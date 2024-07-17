@@ -1,4 +1,4 @@
-package cn.liubinbin.kdb;
+package cn.liubinbin.kdb.client;
 
 import static org.junit.Assert.assertTrue;
 

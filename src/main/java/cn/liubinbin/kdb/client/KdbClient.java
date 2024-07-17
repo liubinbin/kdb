@@ -1,10 +1,10 @@
-package cn.liubinbin.kdb;
+package cn.liubinbin.kdb.client;
 
 /**
  * Hello world!
  *
  */
-public class App 
+public class KdbClient 
 {
     public static void main( String[] args )
     {
