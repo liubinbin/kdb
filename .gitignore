@@ -3,3 +3,8 @@ target/classes/cn/liubinbin/kdb/App.class
 target/classes/cn/liubinbin/kdb/client/KdbClient.class
 target/test-classes/cn/liubinbin/kdb/AppTest.class
 target/test-classes/cn/liubinbin/kdb/client/AppTest.class
+target/classes/cn/liubinbin/kdb/server/BTreeEngine.class
+target/classes/cn/liubinbin/kdb/server/LsmEngine.class
+target/classes/cn/liubinbin/kdb/server/Parser.class
+target/classes/cn/liubinbin/kdb/server/SessionManage.class
+target/classes/cn/liubinbin/kdb/server/Statement.class
