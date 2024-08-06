@@ -13,7 +13,7 @@ service KdbService {
 }
 
 message KdbSqlRequest {
-    string username = 1;
+    string sql = 1;
 }
 
 message KdbSqlResponse {

@@ -3,3 +3,4 @@ target/
 .VSCodeCounter/
 src/main/proto/cn/liubinbin/kdb/.DS_Store
 .gitignore
+/.idea/
