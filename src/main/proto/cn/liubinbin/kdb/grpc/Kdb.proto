@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package cn.liubinbin.kdb.grpc;
+
+option java_package = "cn.liubinbin.kdb.grpc";
+option java_outer_classname = "KdbProto";
+option java_multiple_files = true;
+
+service KdbService {
+    rpc GetRealNameByUsername(KdbSqlRequest) returns (KdbSqlResponse) {}
+
+    rpc BiTalk(stream StreamRequest) returns (stream StreamResponse) {}
+}
+
+message KdbSqlRequest {
+    string username = 1;
+}
+
+message KdbSqlResponse {
+    string realname = 2;
+}
+
+message StreamRequest {
+    string request_info = 1;
+}
+
+message StreamResponse {
+    string response_info = 1;
+}

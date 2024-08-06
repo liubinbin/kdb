@@ -6,9 +6,24 @@ public class Node {
     private boolean isLeaf;
     private Integer nodeId;
 
-    public Node(boolean isRoot, boolean isLeaf, Integer nodeId) {
+    Node() {
+    }
+
+    Node(boolean isRoot, boolean isLeaf, Integer nodeId) {
         this.isRoot = isRoot;
         this.isLeaf = isLeaf;
         this.nodeId = nodeId;
+    }
+
+    public boolean isRoot() {
+        return isRoot;
+    }
+
+    public boolean isLeaf() {
+        return isLeaf;
+    }
+
+    public Integer nodeId() {
+        return nodeId;
     }
 }
