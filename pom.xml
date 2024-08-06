@@ -67,6 +67,15 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <!-- 添加额外的资源目录 -->
+      <resource>
+        <directory>src/main/proto</directory>
+      </resource>
+    </resources>
     <extensions>
       <extension>
         <groupId>kr.motd.maven</groupId>
@@ -88,7 +97,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
+          <version>3.9.0</version>
           <configuration>
             <source>22</source> <!-- 设置源代码兼容性 -->
             <target>22</target> <!-- 设置目标代码兼容性 -->
@@ -129,7 +138,7 @@
             <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.65.0:exe:${os.detected.classifier}</pluginArtifact>
             <outputDirectory>${project.build.directory}/generated-sources/java</outputDirectory>
             <includes>
-              <include>src/main/proto/cn/liubinbin/kdb/grpc/*.proto</include>
+              <include>src/main/proto/cn/liubinbin/kdb/grpc/kdb.proto</include>
             </includes>
           </configuration>
           <executions>
