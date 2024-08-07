@@ -1,6 +1,7 @@
-.vscode/settings.json
+.vscode
 target/
 .VSCodeCounter/
 src/main/proto/cn/liubinbin/kdb/.DS_Store
 .gitignore
 /.idea/
+/kdb.iml
