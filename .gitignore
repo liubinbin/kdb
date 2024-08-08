@@ -5,3 +5,4 @@ src/main/proto/cn/liubinbin/kdb/.DS_Store
 .gitignore
 /.idea/
 /kdb.iml
+/src/main/java/cn/liubinbin/kdb/grpc/
