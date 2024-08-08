@@ -7,17 +7,26 @@ option java_outer_classname = "KdbProto";
 option java_multiple_files = true;
 
 service KdbService {
-    rpc GetRealNameByUsername(KdbSqlRequest) returns (KdbSqlResponse) {}
-
-    rpc BiTalk(stream StreamRequest) returns (stream StreamResponse) {}
+    rpc sqlSingleRequest(KdbSqlRequest) returns (KdbSqlResponse) {}
+    rpc sqlStreamRequest(stream StreamRequest) returns (stream StreamResponse) {}
 }
 
 message KdbSqlRequest {
     string sql = 1;
+    string user = 2;
+}
+
+message Header {
+    repeated string header = 1;
+}
+
+message Row {
+    repeated string value = 1;
 }
 
 message KdbSqlResponse {
-    string realname = 2;
+    Header header = 1;
+    repeated Row row = 2;
 }
 
 message StreamRequest {
