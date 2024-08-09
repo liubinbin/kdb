@@ -17,12 +17,14 @@
 package cn.liubinbin.kdb.server.interf;
 
 import cn.liubinbin.kdb.grpc.*;
+import cn.liubinbin.kdb.server.table.TableManage;
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
 import io.grpc.Server;
 import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -30,11 +32,17 @@ import java.util.logging.Logger;
  * Server that manages startup/shutdown of a {@code Greeter} server.
  */
 public class KdbGrpcServer {
+
   private static final Logger logger = Logger.getLogger(KdbGrpcServer.class.getName());
 
   private Server server;
+  private final TableManage tableManage;
 
-  private void start() throws IOException {
+  public KdbGrpcServer(TableManage tableManage) {
+    this.tableManage = tableManage;
+  }
+
+  public void start() throws IOException {
     /* The port on which the server should run */
     int port = 50051;
     server = Grpc.newServerBuilderForPort(port, InsecureServerCredentials.create())
@@ -66,27 +74,18 @@ public class KdbGrpcServer {
   /**
    * Await termination on the main thread since the grpc library uses daemon threads.
    */
-  private void blockUntilShutdown() throws InterruptedException {
+  public void blockUntilShutdown() throws InterruptedException {
     if (server != null) {
       server.awaitTermination();
     }
   }
-
-  /**
-   * Main launches the server from the command line.
-   */
-  public static void main(String[] args) throws IOException, InterruptedException {
-    final KdbGrpcServer server = new KdbGrpcServer();
-    server.start();
-    server.blockUntilShutdown();
-  }
-
-  static class SqlRequestImpl extends KdbServiceGrpc.KdbServiceImplBase {
+  class SqlRequestImpl extends KdbServiceGrpc.KdbServiceImplBase {
 
     @Override
     public void sqlSingleRequest(KdbSqlRequest req, StreamObserver<KdbSqlResponse> responseObserver) {
+      List<cn.liubinbin.kdb.server.entity.Row> rows = tableManage.getTable("test").limit(1);
       Header header = Header.newBuilder().addHeader("bin header").build();
-      Row row = Row.newBuilder().addValue("bin value").build();
+      Row row = Row.newBuilder().addValue(rows.get(0).getValues().get(0)).build();
       KdbSqlResponse reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(row).build();
       responseObserver.onNext(reply);
       responseObserver.onCompleted();

@@ -1,6 +1,10 @@
 package cn.liubinbin.kdb.server.table;
 
-public class Table {
+import cn.liubinbin.kdb.server.entity.Row;
 
+import java.util.List;
 
+public interface Table {
+
+    public List<Row> limit(Integer limit);
 }
