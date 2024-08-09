@@ -53,7 +53,8 @@ public class KdbGrpcClient {
       logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
       return;
     }
-    logger.info("response: " + response.getHeader());
+    logger.info("response header: " + response.getHeader());
+    logger.info("response header: " + response.getRowList());
   }
 
   /**

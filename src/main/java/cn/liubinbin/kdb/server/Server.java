@@ -1,5 +1,6 @@
 package cn.liubinbin.kdb.server;
 
+import cn.liubinbin.kdb.server.parser.Parser;
 import org.apache.calcite.sql.SqlNode;
 
 public class Server {

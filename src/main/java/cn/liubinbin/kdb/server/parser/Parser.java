@@ -1,4 +1,4 @@
-package cn.liubinbin.kdb.server;
+package cn.liubinbin.kdb.server.parser;
 
 import org.apache.calcite.sql.SqlNode;
 import org.apache.calcite.sql.parser.SqlParseException;

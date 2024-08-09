@@ -16,10 +16,7 @@
 
 package cn.liubinbin.kdb.server.interf;
 
-import cn.liubinbin.kdb.grpc.Header;
-import cn.liubinbin.kdb.grpc.KdbServiceGrpc;
-import cn.liubinbin.kdb.grpc.KdbSqlRequest;
-import cn.liubinbin.kdb.grpc.KdbSqlResponse;
+import cn.liubinbin.kdb.grpc.*;
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
 import io.grpc.Server;
@@ -88,8 +85,9 @@ public class KdbGrpcServer {
 
     @Override
     public void sqlSingleRequest(KdbSqlRequest req, StreamObserver<KdbSqlResponse> responseObserver) {
-      Header header = Header.newBuilder().addHeader("hello").build();
-      KdbSqlResponse reply = KdbSqlResponse.newBuilder().setHeader(header).build();
+      Header header = Header.newBuilder().addHeader("bin header").build();
+      Row row = Row.newBuilder().addValue("bin value").build();
+      KdbSqlResponse reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(row).build();
       responseObserver.onNext(reply);
       responseObserver.onCompleted();
     }
