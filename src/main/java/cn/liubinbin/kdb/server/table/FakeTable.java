@@ -5,7 +5,7 @@ import cn.liubinbin.kdb.server.entity.Row;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FakeTable extends AbstTable implements Table {
+public class FakeTable extends AbstTable {
 
     public FakeTable(String tableName) {
         this.tableName = tableName;
