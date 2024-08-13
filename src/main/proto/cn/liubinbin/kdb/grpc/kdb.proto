@@ -7,32 +7,32 @@ option java_outer_classname = "KdbProto";
 option java_multiple_files = true;
 
 service KdbService {
-    rpc sqlSingleRequest(KdbSqlRequest) returns (KdbSqlResponse) {}
-    rpc sqlStreamRequest(stream StreamRequest) returns (stream StreamResponse) {}
+  rpc sqlSingleRequest(KdbSqlRequest) returns (KdbSqlResponse) {}
+  rpc sqlStreamRequest(stream StreamRequest) returns (stream StreamResponse) {}
 }
 
 message KdbSqlRequest {
-    string sql = 1;
-    string user = 2;
+  string sql = 1;
+  string user = 2;
 }
 
 message Header {
-    repeated string header = 1;
+  repeated string header = 1;
 }
 
 message Row {
-    repeated string value = 1;
+  repeated string value = 1;
 }
 
 message KdbSqlResponse {
-    Header header = 1;
-    repeated Row row = 2;
+  Header header = 1;
+  repeated Row row = 2;
 }
 
 message StreamRequest {
-    string request_info = 1;
+  string request_info = 1;
 }
 
 message StreamResponse {
-    string response_info = 1;
+  string response_info = 1;
 }

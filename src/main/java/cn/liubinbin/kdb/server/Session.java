@@ -9,10 +9,11 @@ public class Session {
         this.sqlString = sqlString;
         this.statement = statement;
     }
-    
+
     public String getSqlString() {
         return sqlString;
     }
+
     public Statement getStatement() {
         return statement;
     }

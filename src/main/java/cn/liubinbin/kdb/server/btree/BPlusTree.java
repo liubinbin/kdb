@@ -2,10 +2,10 @@ package cn.liubinbin.kdb.server.btree;
 
 import cn.liubinbin.kdb.server.executor.Engine;
 
-public class BPlusTree extends Engine{
-    
+public class BPlusTree extends Engine {
+
     private Node root;
-    
+
     BPlusTree(Integer order) {
         root = new Node();
     }
@@ -18,11 +18,11 @@ public class BPlusTree extends Engine{
         this.root = root;
     }
 
-    public void insert(){
+    public void insert() {
 
 
     }
-    
+
     public void delete() {
 
     }
@@ -30,5 +30,5 @@ public class BPlusTree extends Engine{
     public void rangeScan() {
 
     }
-    
+
 }

@@ -9,11 +9,11 @@ import java.io.IOException;
 
 public class KdbServer {
 
-    public void start(){
+    public void start() {
 
     }
 
-    public void localMock(){
+    public void localMock() {
         System.out.println("local mock");
         SqlNode sqlNode = Parser.parse("select a,b from c");
         System.out.println(sqlNode);
@@ -28,5 +28,5 @@ public class KdbServer {
         server.start();
         server.blockUntilShutdown();
     }
-    
+
 }

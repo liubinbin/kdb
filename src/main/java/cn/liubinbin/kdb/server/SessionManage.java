@@ -18,7 +18,7 @@ public class SessionManage {
 
 
     public void executeStatement(Session... sessions) {
-        
+
     }
 
 }

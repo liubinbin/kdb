@@ -16,10 +16,11 @@ public class Parser {
     // }
 
     public static SqlNode parse(String sql) {
-         SqlParser.ConfigBuilder configBuilder = SqlParser.create(sql).configBuilder()
-                 .setCaseSensitive(false)
-                 .setLex(Lex.MYSQL)
-                 .setParserFactory(SqlDdlParserImpl.FACTORY);;
+        SqlParser.ConfigBuilder configBuilder = SqlParser.create(sql).configBuilder()
+                .setCaseSensitive(false)
+                .setLex(Lex.MYSQL)
+                .setParserFactory(SqlDdlParserImpl.FACTORY);
+        ;
 //                 .setUnquotedCasing(SqlParser.Config.UnquotedCasing.UNCHANGED);
         SqlParser parser = SqlParser.create(sql, configBuilder.build());
         try {

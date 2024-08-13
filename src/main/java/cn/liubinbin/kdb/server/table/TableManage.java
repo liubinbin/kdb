@@ -19,7 +19,7 @@ public class TableManage {
         tableMap.put(tableName, table);
     }
 
-    public AbstTable getTable(String tableName){
+    public AbstTable getTable(String tableName) {
         return tableMap.get(tableName);
     }
 }

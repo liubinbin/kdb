@@ -1,6 +1,6 @@
 package cn.liubinbin.kdb.server.table;
 
-public abstract class AbstTable implements Table{
+public abstract class AbstTable implements Table {
 
     String tableName;
 

@@ -1,0 +1,29 @@
+package cn.liubinbin.kdb.server.table;
+
+/**
+ * Created by liubinbin on 16/10/30.
+ */
+public enum ColumnType {
+    INT(0),
+    VARCHAR(1);
+
+    private int columnType;
+
+    ColumnType(int columnType) {
+        this.columnType = columnType;
+    }
+
+    public int getColumnType() {
+        return columnType;
+    }
+
+    public static ColumnType getColumnType(int value) {
+        switch (value) {
+            case 0:
+                return INT;
+            case 1:
+                return VARCHAR;
+        }
+        return null;
+    }
+}
