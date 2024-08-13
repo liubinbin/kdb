@@ -32,6 +32,7 @@ public class Parser {
     public static void main(String[] args) {
         List<String> sqls = new ArrayList<>();
         sqls.add("create table a(id int, b int, c varchar(256))"); // id为主键
+//        sqls.add("insert into a (1, 'helloworld')");
         sqls.add("select * from a");
         sqls.add("select * from a where b = 1");
         sqls.add("select * from a where b = 1 and c = 'haha'");
@@ -39,7 +40,7 @@ public class Parser {
         for (String sql : sqls) {
             System.out.println("-----");
             SqlNode sqlNode = parse(sql);
-            System.out.println(sqlNode);
+            System.out.println(sqlNode.getKind());
         }
 
     }
