@@ -62,7 +62,6 @@ public class Contants {
     public static int VALUELENGTH_SHIFT = 24;
     public static int KEYVALUE_SHIFT = 28;
 
-
     // linked version
     //     private int status;         // 4 byte, 0
     //     private long expireTime;    // 8 bytes, 0 + 4

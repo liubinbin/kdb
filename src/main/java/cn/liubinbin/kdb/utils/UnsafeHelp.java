@@ -9,6 +9,9 @@ import java.nio.ByteOrder;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
+/**
+ * @author liubinbin
+ */
 public final class UnsafeHelp {
 
     /**
