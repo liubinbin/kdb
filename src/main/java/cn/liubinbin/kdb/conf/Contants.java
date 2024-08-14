@@ -5,9 +5,9 @@ package cn.liubinbin.kdb.conf;
  */
 public class Contants {
 
-    public static final String PAN_SERVER_PORT = "pan.server.port";
+    public static final String KDB_SERVER_PORT = "kdb.server.port";
 
-    public static final int DEFAULT_CACHE_SERVER_PORT = 50503;
+    public static final int DEFAULT_KDB_SERVER_PORT = 50503;
 
     public static final String PAN_NETTY_SERVER_THREAD_COUNT = "pan.netty.server.thread.count";
 

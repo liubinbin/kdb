@@ -19,8 +19,8 @@ public class Config {
         configuration.read(new FileReader("conf/config.properties"));
     }
 
-    public int getPort() {
-        return configuration.getInt(Contants.PAN_SERVER_PORT, Contants.DEFAULT_CACHE_SERVER_PORT);
+    public int getKdbServerPort() {
+        return configuration.getInt(Contants.KDB_SERVER_PORT, Contants.DEFAULT_KDB_SERVER_PORT);
     }
 
     public int getNettyThreadCount() {

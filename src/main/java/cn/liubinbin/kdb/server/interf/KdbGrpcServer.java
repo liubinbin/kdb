@@ -16,12 +16,15 @@
 
 package cn.liubinbin.kdb.server.interf;
 
+import cn.liubinbin.kdb.conf.Config;
 import cn.liubinbin.kdb.grpc.*;
+import cn.liubinbin.kdb.server.parser.Parser;
 import cn.liubinbin.kdb.server.table.TableManage;
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
 import io.grpc.Server;
 import io.grpc.stub.StreamObserver;
+import org.apache.calcite.sql.SqlNode;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,19 +40,20 @@ public class KdbGrpcServer {
 
     private Server server;
     private final TableManage tableManage;
+    private final int kdbServerPort;
 
-    public KdbGrpcServer(TableManage tableManage) {
+    public KdbGrpcServer(Config kdbConfig, TableManage tableManage) {
         this.tableManage = tableManage;
+        this.kdbServerPort = kdbConfig.getKdbServerPort();
     }
 
     public void start() throws IOException {
         /* The port on which the server should run */
-        int port = 50051;
-        server = Grpc.newServerBuilderForPort(port, InsecureServerCredentials.create())
+        server = Grpc.newServerBuilderForPort(kdbServerPort, InsecureServerCredentials.create())
                 .addService(new SqlRequestImpl())
                 .build()
                 .start();
-        logger.info("Server started, listening on " + port);
+        logger.info("Server started, listening on " + kdbServerPort);
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
@@ -84,6 +88,25 @@ public class KdbGrpcServer {
 
         @Override
         public void sqlSingleRequest(KdbSqlRequest req, StreamObserver<KdbSqlResponse> responseObserver) {
+            // parser
+            String sql = req.getSql();
+            SqlNode sqlNode = Parser.parse(sql);
+            switch (sqlNode.getKind()) {
+                case CREATE_SCHEMA:
+                    System.out.println("this is table craete");
+                    break;
+                case INSERT:
+                    System.out.println("this is table insert");
+                    break;
+                case SELECT:
+                    System.out.println("this is table select");
+                    break;
+                case OTHER:
+                    System.out.println("do not support");
+                    break;
+            }
+
+            //
             List<cn.liubinbin.kdb.server.entity.Row> rows = tableManage.getTable("test").limit(1);
             Header header = Header.newBuilder().addHeader("bin header").build();
             Row row = Row.newBuilder().addValue(rows.get(0).getValues().get(0)).build();

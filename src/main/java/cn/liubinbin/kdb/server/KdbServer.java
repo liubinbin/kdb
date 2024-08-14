@@ -17,11 +17,12 @@ public class KdbServer {
         // 配置文件
         Config kdbConfig = new Config();
 
-        // 初始化
-        TableManage tableManage = new TableManage();
+        // 表信息初始化
+        TableManage tableManage = new TableManage(kdbConfig);
         tableManage.init();
 
-        final KdbGrpcServer server = new KdbGrpcServer(tableManage);
+        // gRPC server 初始化和启动
+        final KdbGrpcServer server = new KdbGrpcServer(kdbConfig, tableManage);
         server.start();
         server.blockUntilShutdown();
     }
