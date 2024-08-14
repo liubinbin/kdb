@@ -8,6 +8,8 @@ import org.apache.calcite.sql.SqlNode;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KdbServer {
 
@@ -25,14 +27,25 @@ public class KdbServer {
     }
 
     public void localMock() {
-        System.out.println("local mock");
-        SqlNode sqlNode = Parser.parse("select a,b from c");
-        System.out.println(sqlNode);
+        List<String> sqls = new ArrayList<>();
+        sqls.add("create table a(id int, b int, c varchar(256))"); // id为主键
+        sqls.add("insert into a (id, name) VALUES (1, 'Alice')");
+        sqls.add("select * from a");
+        sqls.add("select * from a where b = 1");
+        sqls.add("select * from a where b = 1 and c = 'haha'");
+        sqls.add("select * from a order by b limit 10");
+        sqls.add("select a,b from c");
+        for (String sql : sqls) {
+            System.out.println("-----");
+            SqlNode sqlNode = Parser.parse(sql);
+            System.out.println(sqlNode.getKind());
+        }
+
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ConfigurationException {
-        new KdbServer().doStart();
-//        new KdbServer().localMock();
+//        new KdbServer().doStart();
+        new KdbServer().localMock();
     }
 
 }
