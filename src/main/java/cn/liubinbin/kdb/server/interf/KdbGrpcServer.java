@@ -90,9 +90,11 @@ public class KdbGrpcServer {
         public void sqlSingleRequest(KdbSqlRequest req, StreamObserver<KdbSqlResponse> responseObserver) {
             // parser
             String sql = req.getSql();
+            System.out.println("sql : " + sql);
             SqlNode sqlNode = Parser.parse(sql);
+            System.out.println("lbb " + sqlNode.getKind());
             switch (sqlNode.getKind()) {
-                case CREATE_SCHEMA:
+                case CREATE_TABLE:
                     System.out.println("this is table craete");
                     break;
                 case INSERT:

@@ -45,8 +45,8 @@ public class KdbServer {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ConfigurationException {
-//        new KdbServer().doStart();
-        new KdbServer().localMock();
+        new KdbServer().doStart();
+//        new KdbServer().localMock();
     }
 
 }

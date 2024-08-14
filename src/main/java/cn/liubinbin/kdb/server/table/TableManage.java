@@ -24,4 +24,12 @@ public class TableManage {
     public AbstTable getTable(String tableName) {
         return tableMap.get(tableName);
     }
+
+    public void close(){
+
+    }
+
+    public void persist(){
+
+    }
 }

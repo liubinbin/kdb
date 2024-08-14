@@ -21,6 +21,8 @@ import cn.liubinbin.kdb.grpc.KdbSqlRequest;
 import cn.liubinbin.kdb.grpc.KdbSqlResponse;
 import io.grpc.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,7 +49,7 @@ public class KdbGrpcClient {
     /**
      * Say hello to server.
      */
-    public void greet(String sql) {
+    public void sendSql(String sql) {
         logger.info("Will try to greet " + sql + " ...");
         KdbSqlRequest request = KdbSqlRequest.newBuilder().setSql(sql).build();
         KdbSqlResponse response;
@@ -66,19 +68,24 @@ public class KdbGrpcClient {
      * greeting. The second argument is the target server.
      */
     public static void main(String[] args) throws Exception {
-        String user = "world";
+        String sql = "create table a(id int, b int, c varchar(256))"; // id为主键
+//        String sql = "insert into a (id, name) VALUES (1, 'Alice')";
+//        String sql = "select * from a";
+//        String sql = "select * from a where b = 1";
+//        String sql = "select * from a where b = 1 and c = 'haha'";
+//        String sql = "select * from a order by b limit 10";
+//        String sql = "select a,b from c";
         // Access a service running on the local machine on port 50051
-        String target = "localhost:50051";
+        String target = "localhost:50501";
         // Allow passing in the user and target strings as command line arguments
         if (args.length > 0) {
             if ("--help".equals(args[0])) {
                 System.err.println("Usage: [name [target]]");
                 System.err.println("哈哈哈");
-                System.err.println("  name    The name you wish to be greeted by. Defaults to " + user);
+                System.err.println("  name    The name you wish to be greeted by. Defaults to ");
                 System.err.println("  target  The server to connect to. Defaults to " + target);
                 System.exit(1);
             }
-            user = args[0];
         }
         if (args.length > 1) {
             target = args[1];
@@ -94,7 +101,7 @@ public class KdbGrpcClient {
                 .build();
         try {
             KdbGrpcClient client = new KdbGrpcClient(channel);
-            client.greet(user);
+            client.sendSql(sql);
         } finally {
             // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
             // resources the channel should be shut down when it will no longer be used. If it may be used
