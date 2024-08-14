@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
- * Server that manages startup/shutdown of a {@code Greeter} server.
+ * Server that manages startup/shutdown of a KdbGrpcServer.
  */
 public class KdbGrpcServer {
 
