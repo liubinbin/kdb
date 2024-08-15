@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by liubinbin on 2020/1/16.
+ * @author liubinbin
  */
 public class KdbRow {
 

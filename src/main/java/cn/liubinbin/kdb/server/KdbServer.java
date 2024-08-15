@@ -2,15 +2,15 @@ package cn.liubinbin.kdb.server;
 
 import cn.liubinbin.kdb.conf.KdbConfig;
 import cn.liubinbin.kdb.server.interf.KdbGrpcServer;
-import cn.liubinbin.kdb.server.parser.Parser;
 import cn.liubinbin.kdb.server.table.TableManage;
-import org.apache.calcite.sql.SqlNode;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * @author liubinbin
+ * @date 2024/8/14
+ */
 public class KdbServer {
 
     public void doStart() throws IOException, InterruptedException, ConfigurationException {

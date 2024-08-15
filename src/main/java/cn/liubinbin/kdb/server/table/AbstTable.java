@@ -3,7 +3,8 @@ package cn.liubinbin.kdb.server.table;
 import java.util.List;
 
 /**
- * Created by liubinbin on 16/10/31.
+ * @author liubinbin
+ * @info Created by liubinbin on 2024/08/14.
  */
 public abstract class AbstTable implements Table {
 

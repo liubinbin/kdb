@@ -21,22 +21,25 @@ public class Planer {
                 }
                 break;
             case DESCRIBE_TABLE:
-                System.out.println("this is table describe");
                 if (sqlNode instanceof SqlDescribeTable) {
                     SqlDescribeTable describeTable = (SqlDescribeTable) sqlNode;
                     plan = new DescribeTablePlan(PlanKind.DESCRIBE_TABLE, describeTable.getTable().getSimple());
-                    System.out.println("Parsed describeTable statement: " + describeTable.getTable().getSimple());
                 } else {
-                    throw new RuntimeException("Expected an INSERT statement but got: " + sqlNode.getKind());
+                    throw new RuntimeException("Expected an DESCRIBE_TABLE statement but got: " + sqlNode.getKind());
                 }
                 break;
             case CREATE_TABLE:
                 System.out.println("this is table create");
                 if (sqlNode instanceof SqlCreate) {
                     SqlCreateTable create = (SqlCreateTable) sqlNode;
-                    System.out.println("Parsed INSERT statement: " + create);
+//                    plan = new DescribeTablePlan(PlanKind.DESCRIBE_TABLE, describeTable.getTable().getSimple());
+                    System.out.println("Parsed INSERT statement: " + create.name);
+                    System.out.println("Parsed INSERT statement: " + create.columnList);
+                    System.out.println("Parsed INSERT statement: " + create.columnList.get(0));
+                    System.out.println("Parsed INSERT statement: " + create.columnList.get(1));
+                    System.out.println("Parsed INSERT statement: " + create.columnList.get(2).getKind());
                 } else {
-                    throw new RuntimeException("Expected an INSERT statement but got: " + sqlNode.getKind());
+                    throw new RuntimeException("Expected an CREATE_TABLE statement but got: " + sqlNode.getKind());
                 }
                 break;
             case INSERT:

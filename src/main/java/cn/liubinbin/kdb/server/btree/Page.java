@@ -1,7 +1,7 @@
 package cn.liubinbin.kdb.server.btree;
 
 /**
- * Created by bin on 2019/6/26.
+ * @author liubinbin
  */
 public class Page {
 

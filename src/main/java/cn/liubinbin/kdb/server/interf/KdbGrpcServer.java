@@ -17,7 +17,9 @@
 package cn.liubinbin.kdb.server.interf;
 
 import cn.liubinbin.kdb.conf.KdbConfig;
-import cn.liubinbin.kdb.grpc.*;
+import cn.liubinbin.kdb.grpc.KdbServiceGrpc;
+import cn.liubinbin.kdb.grpc.KdbSqlRequest;
+import cn.liubinbin.kdb.grpc.KdbSqlResponse;
 import cn.liubinbin.kdb.server.executor.Executor;
 import cn.liubinbin.kdb.server.parser.Parser;
 import cn.liubinbin.kdb.server.planer.Plan;
@@ -27,17 +29,15 @@ import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
 import io.grpc.Server;
 import io.grpc.stub.StreamObserver;
-import org.apache.calcite.sql.SqlCreate;
 import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.sql.ddl.SqlCreateTable;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
- * Server that manages startup/shutdown of a KdbGrpcServer.
+ * @author liubinbin
+ * @info Server that manages startup/shutdown of a KdbGrpcServer.
  */
 public class KdbGrpcServer {
 

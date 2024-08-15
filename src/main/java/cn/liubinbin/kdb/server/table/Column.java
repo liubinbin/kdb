@@ -1,7 +1,8 @@
 package cn.liubinbin.kdb.server.table;
 
 /**
- * Created by liubinbin on 16/3/16.
+ * @author liubinbin
+ * @info Created by liubinbin on 16/3/16.
  */
 public class Column {
 

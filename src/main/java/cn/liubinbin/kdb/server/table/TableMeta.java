@@ -6,7 +6,9 @@ import java.io.RandomAccessFile;
 import java.util.List;
 
 /**
- * 暂只支持 integer 和 varchar
+ * @author liubinbin
+ * @date 2024/8/14
+ * @info 暂只支持 integer 和 varchar
  * overview meta
  * 8个字节 table 个数
  * table meta

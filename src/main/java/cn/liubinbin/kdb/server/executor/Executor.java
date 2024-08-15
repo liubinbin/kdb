@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by liubinbin on 16/10/31.
+ * @author liubinbin
+ * @info Created by liubinbin on 16/10/31.
  */
 public class Executor {
 

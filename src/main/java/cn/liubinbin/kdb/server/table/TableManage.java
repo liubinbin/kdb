@@ -7,6 +7,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author liubinbin
+ * @date 2024/8/14
+ */
 public class TableManage {
 
     ConcurrentHashMap<String, AbstTable> tableMap;

@@ -1,7 +1,8 @@
 package cn.liubinbin.kdb.server.planer;
 
 /**
- * Created by liubinbin on 16/10/31.
+ * @author liubinbin
+ * @info Created by liubinbin on 2024/08/14.
  */
 public class DescribeTablePlan extends Plan{
 

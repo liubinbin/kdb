@@ -1,7 +1,8 @@
 package cn.liubinbin.kdb.server.planer;
 
 /**
- * Created by liubinbin on 16/11/15.
+ * @author liubinbin
+ * @info Created by liubinbin on 16/11/15.
  */
 public enum PlanKind {
 

@@ -5,6 +5,10 @@ import cn.liubinbin.kdb.server.entity.KdbRow;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * @author liubinbin
+ */
 public class FakeTable extends AbstTable {
 
     public FakeTable(String tableName, List<Column> columns) {

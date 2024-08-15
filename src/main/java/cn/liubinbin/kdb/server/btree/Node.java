@@ -1,5 +1,8 @@
 package cn.liubinbin.kdb.server.btree;
 
+/**
+ * @author liubinbin
+ */
 public class Node {
 
     private boolean isRoot;

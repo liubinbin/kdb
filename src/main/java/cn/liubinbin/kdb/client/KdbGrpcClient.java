@@ -26,7 +26,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * A simple client that requests a sql from the {@link cn.liubinbin.kdb.server.interf.KdbGrpcServer}.
+ * @author liubinbin
+ * @date 2024/8/14
+ * @info A simple client that requests a sql from the {@link cn.liubinbin.kdb.server.interf.KdbGrpcServer}.
  */
 public class KdbGrpcClient {
     private static final Logger logger = Logger.getLogger(KdbGrpcClient.class.getName());
@@ -62,14 +64,13 @@ public class KdbGrpcClient {
     }
 
     /**
-     * Greet server. If provided, the first element of {@code args} is the name to use in the
-     * greeting. The second argument is the target server.
+     * Communicate with server.
      */
     public static void main(String[] args) throws Exception {
         String kdbServerAddr = "localhost:50501";
 //        String sql = "describe database kdb";
-        String sql = "describe table test1";
-//        String sql = "create table a(id int, b int, c varchar(256))"; // id为主键
+//        String sql = "describe table test1";
+        String sql = "create table test3(id int, b int, c varchar(256))"; // id为主键
 //        String sql = "insert into a (id, name) VALUES (1, 'Alice')";
 //        String sql = "select * from a";
 //        String sql = "select * from a where b = 1";

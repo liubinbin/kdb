@@ -1,5 +1,9 @@
 package cn.liubinbin.kdb.server.planer;
 
+
+/**
+ * @author liubinbin
+ */
 public abstract class Plan {
 
     private PlanKind planKind;

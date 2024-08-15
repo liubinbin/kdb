@@ -2,6 +2,7 @@ package cn.liubinbin.kdb.utils;
 
 /**
  * @author liubinbin
+ * @date 2024/8/14
  */
 public class ByteArrayUtils {
 

@@ -2,24 +2,22 @@ package cn.liubinbin.kdb.utils;
 
 /**
  * @author liubinbin
+ * @date 2024/08/14
  */
 public class Contants {
 
-    public static final String PAN_SERVER_PORT = "pan.server.port";
+    public static final String KDB_SERVER_PORT = "kdb.server.grpc.port";
 
-    public static final int DEFAULT_CACHE_SERVER_PORT = 50503;
+    public static final int DEFAULT_KDB_SERVER_PORT = 50503;
 
-    public static final String PAN_NETTY_SERVER_THREAD_COUNT = "pan.netty.server.thread.count";
+    public static final String KDB_METRICS_PRINT = "kdb.metrics.print";
 
-    public static final int DEFAULT_CACHE_NETTY_SERVER_THREAD_COUNT = 8;
+    public static final String dadf = "kdb.server.file.root.path";
 
-    public static final String CACHE_SLAB_SIZE = "pan.cache.slab.size";
 
-    public static final String CACHE_SLAB_MAX_COUNT = "pan.cache.slab.max.count";
+    // --------------------------------------------------------------
 
-    public static final String PAN_METRICS_PRINT = "pan.metrics.print";
-
-    public static final String PAN_RMI_PORT = "pan.rmi.port";
+    public static final String KDB_RMI_PORT = "kdb.rmi.port";
 
     // 132096 = 1024 * 129
     public static final int DEFAULT_CACHE_SLAB_SIZE = 132096;
@@ -38,7 +36,7 @@ public class Contants {
 
     public static final int DEFAULT_HASHMOD = 4;
 
-    public static final int DEFAULT_PAN_RMI_PORT = 1099;
+    public static final int DEFAULT_KDB_RMI_PORT = 1099;
 
     public static final String FILE_SEPARATOR = "/";
 
@@ -61,7 +59,6 @@ public class Contants {
     public static int KEYLENGTH_SHIFT = 20;
     public static int VALUELENGTH_SHIFT = 24;
     public static int KEYVALUE_SHIFT = 28;
-
 
     // linked version
     //     private int status;         // 4 byte, 0
