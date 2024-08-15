@@ -27,26 +27,8 @@ public class KdbServer {
         server.blockUntilShutdown();
     }
 
-    public void localMock() {
-        List<String> sqls = new ArrayList<>();
-        sqls.add("create table a(id int, b int, c varchar(256))"); // id为主键
-        sqls.add("insert into a (id, name) VALUES (1, 'Alice')");
-        sqls.add("select * from a");
-        sqls.add("select * from a where b = 1");
-        sqls.add("select * from a where b = 1 and c = 'haha'");
-        sqls.add("select * from a order by b limit 10");
-        sqls.add("select a,b from c");
-        for (String sql : sqls) {
-            System.out.println("-----");
-            SqlNode sqlNode = Parser.parse(sql);
-            System.out.println(sqlNode.getKind());
-        }
-
-    }
-
     public static void main(String[] args) throws IOException, InterruptedException, ConfigurationException {
         new KdbServer().doStart();
-//        new KdbServer().localMock();
     }
 
 }

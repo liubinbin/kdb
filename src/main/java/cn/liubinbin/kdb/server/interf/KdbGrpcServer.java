@@ -44,7 +44,7 @@ public class KdbGrpcServer {
     private static final Logger logger = Logger.getLogger(KdbGrpcServer.class.getName());
 
     private Server server;
-    private TableManage tableManage;
+    private final TableManage tableManage;
     private final int kdbServerPort;
 
     public KdbGrpcServer(KdbConfig kdbConfig, TableManage tableManage) {
@@ -58,12 +58,12 @@ public class KdbGrpcServer {
                 .addService(new SqlRequestImpl())
                 .build()
                 .start();
-        logger.info("Server started, listening on " + kdbServerPort);
+        logger.info("KDB Server started, listening on " + kdbServerPort);
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
                 // Use stderr here since the logger may have been reset by its JVM shutdown hook.
-                System.err.println("*** shutting down gRPC server since JVM is shutting down");
+                System.err.println("*** shutting down KDB gRPC server since JVM is shutting down");
                 try {
                     KdbGrpcServer.this.stop();
                 } catch (InterruptedException e) {
@@ -95,7 +95,7 @@ public class KdbGrpcServer {
         public void sqlSingleRequest(KdbSqlRequest req, StreamObserver<KdbSqlResponse> responseObserver) {
             // request
             String sql = req.getSql();
-            logger.info("Server receive sql " + sql);
+            logger.info("KDB Server receive sql " + sql);
             System.out.println("sql : " + sql);
             // parser
             SqlNode sqlNode = Parser.parse(sql);

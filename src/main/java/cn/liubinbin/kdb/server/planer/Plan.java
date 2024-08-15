@@ -1,9 +1,14 @@
 package cn.liubinbin.kdb.server.planer;
 
-public class Plan {
+public abstract class Plan {
 
+    private PlanKind planKind;
 
-    public Plan() {
+    public Plan(PlanKind planKind) {
+        this.planKind = planKind;
     }
 
+    public PlanKind getPlanKind() {
+        return planKind;
+    }
 }

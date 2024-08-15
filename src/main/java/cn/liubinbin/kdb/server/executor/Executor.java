@@ -20,10 +20,24 @@ public class Executor {
     }
 
     public KdbSqlResponse execute(Plan plan) {
-        List<Row> rows = tableManage.getTable("test").limit(1);
-        Header header = Header.newBuilder().addHeader("bin header").build();
-        cn.liubinbin.kdb.grpc.Row row = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(rows.get(0).getValues().get(0)).build();
-        KdbSqlResponse reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(row).build();
+        Header header = Header.newBuilder().addHeader("null data").build();
+        KdbSqlResponse reply = KdbSqlResponse.newBuilder().setHeader(header).build();
+        switch (plan.getPlanKind()) {
+            case DESCRIBE_DATABASE:
+                header = Header.newBuilder().addHeader("tables").build();
+                List<String> tableNames = tableManage.ListTableName();
+                cn.liubinbin.kdb.grpc.Row describeDatabaseRow = cn.liubinbin.kdb.grpc.Row.newBuilder().addAllValue(tableNames).build();
+                reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(describeDatabaseRow).build();
+                break;
+            case DESCRIBE_TABLE:
+                break;
+            case SELECT_TABLE:
+                List<Row> rows = tableManage.getTable("test").limit(1);
+                header = Header.newBuilder().addHeader("bin header").build();
+                cn.liubinbin.kdb.grpc.Row row = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(rows.get(0).getValues().get(0)).build();
+                reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(row).build();
+                break;
+        }
         return reply;
     }
 }

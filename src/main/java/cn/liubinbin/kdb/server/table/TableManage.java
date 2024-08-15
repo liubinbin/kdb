@@ -2,6 +2,8 @@ package cn.liubinbin.kdb.server.table;
 
 import cn.liubinbin.kdb.conf.KdbConfig;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TableManage {
@@ -13,8 +15,9 @@ public class TableManage {
     }
 
     public void init() {
-        // TODO read talble meta and data
+        // TODO read table meta and data
         tableMap.put("test", new FakeTable("test"));
+        tableMap.put("test1", new FakeTable("test"));
     }
 
     public void createTable() {
@@ -27,6 +30,10 @@ public class TableManage {
 
     public AbstTable getTable(String tableName) {
         return tableMap.get(tableName);
+    }
+
+    public List<String> ListTableName(){
+        return new ArrayList<>(tableMap.keySet());
     }
 
     public void close() {
