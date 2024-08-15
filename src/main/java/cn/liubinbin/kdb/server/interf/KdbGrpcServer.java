@@ -16,7 +16,7 @@
 
 package cn.liubinbin.kdb.server.interf;
 
-import cn.liubinbin.kdb.conf.Config;
+import cn.liubinbin.kdb.conf.KdbConfig;
 import cn.liubinbin.kdb.grpc.*;
 import cn.liubinbin.kdb.server.parser.Parser;
 import cn.liubinbin.kdb.server.table.TableManage;
@@ -42,7 +42,7 @@ public class KdbGrpcServer {
     private final TableManage tableManage;
     private final int kdbServerPort;
 
-    public KdbGrpcServer(Config kdbConfig, TableManage tableManage) {
+    public KdbGrpcServer(KdbConfig kdbConfig, TableManage tableManage) {
         this.tableManage = tableManage;
         this.kdbServerPort = kdbConfig.getKdbServerPort();
     }

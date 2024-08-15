@@ -1,6 +1,6 @@
 package cn.liubinbin.kdb.server.table;
 
-import cn.liubinbin.kdb.conf.Config;
+import cn.liubinbin.kdb.conf.KdbConfig;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -8,7 +8,7 @@ public class TableManage {
 
     ConcurrentHashMap<String, AbstTable> tableMap;
 
-    public TableManage(Config kdbConfig) {
+    public TableManage(KdbConfig kdbConfig) {
         tableMap = new ConcurrentHashMap<String, AbstTable>();
     }
 

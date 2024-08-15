@@ -1,6 +1,6 @@
 package cn.liubinbin.kdb.server;
 
-import cn.liubinbin.kdb.conf.Config;
+import cn.liubinbin.kdb.conf.KdbConfig;
 import cn.liubinbin.kdb.server.interf.KdbGrpcServer;
 import cn.liubinbin.kdb.server.parser.Parser;
 import cn.liubinbin.kdb.server.table.TableManage;
@@ -15,7 +15,7 @@ public class KdbServer {
 
     public void doStart() throws IOException, InterruptedException, ConfigurationException {
         // 配置文件
-        Config kdbConfig = new Config();
+        KdbConfig kdbConfig = new KdbConfig();
 
         // 表信息初始化
         TableManage tableManage = new TableManage(kdbConfig);
