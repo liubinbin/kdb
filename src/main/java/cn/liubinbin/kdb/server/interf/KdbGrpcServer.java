@@ -25,7 +25,6 @@ import io.grpc.InsecureServerCredentials;
 import io.grpc.Server;
 import io.grpc.stub.StreamObserver;
 import org.apache.calcite.sql.SqlCreate;
-import org.apache.calcite.sql.SqlInsert;
 import org.apache.calcite.sql.SqlNode;
 import org.apache.calcite.sql.ddl.SqlCreateTable;
 
@@ -96,7 +95,7 @@ public class KdbGrpcServer {
             System.out.println("sql : " + sql);
             SqlNode sqlNode = Parser.parse(sql);
 
-            
+
             System.out.println("lbb " + sqlNode.getKind());
             switch (sqlNode.getKind()) {
                 case CREATE_TABLE:

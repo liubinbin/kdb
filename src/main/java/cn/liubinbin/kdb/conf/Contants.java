@@ -14,7 +14,6 @@ public class Contants {
     public static final String dadf = "kdb.server.file.root.path";
 
 
-
     // --------------------------------------------------------------
 
     public static final String KDB_RMI_PORT = "kdb.rmi.port";

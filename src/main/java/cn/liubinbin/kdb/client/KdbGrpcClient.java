@@ -21,8 +21,6 @@ import cn.liubinbin.kdb.grpc.KdbSqlRequest;
 import cn.liubinbin.kdb.grpc.KdbSqlResponse;
 import io.grpc.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;

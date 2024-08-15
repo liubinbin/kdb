@@ -7,14 +7,14 @@ import java.util.List;
 
 /**
  * 暂只支持 integer 和 varchar
- *  overview meta
- *    8个字节 table 个数
- *  table meta
- *    8个字节 tableName len
- *    8个字节 string
- *    8个字节 column 个数
- *      8个字节 columnName len
- *      8个字节 columnName
+ * overview meta
+ * 8个字节 table 个数
+ * table meta
+ * 8个字节 tableName len
+ * 8个字节 string
+ * 8个字节 column 个数
+ * 8个字节 columnName len
+ * 8个字节 columnName
  */
 public class TableMeta {
 

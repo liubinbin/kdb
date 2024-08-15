@@ -11,17 +11,11 @@ import java.util.List;
 
 public class Parser {
 
-    // Statement parse(String sqlString){
-    //     return null;
-    // }
-
     public static SqlNode parse(String sql) {
         SqlParser.ConfigBuilder configBuilder = SqlParser.create(sql).configBuilder()
                 .setCaseSensitive(false)
                 .setLex(Lex.MYSQL)
                 .setParserFactory(SqlDdlParserImpl.FACTORY);
-        ;
-//                 .setUnquotedCasing(SqlParser.Config.UnquotedCasing.UNCHANGED);
         SqlParser parser = SqlParser.create(sql, configBuilder.build());
         try {
             return parser.parseQuery();
@@ -43,6 +37,5 @@ public class Parser {
             SqlNode sqlNode = parse(sql);
             System.out.println(sqlNode.getKind());
         }
-
     }
 }

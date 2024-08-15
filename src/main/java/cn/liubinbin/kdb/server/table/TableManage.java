@@ -17,7 +17,7 @@ public class TableManage {
         tableMap.put("test", new FakeTable("test"));
     }
 
-    public void createTable(){
+    public void createTable() {
 
     }
 
@@ -29,11 +29,11 @@ public class TableManage {
         return tableMap.get(tableName);
     }
 
-    public void close(){
+    public void close() {
 
     }
 
-    public void persist(){
+    public void persist() {
 
     }
 }
