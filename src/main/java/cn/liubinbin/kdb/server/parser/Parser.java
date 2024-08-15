@@ -9,6 +9,9 @@ import org.apache.calcite.sql.parser.ddl.SqlDdlParserImpl;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by liubinbin on 16/11/15.
+ */
 public class Parser {
 
     public static SqlNode parse(String sql) {
@@ -27,11 +30,13 @@ public class Parser {
     public static void main(String[] args) {
         List<String> sqls = new ArrayList<>();
         sqls.add("create table a(id int, b int, c varchar(256))"); // id为主键
-//        sqls.add("insert into a (1, 'helloworld')");
+        sqls.add("insert into a (id, name) VALUES (1, 'Alice')");
         sqls.add("select * from a");
         sqls.add("select * from a where b = 1");
         sqls.add("select * from a where b = 1 and c = 'haha'");
         sqls.add("select * from a order by b limit 10");
+        sqls.add("describe database kdb");
+        sqls.add("describe table a");
         for (String sql : sqls) {
             System.out.println("-----");
             SqlNode sqlNode = parse(sql);

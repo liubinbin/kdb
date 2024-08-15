@@ -67,21 +67,15 @@ public class KdbGrpcClient {
      */
     public static void main(String[] args) throws Exception {
         String kdbServerAddr = "localhost:50501";
-        String sql = "create table a(id int, b int, c varchar(256))"; // id为主键
+        String sql = "describe database kdb";
+//        String sql = "create table a(id int, b int, c varchar(256))"; // id为主键
 //        String sql = "insert into a (id, name) VALUES (1, 'Alice')";
 //        String sql = "select * from a";
 //        String sql = "select * from a where b = 1";
 //        String sql = "select * from a where b = 1 and c = 'haha'";
 //        String sql = "select * from a order by b limit 10";
 //        String sql = "select a,b from c";
-        // Access a service running on the local machine on port 50051
 
-        // Create a communication channel to the server, known as a Channel. Channels are thread-safe
-        // and reusable. It is common to create channels at the beginning of your application and reuse
-        // them until the application shuts down.
-        //
-        // For the example we use plaintext insecure credentials to avoid needing TLS certificates. To
-        // use TLS, use TlsChannelCredentials instead.
         ManagedChannel channel = Grpc.newChannelBuilder(kdbServerAddr, InsecureChannelCredentials.create())
                 .build();
         try {
