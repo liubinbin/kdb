@@ -1,13 +1,20 @@
 暂时计划
 
-1、搭建 http server 
+1、搭建 grpc server。
 
-protoc --java_out=src/main/java src/main/proto/cn/liubinbin/kdb/grpc/kdb.proto
+2、依据需求设置 protoc。
 
+3、使用 Apache Calcite 解析 sql 实验。
 
-2、搭建客户端连接 http server
+4、搭建客户端连接 grpc server，可以跑通流程。
 
-3、确认语法实现方法
+5、搭建整个代码结构。
 
-4、确定语法
+6、实现显示表列表。
+
+7、实现显示表结构。
+
+8、
+
+9、
 
