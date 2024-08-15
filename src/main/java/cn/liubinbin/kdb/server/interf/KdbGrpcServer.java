@@ -18,7 +18,10 @@ package cn.liubinbin.kdb.server.interf;
 
 import cn.liubinbin.kdb.conf.KdbConfig;
 import cn.liubinbin.kdb.grpc.*;
+import cn.liubinbin.kdb.server.executor.Executor;
 import cn.liubinbin.kdb.server.parser.Parser;
+import cn.liubinbin.kdb.server.planer.Plan;
+import cn.liubinbin.kdb.server.planer.Planer;
 import cn.liubinbin.kdb.server.table.TableManage;
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
@@ -41,7 +44,7 @@ public class KdbGrpcServer {
     private static final Logger logger = Logger.getLogger(KdbGrpcServer.class.getName());
 
     private Server server;
-    private final TableManage tableManage;
+    private TableManage tableManage;
     private final int kdbServerPort;
 
     public KdbGrpcServer(KdbConfig kdbConfig, TableManage tableManage) {
@@ -90,40 +93,18 @@ public class KdbGrpcServer {
 
         @Override
         public void sqlSingleRequest(KdbSqlRequest req, StreamObserver<KdbSqlResponse> responseObserver) {
-            // parser
+            // request
             String sql = req.getSql();
+            logger.info("Server receive sql " + sql);
             System.out.println("sql : " + sql);
+            // parser
             SqlNode sqlNode = Parser.parse(sql);
-
-
-            System.out.println("lbb " + sqlNode.getKind());
-            switch (sqlNode.getKind()) {
-                case CREATE_TABLE:
-                    System.out.println("this is table create");
-                    if (sqlNode instanceof SqlCreate) {
-                        SqlCreateTable create = (SqlCreateTable) sqlNode;
-                        System.out.println("Parsed INSERT statement: " + create);
-                    } else {
-                        throw new RuntimeException("Expected an INSERT statement but got: " + sqlNode.getKind());
-                    }
-                    break;
-                case INSERT:
-                    System.out.println("this is table insert");
-                    break;
-                case SELECT:
-                    System.out.println("this is table select");
-                    break;
-                case OTHER:
-                    System.out.println("do not support");
-                    break;
-            }
-
-            //
-            List<cn.liubinbin.kdb.server.entity.Row> rows = tableManage.getTable("test").limit(1);
-            Header header = Header.newBuilder().addHeader("bin header").build();
-            Row row = Row.newBuilder().addValue(rows.get(0).getValues().get(0)).build();
-            KdbSqlResponse reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(row).build();
-            responseObserver.onNext(reply);
+            // planer
+            Plan plan = Planer.plan(sqlNode);
+            // executor
+            KdbSqlResponse response = new Executor(tableManage).execute(plan);
+            // return
+            responseObserver.onNext(response);
             responseObserver.onCompleted();
         }
     }
