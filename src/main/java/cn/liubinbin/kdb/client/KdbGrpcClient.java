@@ -50,7 +50,7 @@ public class KdbGrpcClient {
      * Say hello to server.
      */
     public void sendSql(String sql) {
-        logger.info("Will try to greet " + sql + " ...");
+        logger.info("Will try to send sql " + sql + " ...");
         KdbSqlRequest request = KdbSqlRequest.newBuilder().setSql(sql).build();
         KdbSqlResponse response;
         try {
@@ -60,7 +60,7 @@ public class KdbGrpcClient {
             return;
         }
         logger.info("response header: " + response.getHeader());
-        logger.info("response header: " + response.getRowList());
+        logger.info("response data: " + response.getRowList());
     }
 
     /**
@@ -68,6 +68,7 @@ public class KdbGrpcClient {
      * greeting. The second argument is the target server.
      */
     public static void main(String[] args) throws Exception {
+        String kdbServerAddr = "localhost:50501";
         String sql = "create table a(id int, b int, c varchar(256))"; // id为主键
 //        String sql = "insert into a (id, name) VALUES (1, 'Alice')";
 //        String sql = "select * from a";
@@ -76,20 +77,6 @@ public class KdbGrpcClient {
 //        String sql = "select * from a order by b limit 10";
 //        String sql = "select a,b from c";
         // Access a service running on the local machine on port 50051
-        String target = "localhost:50501";
-        // Allow passing in the user and target strings as command line arguments
-        if (args.length > 0) {
-            if ("--help".equals(args[0])) {
-                System.err.println("Usage: [name [target]]");
-                System.err.println("哈哈哈");
-                System.err.println("  name    The name you wish to be greeted by. Defaults to ");
-                System.err.println("  target  The server to connect to. Defaults to " + target);
-                System.exit(1);
-            }
-        }
-        if (args.length > 1) {
-            target = args[1];
-        }
 
         // Create a communication channel to the server, known as a Channel. Channels are thread-safe
         // and reusable. It is common to create channels at the beginning of your application and reuse
@@ -97,7 +84,7 @@ public class KdbGrpcClient {
         //
         // For the example we use plaintext insecure credentials to avoid needing TLS certificates. To
         // use TLS, use TlsChannelCredentials instead.
-        ManagedChannel channel = Grpc.newChannelBuilder(target, InsecureChannelCredentials.create())
+        ManagedChannel channel = Grpc.newChannelBuilder(kdbServerAddr, InsecureChannelCredentials.create())
                 .build();
         try {
             KdbGrpcClient client = new KdbGrpcClient(channel);

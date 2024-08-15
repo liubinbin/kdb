@@ -17,6 +17,10 @@ public class TableManage {
         tableMap.put("test", new FakeTable("test"));
     }
 
+    public void createTable(){
+
+    }
+
     public void addTable(String tableName, AbstTable table) {
         tableMap.put(tableName, table);
     }

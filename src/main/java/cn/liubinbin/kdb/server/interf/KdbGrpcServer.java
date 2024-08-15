@@ -24,7 +24,10 @@ import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
 import io.grpc.Server;
 import io.grpc.stub.StreamObserver;
+import org.apache.calcite.sql.SqlCreate;
+import org.apache.calcite.sql.SqlInsert;
 import org.apache.calcite.sql.SqlNode;
+import org.apache.calcite.sql.ddl.SqlCreateTable;
 
 import java.io.IOException;
 import java.util.List;
@@ -92,10 +95,18 @@ public class KdbGrpcServer {
             String sql = req.getSql();
             System.out.println("sql : " + sql);
             SqlNode sqlNode = Parser.parse(sql);
+
+            
             System.out.println("lbb " + sqlNode.getKind());
             switch (sqlNode.getKind()) {
                 case CREATE_TABLE:
-                    System.out.println("this is table craete");
+                    System.out.println("this is table create");
+                    if (sqlNode instanceof SqlCreate) {
+                        SqlCreateTable create = (SqlCreateTable) sqlNode;
+                        System.out.println("Parsed INSERT statement: " + create);
+                    } else {
+                        throw new RuntimeException("Expected an INSERT statement but got: " + sqlNode.getKind());
+                    }
                     break;
                 case INSERT:
                     System.out.println("this is table insert");
