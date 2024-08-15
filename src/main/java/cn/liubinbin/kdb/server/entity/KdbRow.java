@@ -3,12 +3,19 @@ package cn.liubinbin.kdb.server.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Row {
+/**
+ * Created by liubinbin on 2020/1/16.
+ */
+public class KdbRow {
 
     List<String> values;
 
-    public Row() {
+    public KdbRow() {
         this.values = new ArrayList<>();
+    }
+
+    public KdbRow(List<String> values) {
+        this.values = values;
     }
 
     public void appendRowValue(String temp) {

@@ -1,21 +1,21 @@
 package cn.liubinbin.kdb.server.table;
 
-import cn.liubinbin.kdb.server.entity.Row;
+import cn.liubinbin.kdb.server.entity.KdbRow;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FakeTable extends AbstTable {
 
-    public FakeTable(String tableName) {
-        this.tableName = tableName;
+    public FakeTable(String tableName, List<Column> columns) {
+        super(tableName, columns);
     }
 
     @Override
-    public List<Row> limit(Integer limit) {
-        List<Row> list = new ArrayList<>();
+    public List<KdbRow> limit(Integer limit) {
+        List<KdbRow> list = new ArrayList<>();
         for (int i = 0; i < limit; i++) {
-            Row temp = new Row();
+            KdbRow temp = new KdbRow();
             temp.appendRowValue(" " + i);
             list.add(temp);
         }

@@ -8,6 +8,14 @@ public class Column {
     private int idx;
     private String columnName;
     private ColumnType columnType;
+    private Integer columnParameter;
+
+    Column(int idx, String columnName, ColumnType columnType, Integer columnParameter) {
+        this.idx = idx;
+        this.columnName = columnName;
+        this.columnType = columnType;
+        this.columnParameter = columnParameter;
+    }
 
     public int getIdx() {
         return idx;
@@ -31,5 +39,13 @@ public class Column {
 
     public void setColumnType(ColumnType columnType) {
         this.columnType = columnType;
+    }
+
+    public Integer getColumnParameter() {
+        return columnParameter;
+    }
+
+    public void setColumnParameter(Integer columnParameter) {
+        this.columnParameter = columnParameter;
     }
 }

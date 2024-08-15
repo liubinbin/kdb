@@ -24,7 +24,8 @@ public class Planer {
                 System.out.println("this is table describe");
                 if (sqlNode instanceof SqlDescribeTable) {
                     SqlDescribeTable describeTable = (SqlDescribeTable) sqlNode;
-                    System.out.println("Parsed describeTable statement: " + describeTable);
+                    plan = new DescribeTablePlan(PlanKind.DESCRIBE_TABLE, describeTable.getTable().getSimple());
+                    System.out.println("Parsed describeTable statement: " + describeTable.getTable().getSimple());
                 } else {
                     throw new RuntimeException("Expected an INSERT statement but got: " + sqlNode.getKind());
                 }

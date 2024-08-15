@@ -67,7 +67,8 @@ public class KdbGrpcClient {
      */
     public static void main(String[] args) throws Exception {
         String kdbServerAddr = "localhost:50501";
-        String sql = "describe database kdb";
+//        String sql = "describe database kdb";
+        String sql = "describe table test1";
 //        String sql = "create table a(id int, b int, c varchar(256))"; // id为主键
 //        String sql = "insert into a (id, name) VALUES (1, 'Alice')";
 //        String sql = "select * from a";
