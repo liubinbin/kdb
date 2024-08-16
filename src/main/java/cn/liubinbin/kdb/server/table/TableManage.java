@@ -13,10 +13,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TableManage {
 
-    ConcurrentHashMap<String, AbstTable> tableMap;
+    private ConcurrentHashMap<String, AbstTable> tableMap;
+    private TableType tableType;
+    private String tableMetaPath;
 
     public TableManage(KdbConfig kdbConfig) {
         tableMap = new ConcurrentHashMap<String, AbstTable>(16);
+        tableType = kdbConfig.getTableType();
+
     }
 
     public void init() {
@@ -33,6 +37,18 @@ public class TableManage {
     }
 
     public void createTable(String tableName, List<Column> columns) {
+        // 更新内存
+        if (tableMap.containsKey(tableName)) {
+            throw new RuntimeException("table already exists");
+        }
+        if (tableType == TableType.Btree) {
+            System.out.println("create btree table");
+            tableMap.put(tableName, new BtreeTable(tableName, columns));
+        } else {
+            System.out.println("create fake table");
+            tableMap.put(tableName, new FakeTable(tableName, columns));
+        }
+        // 保存文件
 
     }
 

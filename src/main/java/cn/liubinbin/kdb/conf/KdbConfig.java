@@ -1,5 +1,6 @@
 package cn.liubinbin.kdb.conf;
 
+import cn.liubinbin.kdb.server.table.TableType;
 import cn.liubinbin.kdb.utils.Contants;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -30,5 +31,13 @@ public class KdbConfig {
 
     public String getTableMetaPath() {
         return configuration.getString(Contants.KDB_SERVER_FILE_ROOT_PATH, Contants.KDB_SERVER_FILE_ROOT_PATH);
+    }
+
+    public TableType getTableType() {
+        String kdbTableType = configuration.getString(Contants.KDB_SERVER_TABLE_TYPE, Contants.DEFAULT_KDB_SERVER_TABLE_TYPE);
+        if (kdbTableType == null) {
+            return TableType.Btree;
+        }
+        return TableType.getTableType(kdbTableType);
     }
 }

@@ -14,6 +14,12 @@ public class Contants {
 
     public static final String KDB_SERVER_FILE_ROOT_PATH = "kdb.server.file.root.path";
 
+    public static final String KDB_SERVER_TABLE_TYPE = "kdb.server.table.engine.type";
+
+    public static final String DEFAULT_KDB_SERVER_TABLE_TYPE = "fake";
+
+
+
     public static final String STATUS = "status";
     public static final String SUCCESS = "success";
 
