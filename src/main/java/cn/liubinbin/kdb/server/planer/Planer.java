@@ -49,6 +49,10 @@ public class Planer {
                 }
                 break;
             case INSERT:
+                if (sqlNode instanceof SqlInsert) {
+                    SqlInsert insert = (SqlInsert) sqlNode;
+//                    plan = new InsertTablePlan(insert.getTargetTable(), insert.getSource());
+                }
                 System.out.println("this is table insert");
                 break;
             case SELECT:

@@ -21,6 +21,7 @@ import cn.liubinbin.kdb.grpc.KdbSqlRequest;
 import cn.liubinbin.kdb.grpc.KdbSqlResponse;
 import cn.liubinbin.kdb.utils.Contants;
 import cn.liubinbin.kdb.utils.StringUtils;
+import com.google.protobuf.ProtocolStringList;
 import io.grpc.*;
 
 import java.util.Scanner;
@@ -34,6 +35,7 @@ import java.util.logging.Logger;
  * @info A simple client that requests a sql from the {@link cn.liubinbin.kdb.server.interf.KdbGrpcServer}.
  */
 public class KdbGrpcClient {
+
     private static final Logger logger = Logger.getLogger(KdbGrpcClient.class.getName());
 
     private final KdbServiceGrpc.KdbServiceBlockingStub blockingStub;
@@ -62,26 +64,15 @@ public class KdbGrpcClient {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return null;
         }
-//        logger.info("response header: " + response.getHeader());
-//        logger.info("response data: " + response.getRowList());
         return response;
     }
 
-    private static void printRow(Object[] row, boolean isHeader) {
-        // 计算每列的最大宽度
-        int idWidth = 3; // ID 列固定宽度
-        int nameWidth = 10; // 名字列宽度
-        int ageWidth = 4; // 年龄列宽度
-
+    private static void printRow(ProtocolStringList row) {
         // 格式化输出
-        String format = "%-" + idWidth + "d | %-" + nameWidth + "s | %-" + ageWidth + "d";
-        System.out.format(format, row[0], row[1], row[2]);
-
-        // 如果是 header，则高亮显示
-        if (isHeader) {
-            System.out.println(" (Header)");
-        } else {
-            System.out.println();
+        for (String s : row) {
+            StringBuilder rowStr = new StringBuilder();
+            rowStr.append(Contants.ROW_PRINT_SEPARATOR).append(StringUtils.leftPadding(s, 10)).append(Contants.ROW_PRINT_SEPARATOR);
+            System.out.println(rowStr);
         }
     }
 
@@ -93,12 +84,17 @@ public class KdbGrpcClient {
             separator.append(StringUtils.repeat("-", 10)); // 假设每列宽度都是10
         }
         separator.append("+");
-        System.out.println(separator.toString());
+        System.out.println(separator);
     }
 
     private static void printResponse(KdbSqlResponse response) {
-        System.out.println("response header: " + response.getHeader());
-        System.out.println("response data: " + response.getRowList());
+        printSeparator(response.getHeader().getHeaderCount());
+        printRow(response.getHeader().getHeaderList());
+        printSeparator(response.getHeader().getHeaderCount());
+        for (cn.liubinbin.kdb.grpc.Row row : response.getRowList()) {
+            printRow(row.getValueList());
+        }
+        printSeparator(response.getHeader().getHeaderCount());
     }
 
     /**
@@ -107,7 +103,7 @@ public class KdbGrpcClient {
     public static void main(String[] args) throws Exception {
         String kdbServerAddr = "localhost:50501";
 //        String sql = "describe database kdb";
-        String sql = "describe table test1";
+//        String sql = "describe table test1";
 //        String sql = "create table test3(id int, b int, c varchar(256))"; // id为主键
 //        String sql = "insert into a (id, name) VALUES (1, 'Alice')";
 //        String sql = "select * from a";
@@ -132,7 +128,7 @@ public class KdbGrpcClient {
                     break;
                 } else {
                     System.out.println("You entered: " + input);
-                    KdbSqlResponse kdbSqlResponse = client.sendSql(sql);
+                    KdbSqlResponse kdbSqlResponse = client.sendSql(input);
                     printResponse(kdbSqlResponse);
                 }
             }

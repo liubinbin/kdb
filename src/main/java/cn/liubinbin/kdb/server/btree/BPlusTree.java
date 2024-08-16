@@ -8,9 +8,10 @@ import cn.liubinbin.kdb.server.executor.Engine;
 public class BPlusTree extends Engine {
 
     private Node root;
+    private Integer order;
 
     BPlusTree(Integer order) {
-        root = new Node();
+//        root = new Node();
     }
 
     public Node getRoot() {
