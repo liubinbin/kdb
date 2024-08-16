@@ -30,7 +30,11 @@ public class KdbConfig {
     }
 
     public String getTableMetaPath() {
-        return configuration.getString(Contants.KDB_SERVER_FILE_ROOT_PATH, Contants.KDB_SERVER_FILE_ROOT_PATH);
+        return configuration.getString(Contants.KDB_SERVER_FILE_ROOT_PATH, Contants.DEFAULT_KDB_SERVER_FILE_ROOT_PATH);
+    }
+
+    public String getTableMetaFileName() {
+        return configuration.getString(Contants.KDB_SERVER_META_FILE, Contants.DEFAULT_KDB_SERVER_META_FILE);
     }
 
     public TableType getTableType() {
@@ -39,5 +43,13 @@ public class KdbConfig {
             return TableType.Btree;
         }
         return TableType.getTableType(kdbTableType);
+    }
+
+    public String getMetaFullPath() {
+        return getTableMetaPath() + Contants.FILE_SEPARATOR + getTableMetaFileName();
+    }
+
+    public String getBackupFileExtension() {
+        return configuration.getString(Contants.KDB_SERVER_BACKUP_FILE_EXTENSION, Contants.DEFAULT_KDB_SERVER_BACKUP_FILE_EXTENSION);
     }
 }

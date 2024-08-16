@@ -84,6 +84,7 @@ public class KdbGrpcServer {
      * Await termination on the main thread since the grpc library uses daemon threads.
      */
     public void blockUntilShutdown() throws InterruptedException {
+        tableManage.close();
         if (server != null) {
             server.awaitTermination();
         }

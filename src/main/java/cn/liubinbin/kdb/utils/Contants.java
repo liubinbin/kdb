@@ -14,11 +14,21 @@ public class Contants {
 
     public static final String KDB_SERVER_FILE_ROOT_PATH = "kdb.server.file.root.path";
 
+    public static final String DEFAULT_KDB_SERVER_FILE_ROOT_PATH = "/tmp";
+
+    public static final String KDB_SERVER_META_FILE = "kdb.server.meta.file";
+
+    public static final String DEFAULT_KDB_SERVER_META_FILE = "meta.kdb";
+
     public static final String KDB_SERVER_TABLE_TYPE = "kdb.server.table.engine.type";
 
     public static final String DEFAULT_KDB_SERVER_TABLE_TYPE = "fake";
 
+    public static final String KDB_SERVER_BACKUP_FILE_EXTENSION = "kdb.server.backup.file.extension";
 
+    public static final String DEFAULT_KDB_SERVER_BACKUP_FILE_EXTENSION = ".bk";
+
+    public static final String DEFAULT_KDB_DATABASE_NAME = "kdb";
 
     public static final String STATUS = "status";
     public static final String SUCCESS = "success";
