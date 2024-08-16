@@ -12,7 +12,7 @@ import java.util.List;
 public class FakeTable extends AbstTable {
 
     public FakeTable(String tableName, List<Column> columns) {
-        super(tableName, columns);
+        super(tableName, columns, TableType.Fake);
     }
 
     @Override

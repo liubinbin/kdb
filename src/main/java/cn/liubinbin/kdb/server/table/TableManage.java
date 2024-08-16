@@ -41,16 +41,17 @@ public class TableManage {
     }
 
     public void init() {
-        // TODO read table meta and data
+        // read meta data
+        readFrom();
 
-        // init fake table
-        ArrayList<Column> columns = new ArrayList<Column>();
-        Column column1 = new Column(0, "id", ColumnType.INTEGER, null);
-        Column column2 = new Column(1, "name", ColumnType.VARCHAR, 100);
-        Collections.addAll(columns, column1, column2);
-
-        tableMap.put("test", new FakeTable("test", columns));
-        tableMap.put("test1", new FakeTable("test1", columns));
+//        // init fake table
+//        ArrayList<Column> columns = new ArrayList<Column>();
+//        Column column1 = new Column(0, "id", ColumnType.INTEGER, 0);
+//        Column column2 = new Column(1, "name", ColumnType.VARCHAR, 100);
+//        Collections.addAll(columns, column1, column2);
+//
+//        tableMap.put("test", new FakeTable("test", columns));
+//        tableMap.put("test1", new FakeTable("test1", columns));
     }
 
     public void createTable(String tableName, List<Column> columns) {
@@ -87,7 +88,7 @@ public class TableManage {
 
 
     public void readFrom() {
-        try (RandomAccessFile raf = new RandomAccessFile(new File(tableMetaFullBackupPath), "r")) {
+        try (RandomAccessFile raf = new RandomAccessFile(new File(tableMetaFullPath), "r")) {
             raf.seek(0);
 
             // 读取数据
@@ -97,10 +98,17 @@ public class TableManage {
             String dbName = new String(dbNameBytes);
             int tableLen = raf.readInt();
 
-            // 输出结果
+            // print db info
             System.out.println("dbNameLength: " + dbNameLen);
             System.out.println("dbName: " + dbName);
             System.out.println("tableLen " + tableLen);
+
+            for (int i = 0; i < tableLen; i++) {
+                AbstTable abstTable = AbstTable.readFrom(raf);
+                this.tableMap.put(abstTable.getTableName(), abstTable);
+                System.out.println(abstTable);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -113,10 +121,25 @@ public class TableManage {
             raf.write(Contants.DEFAULT_KDB_DATABASE_NAME.getBytes());
             raf.writeInt(this.tableMap.size());
 
+            for (AbstTable table : tableMap.values()) {
+                table.writeTo(raf);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        reNameBackupTableMeta();
+    }
 
+    private void reNameBackupTableMeta(){
+        File file = new File(tableMetaFullPath);
+        File backFile = new File(tableMetaFullBackupPath);
+        if (file.exists()) {
+            file.delete();
+        }
+        boolean renameIfSucc = backFile.renameTo(file);
+        if (!renameIfSucc) {
+            throw new RuntimeException("rename table meta file failed");
+        }
     }
 
     public static void main(String[] args) throws ConfigurationException, IOException {

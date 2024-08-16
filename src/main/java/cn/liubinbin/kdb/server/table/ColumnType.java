@@ -28,6 +28,10 @@ public enum ColumnType {
         this.ColumnTypeStr = ColumnTypeStr;
     }
 
+    public int getColumnTypeInt() {
+        return columnTypeInt;
+    }
+
     public static ColumnType getColumnType(int value) {
         switch (value) {
             case 0:

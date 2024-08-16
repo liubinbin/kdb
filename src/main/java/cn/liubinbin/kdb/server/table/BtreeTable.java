@@ -13,7 +13,7 @@ import java.util.List;
 public class BtreeTable extends AbstTable {
 
     public BtreeTable(String tableName, List<Column> columns) {
-        super(tableName, columns);
+        super(tableName, columns, TableType.Btree);
     }
 
     @Override
