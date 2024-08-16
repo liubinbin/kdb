@@ -25,4 +25,8 @@ public class KdbRow {
     public List<String> getValues() {
         return values;
     }
+
+    public int compareTo(KdbRow o) {
+        return this.values.get(0).compareTo(o.values.get(0));
+    }
 }
