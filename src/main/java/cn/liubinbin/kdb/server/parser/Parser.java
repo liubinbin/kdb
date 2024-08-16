@@ -44,15 +44,19 @@ public class Parser {
 //        sqls.add("describe table a");
 
         for (String sql : sqls) {
-            System.out.println("-----");
             SqlNode sqlNode = parse(sql);
             SqlCreateTable create = (SqlCreateTable) sqlNode;
-            SqlColumnDeclaration columnDeclaration = (SqlColumnDeclaration) create.columnList.get(1);
-            System.out.println(columnDeclaration.dataType.getTypeNameSpec());
-            SqlDataTypeSpec sqlDataTypeSpec = columnDeclaration.dataType;
-            SqlBasicTypeNameSpec sqlBasicTypeNameSpec = (SqlBasicTypeNameSpec)sqlDataTypeSpec.getTypeNameSpec();
-            System.out.println(sqlBasicTypeNameSpec.getPrecision());
-            System.out.println(sqlBasicTypeNameSpec.getTypeName());
+            for (SqlNode node : create.columnList) {
+                System.out.println( " --- one colume ---");
+                SqlColumnDeclaration columnDeclaration = (SqlColumnDeclaration) node;
+                System.out.println(columnDeclaration.dataType.getTypeNameSpec());
+                SqlDataTypeSpec sqlDataTypeSpec = columnDeclaration.dataType;
+                SqlBasicTypeNameSpec sqlBasicTypeNameSpec = (SqlBasicTypeNameSpec)sqlDataTypeSpec.getTypeNameSpec();
+
+                System.out.println(sqlBasicTypeNameSpec.getPrecision());
+                System.out.println(sqlBasicTypeNameSpec.getTypeName());
+            }
+
         }
     }
 }

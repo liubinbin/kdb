@@ -1,31 +1,54 @@
 package cn.liubinbin.kdb.server.table;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author liubinbin
  * @info Created by liubinbin on 16/10/30.
  */
 public enum ColumnType {
 
-    INT(0),
-    VARCHAR(1);
+    INTEGER(0, "INTEGER"),
+    VARCHAR(1, "VARCHAR");
 
-    private final int columnType;
+    private final int columnTypeInt;
+    private final String ColumnTypeStr;
 
-    ColumnType(int columnType) {
-        this.columnType = columnType;
+    ColumnType(int columnTypeInt) {
+        ColumnType columnType = getColumnType(columnTypeInt);
+        if (columnType == null) {
+            throw new IllegalArgumentException("Illegal ColumnType value: " + columnTypeInt);
+        }
+        this.columnTypeInt = columnTypeInt;
+        this.ColumnTypeStr = columnType.ColumnTypeStr;
     }
 
-    public int getColumnType() {
-        return columnType;
+    ColumnType(int columnTypeInt, String ColumnTypeStr) {
+        this.columnTypeInt = columnTypeInt;
+        this.ColumnTypeStr = ColumnTypeStr;
     }
 
     public static ColumnType getColumnType(int value) {
         switch (value) {
             case 0:
-                return INT;
+                return INTEGER;
             case 1:
                 return VARCHAR;
         }
         return null;
     }
+
+    public static ColumnType getColumnType(String value) {
+        if (StringUtils.isEmpty(value)) {
+            return null;
+        }
+        if (value.equalsIgnoreCase(INTEGER.ColumnTypeStr)) {
+            return INTEGER;
+        }
+        if (value.equalsIgnoreCase(VARCHAR.ColumnTypeStr)) {
+            return VARCHAR;
+        }
+        return null;
+    }
+
 }

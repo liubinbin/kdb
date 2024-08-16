@@ -29,6 +29,6 @@ public class KdbConfig {
     }
 
     public String getTableMetaPath() {
-        return configuration.getString(Contants.dadf, Contants.dadf);
+        return configuration.getString(Contants.KDB_SERVER_FILE_ROOT_PATH, Contants.KDB_SERVER_FILE_ROOT_PATH);
     }
 }

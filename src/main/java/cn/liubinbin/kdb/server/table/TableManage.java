@@ -24,7 +24,7 @@ public class TableManage {
 
         // init fake table
         ArrayList<Column> columns = new ArrayList<Column>();
-        Column column1 = new Column(0, "id", ColumnType.INT, null);
+        Column column1 = new Column(0, "id", ColumnType.INTEGER, null);
         Column column2 = new Column(1, "name", ColumnType.VARCHAR, 100);
         Collections.addAll(columns, column1, column2);
 
@@ -32,7 +32,7 @@ public class TableManage {
         tableMap.put("test1", new FakeTable("test1", columns));
     }
 
-    public void createTable() {
+    public void createTable(String tableName, List<Column> columns) {
 
     }
 

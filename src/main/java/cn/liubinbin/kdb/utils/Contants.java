@@ -12,8 +12,10 @@ public class Contants {
 
     public static final String KDB_METRICS_PRINT = "kdb.metrics.print";
 
-    public static final String dadf = "kdb.server.file.root.path";
+    public static final String KDB_SERVER_FILE_ROOT_PATH = "kdb.server.file.root.path";
 
+    public static final String STATUS = "status";
+    public static final String SUCCESS = "success";
 
     // --------------------------------------------------------------
 

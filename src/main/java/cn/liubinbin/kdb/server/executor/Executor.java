@@ -4,11 +4,13 @@ import cn.liubinbin.kdb.grpc.Header;
 import cn.liubinbin.kdb.grpc.KdbSqlResponse;
 import cn.liubinbin.kdb.grpc.Row;
 import cn.liubinbin.kdb.server.entity.KdbRow;
+import cn.liubinbin.kdb.server.planer.CreateTablePlan;
 import cn.liubinbin.kdb.server.planer.DescribeTablePlan;
 import cn.liubinbin.kdb.server.planer.Plan;
 import cn.liubinbin.kdb.server.table.Column;
 import cn.liubinbin.kdb.server.table.ColumnType;
 import cn.liubinbin.kdb.server.table.TableManage;
+import cn.liubinbin.kdb.utils.Contants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +43,7 @@ public class Executor {
                 List<Column> columns = tableManage.describeTable(describeTablePlan.getTableName());
                 List<Row> rows = new ArrayList<>();
                 for (Column curColumn : columns) {
-                    if (curColumn.getColumnType() == ColumnType.INT) {
+                    if (curColumn.getColumnType() == ColumnType.INTEGER) {
                         rows.add(cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(curColumn.getColumnName()).
                                 addValue(curColumn.getColumnType().name()).addValue("0").build());
                     } else {
@@ -51,11 +53,20 @@ public class Executor {
                 }
                 reply = KdbSqlResponse.newBuilder().setHeader(header).addAllRow(rows).build();
                 break;
+            case CREATE_TABLE:
+                System.out.println("hahahaha");
+                CreateTablePlan createTablePlan = (CreateTablePlan) plan;
+                System.out.println(createTablePlan);
+                tableManage.createTable(createTablePlan.getTableName(), createTablePlan.getColumns());
+                header = Header.newBuilder().addHeader(Contants.STATUS).build();
+                cn.liubinbin.kdb.grpc.Row createTableRow = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(Contants.SUCCESS).build();
+                reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(createTableRow).build();
+                break;
             case SELECT_TABLE:
                 List<KdbRow> kdbRows = tableManage.getTable("test").limit(1);
                 header = Header.newBuilder().addHeader("bin header").build();
-                cn.liubinbin.kdb.grpc.Row row = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(kdbRows.get(0).getValues().get(0)).build();
-                reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(row).build();
+                cn.liubinbin.kdb.grpc.Row dataRow = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(kdbRows.get(0).getValues().get(0)).build();
+                reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(dataRow).build();
                 break;
         }
         return reply;

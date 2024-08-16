@@ -11,7 +11,7 @@ public class Column {
     private ColumnType columnType;
     private Integer columnParameter;
 
-    Column(int idx, String columnName, ColumnType columnType, Integer columnParameter) {
+    public Column(int idx, String columnName, ColumnType columnType, Integer columnParameter) {
         this.idx = idx;
         this.columnName = columnName;
         this.columnType = columnType;
@@ -48,5 +48,15 @@ public class Column {
 
     public void setColumnParameter(Integer columnParameter) {
         this.columnParameter = columnParameter;
+    }
+
+    @Override
+    public String toString() {
+        return "Column{" +
+                "idx=" + idx +
+                ", columnName='" + columnName + '\'' +
+                ", columnType=" + columnType +
+                ", columnParameter=" + columnParameter +
+                '}';
     }
 }

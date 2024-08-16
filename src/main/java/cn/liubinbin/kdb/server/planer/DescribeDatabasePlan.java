@@ -8,8 +8,8 @@ public class DescribeDatabasePlan extends Plan{
 
     private String dbName;
 
-    public DescribeDatabasePlan(PlanKind planKind, String dbName) {
-        super(planKind);
+    public DescribeDatabasePlan(String dbName) {
+        super(PlanKind.DESCRIBE_DATABASE);
         this.dbName = dbName;
     }
 

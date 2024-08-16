@@ -8,8 +8,8 @@ public class DescribeTablePlan extends Plan{
 
     private String tableName;
 
-    public DescribeTablePlan(PlanKind planKind, String tableName) {
-        super(planKind);
+    public DescribeTablePlan(String tableName) {
+        super(PlanKind.DESCRIBE_TABLE);
         this.tableName = tableName;
     }
 
