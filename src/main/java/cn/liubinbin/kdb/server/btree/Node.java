@@ -48,12 +48,13 @@ public class Node {
         while (i < curRowCount && data[i].compareTo(row) < 0) {
             i++;
         }
-        if (i < curRowCount && data[i].compareTo(row) == 0) {
+        if (i < curRowCount) {
             for (int j = i; j < curRowCount - 1; j++) {
-                data[j] = data[j + 1];
+                data[j] = null;
             }
-            curRowCount--;
         }
+        curRowCount = i;
+        updateMinAndMax();
     }
 
     public void removeSmallThan(KdbRow row) {
@@ -61,17 +62,32 @@ public class Node {
         while (i < curRowCount && data[i].compareTo(row) < 0) {
             i++;
         }
-        if (i < curRowCount && data[i].compareTo(row) == 0) {
-            for (int j = i; j < curRowCount - 1; j++) {
-                data[j] = data[j + 1];
+        int newNodeIdx = 0;
+        if (i < curRowCount) {
+            for (int j = i; j < curRowCount; j++) {
+                data[newNodeIdx++] = data[j];
             }
-            curRowCount--;
         }
+        curRowCount = newNodeIdx;
+        updateMinAndMax();
+    }
+
+    public Integer getCurrentRowCount() {
+        return curRowCount;
     }
 
     public void updateMinAndMax() {
         maxKey = data[curRowCount - 1].getRowKey();
         minKey = data[0].getRowKey();
+    }
+
+    public boolean isDuplicate(KdbRow row) {
+        for (int i = 0; i < curRowCount; i++) {
+            if (data[i].compareTo(row) == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void add(KdbRow row) {
@@ -84,14 +100,20 @@ public class Node {
         if (curRowCount >= maxCount) {
             return;
         }
+        for (int i = 0; i <= curRowCount - 1; i++) {
+            System.out.println("data[" + i + "]:" + data[i].getRowKey() + " vs " + row.getRowKey());
+            if (data[i].compareTo(row) == 0) {
+                throw new RuntimeException("insert duplicate row");
+            }
+        }
         int i = curRowCount - 1;
         while (i >= 0 && data[i].compareTo(row) > 0) {
+            if (data[i].compareTo(row) == 0) {
+                throw new RuntimeException("insert duplicate row");
+            }
             data[i + 1] = data[i];
             i--;
         }
-//        if (i  ==  curRowCount - 1) {
-//            throw new RuntimeException("insert duplicate key");
-//        }
         data[i + 1] = row;
         curRowCount++;
         updateMinAndMax();
@@ -114,6 +136,7 @@ public class Node {
     }
 
     public void print() {
+        System.out.println("----------------");
         System.out.println("nodeId:" + nodeId);
         System.out.println("isRoot:" + isRoot);
         System.out.println("isLeaf:" + isLeaf);
@@ -140,10 +163,14 @@ public class Node {
         node.add(rowThree);
         node.add(rowFour);
         node.add(rowFive);
-        node.add(rowSix);
+//        node.add(rowSix);
         node.print();
+
 //        node.removeBigThan(rowThree);
 //        node.print();
+
+        node.removeSmallThan(rowThree);
+        node.print();
 
     }
 }
