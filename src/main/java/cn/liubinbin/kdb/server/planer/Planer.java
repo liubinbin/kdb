@@ -1,5 +1,7 @@
 package cn.liubinbin.kdb.server.planer;
 
+import cn.liubinbin.kdb.server.entity.KdbRowValue;
+import cn.liubinbin.kdb.server.parser.ParserUtils;
 import cn.liubinbin.kdb.server.table.Column;
 import cn.liubinbin.kdb.server.table.ColumnType;
 import org.apache.calcite.sql.*;
@@ -51,9 +53,15 @@ public class Planer {
             case INSERT:
                 if (sqlNode instanceof SqlInsert) {
                     SqlInsert insert = (SqlInsert) sqlNode;
-//                    plan = new InsertTablePlan(insert.getTargetTable(), insert.getSource());
+                    String tableName = ParserUtils.getString(insert.getTargetTable());
+                    List<String> columnList = ParserUtils.getColumnList(insert.getTargetColumnList());
+                    SqlBasicCall c = (SqlBasicCall) insert.getSource();
+                    SqlBasicCall d = (SqlBasicCall) c.getOperandList().get(0);
+                    List<KdbRowValue> rowValueList = ParserUtils.getRowValueList(d);
+                    plan = new InsertTablePlan(tableName, columnList, rowValueList);
+                } else {
+                    throw new RuntimeException("Expected an INSERT_TABLE statement but got: " + sqlNode.getKind());
                 }
-                System.out.println("this is table insert");
                 break;
             case SELECT:
                 System.out.println("this is table select");

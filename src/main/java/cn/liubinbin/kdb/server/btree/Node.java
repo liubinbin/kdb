@@ -16,6 +16,7 @@ public class Node {
     private Node[] children;
     private Integer max;
     private Integer min;
+    private Integer pageID;
 
     Node(boolean isRoot, boolean isLeaf, Integer nodeId) {
         this.isRoot = isRoot;
@@ -67,6 +68,6 @@ public class Node {
     }
 
     public static void main(String[] args) {
-
+        Node node = new Node(true, true, 1);
     }
 }

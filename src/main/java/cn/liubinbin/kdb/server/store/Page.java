@@ -16,6 +16,11 @@ public class Page {
     private Node node;
     private int offset;
 
+    public static int getRowMaxSize() {
+        // 根据 PAGE_SIZE 计算
+        return 1;
+    }
+
     public void writeTo(Node node) {
 
     }

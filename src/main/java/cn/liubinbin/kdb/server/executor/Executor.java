@@ -6,6 +6,7 @@ import cn.liubinbin.kdb.grpc.Row;
 import cn.liubinbin.kdb.server.entity.KdbRow;
 import cn.liubinbin.kdb.server.planer.CreateTablePlan;
 import cn.liubinbin.kdb.server.planer.DescribeTablePlan;
+import cn.liubinbin.kdb.server.planer.InsertTablePlan;
 import cn.liubinbin.kdb.server.planer.Plan;
 import cn.liubinbin.kdb.server.table.Column;
 import cn.liubinbin.kdb.server.table.ColumnType;
@@ -54,13 +55,17 @@ public class Executor {
                 reply = KdbSqlResponse.newBuilder().setHeader(header).addAllRow(rows).build();
                 break;
             case CREATE_TABLE:
-                System.out.println("hahahaha");
                 CreateTablePlan createTablePlan = (CreateTablePlan) plan;
                 System.out.println(createTablePlan);
                 tableManage.createTable(createTablePlan.getTableName(), createTablePlan.getColumns());
                 header = Header.newBuilder().addHeader(Contants.STATUS).build();
                 cn.liubinbin.kdb.grpc.Row createTableRow = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(Contants.SUCCESS).build();
                 reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(createTableRow).build();
+                break;
+            case INSERT_TABLE:
+                System.out.println("this is insert table sql ");
+                InsertTablePlan insertTablePlan = (InsertTablePlan) plan;
+                System.out.println("insertTablePlan  "  +  insertTablePlan);
                 break;
             case SELECT_TABLE:
                 List<KdbRow> kdbRows = tableManage.getTable("test").limit(1);
