@@ -30,6 +30,10 @@ public class KdbRowValue {
         }
     }
 
+    public Integer getIntValue() {
+        return IntValue;
+    }
+
     public String getStringValue() {
         if (type == ColumnType.INTEGER) {
             return Integer.toString(IntValue);

@@ -8,14 +8,17 @@ import java.util.List;
  */
 public class KdbRow {
 
-    List<KdbRowValue> values;
+    private Integer rowKey;
+    private List<KdbRowValue> values;
 
     public KdbRow() {
         this.values = new ArrayList<>();
+        this.rowKey = Integer.MIN_VALUE;
     }
 
     public KdbRow(List<KdbRowValue> values) {
         this.values = values;
+        this.rowKey = values.get(0).getIntValue();
     }
 
     public void appendRowValue(KdbRowValue temp) {
@@ -26,7 +29,11 @@ public class KdbRow {
         return values;
     }
 
+    public Integer getRowKey() {
+        return rowKey;
+    }
+
     public int compareTo(KdbRow o) {
-        return this.values.get(0).compareTo(o.values.get(0));
+        return this.rowKey.compareTo(o.getRowKey());
     }
 }

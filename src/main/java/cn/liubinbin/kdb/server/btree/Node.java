@@ -1,6 +1,10 @@
 package cn.liubinbin.kdb.server.btree;
 
 import cn.liubinbin.kdb.server.entity.KdbRow;
+import cn.liubinbin.kdb.server.entity.KdbRowValue;
+import cn.liubinbin.kdb.server.table.ColumnType;
+
+import java.util.Collections;
 
 /**
  * @author liubinbin
@@ -11,34 +15,86 @@ public class Node {
     private boolean isRoot;
     private boolean isLeaf;
     private Integer nodeId;
-    private KdbRow[] data;
-    private Integer rowCount;
-    private Node[] children;
-    private Integer max;
-    private Integer min;
     private Integer pageID;
 
-    Node(boolean isRoot, boolean isLeaf, Integer nodeId) {
+    // 具体数据内容
+    private KdbRow[] data;
+    // 最多的记录树，需从 PageSize 计算
+    private Integer maxCount;
+    // 当前记录数
+    private Integer curRowCount;
+    // 子节点
+    private Node[] children;
+    // 字节点分割
+    private Integer[] childrenSep;
+    // key 的最大值
+    private Integer maxKey;
+    // key 的最小值
+    private Integer minKey;
+
+    public Node(boolean isRoot, boolean isLeaf, Integer nodeId) {
         this.isRoot = isRoot;
         this.isLeaf = isLeaf;
         this.nodeId = nodeId;
+        this.data = new KdbRow[5];
+        this.curRowCount = 0;
+        this.maxKey = Integer.MIN_VALUE;
+        this.minKey = Integer.MAX_VALUE;
+        this.maxCount = 5;
+    }
+
+    public void removeBigThan(KdbRow row) {
+        int i = 0;
+        while (i < curRowCount && data[i].compareTo(row) < 0) {
+            i++;
+        }
+        if (i < curRowCount && data[i].compareTo(row) == 0) {
+            for (int j = i; j < curRowCount - 1; j++) {
+                data[j] = data[j + 1];
+            }
+            curRowCount--;
+        }
+    }
+
+    public void removeSmallThan(KdbRow row) {
+        int i = 0;
+        while (i < curRowCount && data[i].compareTo(row) < 0) {
+            i++;
+        }
+        if (i < curRowCount && data[i].compareTo(row) == 0) {
+            for (int j = i; j < curRowCount - 1; j++) {
+                data[j] = data[j + 1];
+            }
+            curRowCount--;
+        }
+    }
+
+    public void updateMinAndMax() {
+        maxKey = data[curRowCount - 1].getRowKey();
+        minKey = data[0].getRowKey();
     }
 
     public void add(KdbRow row) {
-        if (rowCount == 0) {
+        if (curRowCount == 0) {
             data[0] = row;
-            rowCount++;
+            curRowCount++;
+            updateMinAndMax();
             return;
         }
-        if (rowCount == max) {
+        if (curRowCount >= maxCount) {
             return;
         }
-        int i = rowCount - 1;
+        int i = curRowCount - 1;
         while (i >= 0 && data[i].compareTo(row) > 0) {
             data[i + 1] = data[i];
             i--;
         }
+//        if (i  ==  curRowCount - 1) {
+//            throw new RuntimeException("insert duplicate key");
+//        }
         data[i + 1] = row;
+        curRowCount++;
+        updateMinAndMax();
     }
 
     public KdbRow[] getData() {
@@ -61,14 +117,33 @@ public class Node {
         System.out.println("nodeId:" + nodeId);
         System.out.println("isRoot:" + isRoot);
         System.out.println("isLeaf:" + isLeaf);
-        System.out.println("rowCount:" + rowCount);
-        System.out.println("max:" + max);
-        System.out.println("min:" + min);
-        System.out.println("data:");
+        System.out.println("curRowCount:" + curRowCount);
+        System.out.println("maxCount:" + maxCount);
+        for (int i = 0; i < curRowCount; i++) {
+            System.out.print("data[" + i + "]:" + data[i].getRowKey() + " ; ");
+        }
+        System.out.println();
+        System.out.println("maxKey:" + maxKey);
+        System.out.println("minKey:" + minKey);
     }
 
     public static void main(String[] args) {
+        KdbRow rowOne = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 1)));
+        KdbRow rowTwo = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 2)));
+        KdbRow rowThree = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 3)));
+        KdbRow rowFour = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 4)));
+        KdbRow rowFive = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 5)));
+        KdbRow rowSix = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 6)));
         Node node = new Node(true, true, 1);
+        node.add(rowOne);
+        node.add(rowTwo);
+        node.add(rowThree);
+        node.add(rowFour);
+        node.add(rowFive);
+        node.add(rowSix);
+        node.print();
+//        node.removeBigThan(rowThree);
+//        node.print();
 
     }
 }
