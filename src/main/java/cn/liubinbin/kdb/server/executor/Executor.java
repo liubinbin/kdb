@@ -70,7 +70,7 @@ public class Executor {
             case SELECT_TABLE:
                 List<KdbRow> kdbRows = tableManage.getTable("test").limit(1);
                 header = Header.newBuilder().addHeader("bin header").build();
-                cn.liubinbin.kdb.grpc.Row dataRow = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(kdbRows.get(0).getValues().get(0)).build();
+                cn.liubinbin.kdb.grpc.Row dataRow = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(kdbRows.get(0).getValues().get(0).getStringValue()).build();
                 reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(dataRow).build();
                 break;
         }

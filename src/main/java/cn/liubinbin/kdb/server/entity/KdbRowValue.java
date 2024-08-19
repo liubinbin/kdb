@@ -22,6 +22,21 @@ public class KdbRowValue {
         this.IntValue = IntValue;
     }
 
+    public int compareTo(KdbRowValue o) {
+        if (type == ColumnType.INTEGER) {
+            return IntValue.compareTo(o.IntValue);
+        } else {
+            return StringValue.compareTo(o.StringValue);
+        }
+    }
+
+    public String getStringValue() {
+        if (type == ColumnType.INTEGER) {
+            return Integer.toString(IntValue);
+        }
+        return StringValue;
+    }
+
     @Override
     public String toString() {
         return "KdbRowValue{" +

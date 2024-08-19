@@ -1,6 +1,7 @@
 package cn.liubinbin.kdb.server.table;
 
 import cn.liubinbin.kdb.server.entity.KdbRow;
+import cn.liubinbin.kdb.server.entity.KdbRowValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class FakeTable extends AbstTable {
         List<KdbRow> list = new ArrayList<>();
         for (int i = 0; i < limit; i++) {
             KdbRow temp = new KdbRow();
-            temp.appendRowValue(" " + i);
+            temp.appendRowValue(new KdbRowValue(ColumnType.VARCHAR, "hello world " + i));
             list.add(temp);
         }
         return list;

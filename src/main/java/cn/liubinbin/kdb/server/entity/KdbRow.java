@@ -8,21 +8,21 @@ import java.util.List;
  */
 public class KdbRow {
 
-    List<String> values;
+    List<KdbRowValue> values;
 
     public KdbRow() {
         this.values = new ArrayList<>();
     }
 
-    public KdbRow(List<String> values) {
+    public KdbRow(List<KdbRowValue> values) {
         this.values = values;
     }
 
-    public void appendRowValue(String temp) {
+    public void appendRowValue(KdbRowValue temp) {
         values.add(temp);
     }
 
-    public List<String> getValues() {
+    public List<KdbRowValue> getValues() {
         return values;
     }
 
