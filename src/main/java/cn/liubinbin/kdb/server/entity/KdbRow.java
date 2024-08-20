@@ -23,6 +23,7 @@ public class KdbRow {
 
     public void appendRowValue(KdbRowValue temp) {
         values.add(temp);
+        this.rowKey = values.get(0).getIntValue();
     }
 
     public List<KdbRowValue> getValues() {

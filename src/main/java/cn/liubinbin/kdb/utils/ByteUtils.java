@@ -15,7 +15,7 @@ public class ByteUtils {
 
     public static boolean getBitAsBool(Integer num, int idx) {
         int bit = num & (1 << idx);
-        return bit == 1;
+        return bit != 0;
     }
 
     public static boolean IsByteArrayEqual(byte[] buf1, byte[] buf2) {

@@ -10,6 +10,7 @@ import cn.liubinbin.kdb.utils.ByteUtils;
 import cn.liubinbin.kdb.utils.Contants;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,7 +51,7 @@ public class Page {
         return rowMaxSize / rowSize;
     }
 
-    public void writeTo(Node node) {
+    public void compressNodeToBytes(Node node) {
         int offset = 0;
         int overviewStatus = node.getStatus();
         // meta data
@@ -98,7 +99,7 @@ public class Page {
         }
     }
 
-    public Node readFrom() {
+    public Node exactFromBytes() {
         int offset = 0;
         // meta data
         // meta.nodeId
@@ -125,7 +126,7 @@ public class Page {
         }
         // row data
         offset = Contants.META_SHIFT;
-        KdbRow[] kdbRows = new KdbRow[];
+        KdbRow[] kdbRows = new KdbRow[5];
         for (int i = 0; i < rowCount; i++) {
             KdbRow temp = new KdbRow();
             for (Column column: tableColumnList) {
@@ -133,26 +134,49 @@ public class Page {
                     temp.appendRowValue(new KdbRowValue(column.getColumnType(), ByteArrayUtils.toInt(data, offset)));
                     offset += Contants.INTEGER_SHIFT;
                 } else if (column.getColumnType() == ColumnType.VARCHAR) {
-                    Integer length = ByteArrayUtils.toInt(data, offset);
+                    int length = ByteArrayUtils.toInt(data, offset);
                     offset += Contants.INTEGER_SHIFT;
                     byte[] bytes = ByteArrayUtils.getBytes(data, offset, length);
                     temp.appendRowValue(new KdbRowValue(column.getColumnType(), new String(bytes)));
                     offset += column.getColumnParameter();
                 }
             }
+            kdbRows[i] = temp;
         }
-        node.setData(kdbRows);
+        node.updateData(kdbRows, rowCount);
         return node;
     }
 
+    public static KdbRow newMockRow(int intData, String strData) {
+        List<KdbRowValue> values = new ArrayList<>();
+        values.add(new KdbRowValue(ColumnType.INTEGER, intData));
+        values.add(new KdbRowValue(ColumnType.VARCHAR, strData));
+        return new KdbRow(values);
+    }
+
     public static void main(String[] args) {
-        Node node = new Node(true, true, 1);
+        Node node = new Node(true, true, 0);
+
+        KdbRow rowOne = newMockRow(1, "Helloworld");
+        KdbRow rowTwo = newMockRow(2, "wallstreet");
+        KdbRow rowThree = newMockRow(3, "stockmarket");
+        KdbRow rowFour = newMockRow(4, "kdb");
+        KdbRow rowFive = newMockRow(5, "memory");
+        node.add(rowOne);
+        node.add(rowTwo);
+        node.add(rowThree);
+        node.add(rowFour);
+        node.add(rowFive);
+        node.print();
+
         List<Column> tableColumn = new ArrayList<>();
         tableColumn.add(new Column(0, "id", ColumnType.INTEGER, 0));
         tableColumn.add(new Column(1, "name", ColumnType.VARCHAR, 128));
-
-        System.out.println(node);
         Page page = new Page(node, "test", tableColumn);
-        // TODO
+        page.compressNodeToBytes(node);
+
+        System.out.println("after exact");
+        Node newNode = page.exactFromBytes();
+        newNode.print();
     }
 }

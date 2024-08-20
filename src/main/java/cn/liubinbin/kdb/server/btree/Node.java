@@ -125,7 +125,7 @@ public class Node {
             return;
         }
         for (int i = 0; i <= curRowCount - 1; i++) {
-            System.out.println("data[" + i + "]:" + data[i].getRowKey() + " vs " + row.getRowKey());
+//            System.out.println("data[" + i + "]:" + data[i].getRowKey() + " vs " + row.getRowKey());
             if (data[i].compareTo(row) == 0) {
                 throw new RuntimeException("insert duplicate row");
             }
@@ -205,9 +205,16 @@ public class Node {
         return childrenSep;
     }
 
-    public void setData(KdbRow[] data) {
+    public void updateData(KdbRow[] data, Integer curRowCount) {
         this.data = data;
+        this.curRowCount = curRowCount;
+        updateMinAndMax();
     }
+
+    public void setChildrenCount(int childrenCount) {
+        this.childrenCount = childrenCount;
+    }
+
 
     public static void main(String[] args) {
         KdbRow rowOne = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 1)));
