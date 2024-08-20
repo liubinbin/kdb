@@ -4,7 +4,6 @@ package cn.liubinbin.kdb.server.parser;
 import cn.liubinbin.kdb.server.entity.KdbRowValue;
 import cn.liubinbin.kdb.server.table.ColumnType;
 import org.apache.calcite.sql.*;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;

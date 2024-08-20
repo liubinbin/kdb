@@ -1,11 +1,9 @@
 package cn.liubinbin.kdb.server.parser;
 
-import cn.liubinbin.kdb.server.entity.KdbRowValue;
-import cn.liubinbin.kdb.server.table.ColumnType;
 import org.apache.calcite.config.Lex;
-import org.apache.calcite.sql.*;
-import org.apache.calcite.sql.ddl.SqlColumnDeclaration;
-import org.apache.calcite.sql.ddl.SqlCreateTable;
+import org.apache.calcite.sql.SqlBasicCall;
+import org.apache.calcite.sql.SqlInsert;
+import org.apache.calcite.sql.SqlNode;
 import org.apache.calcite.sql.parser.SqlParseException;
 import org.apache.calcite.sql.parser.SqlParser;
 import org.apache.calcite.sql.parser.ddl.SqlDdlParserImpl;
