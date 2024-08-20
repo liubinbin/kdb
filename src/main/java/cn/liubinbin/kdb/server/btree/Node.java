@@ -72,6 +72,20 @@ public class Node {
         updateMinAndMax();
     }
 
+    public void removeExact(KdbRow row) {
+        int i = 0;
+        while (i < curRowCount && data[i].compareTo(row) < 0) {
+            i++;
+        }
+        if (i < curRowCount) {
+            for (int j = i; j < curRowCount - 1; j++) {
+                data[j] = data[j + 1];
+            }
+        }
+        curRowCount --;
+        updateMinAndMax();
+    }
+
     public Integer getCurrentRowCount() {
         return curRowCount;
     }
@@ -169,7 +183,10 @@ public class Node {
 //        node.removeBigThan(rowThree);
 //        node.print();
 
-        node.removeSmallThan(rowThree);
+//        node.removeSmallThan(rowThree);
+//        node.print();
+
+        node.removeExact(rowThree);
         node.print();
 
     }
