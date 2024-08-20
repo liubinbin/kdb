@@ -3,6 +3,9 @@ package cn.liubinbin.kdb.server.btree;
 import cn.liubinbin.kdb.server.entity.KdbRow;
 import cn.liubinbin.kdb.server.entity.KdbRowValue;
 import cn.liubinbin.kdb.server.table.ColumnType;
+import cn.liubinbin.kdb.utils.ByteArrayUtils;
+import cn.liubinbin.kdb.utils.ByteUtils;
+import cn.liubinbin.kdb.utils.Contants;
 
 import java.util.Collections;
 
@@ -25,6 +28,8 @@ public class Node {
     private Integer curRowCount;
     // 子节点
     private Node[] children;
+    // 字节点个数
+    private int childrenCount;
     // 字节点分割
     private Integer[] childrenSep;
     // key 的最大值
@@ -167,6 +172,33 @@ public class Node {
         System.out.println();
         System.out.println("maxKey:" + maxKey);
         System.out.println("minKey:" + minKey);
+    }
+
+    public Integer getNodeId() {
+        return nodeId;
+    }
+
+    public Integer getStatus(){
+        Integer status = 0;
+        if (isRoot) {
+            status = ByteUtils.setBit(status, Contants.ROOT_BIT_SHIFT, 1);
+        }
+        if (isLeaf) {
+            status = ByteUtils.setBit(status, Contants.LEAF_BIT_SHIFT, 1);
+        }
+        return status;
+    }
+
+    public int getChildrenCount() {
+        return childrenCount;
+    }
+
+    public Node[] getChildren() {
+        return children;
+    }
+
+    public Integer[] getChildrenSep() {
+        return childrenSep;
     }
 
     public static void main(String[] args) {

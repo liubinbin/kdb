@@ -8,6 +8,16 @@ import java.util.Arrays;
  */
 public class ByteUtils {
 
+    public static Integer setBit(Integer num, int idx, int data) {
+        num = num | (1 << idx);
+        return num;
+    }
+
+    public static boolean getBitAsBool(Integer num, int idx) {
+        int bit = num & (1 << idx);
+        return bit == 1;
+    }
+
     public static boolean IsByteArrayEqual(byte[] buf1, byte[] buf2) {
         return Arrays.equals(buf1, buf2);
     }

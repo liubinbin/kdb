@@ -11,8 +11,9 @@ public class Store {
     private ConcurrentHashMap<Integer, Page> pageMap;
 
     public Store() {
-        pageMap = new ConcurrentHashMap<>();
+        pageMap = new ConcurrentHashMap<Integer, Page>();
         // table data 的文件
+
     }
 
     public Page getPage(Integer pageId) {
