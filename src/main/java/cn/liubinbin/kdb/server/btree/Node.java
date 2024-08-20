@@ -147,6 +147,10 @@ public class Node {
         return data;
     }
 
+    public Integer getCurRowCount() {
+        return curRowCount;
+    }
+
     public boolean isRoot() {
         return isRoot;
     }
@@ -199,6 +203,10 @@ public class Node {
 
     public Integer[] getChildrenSep() {
         return childrenSep;
+    }
+
+    public void setData(KdbRow[] data) {
+        this.data = data;
     }
 
     public static void main(String[] args) {

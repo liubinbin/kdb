@@ -1,6 +1,8 @@
 package cn.liubinbin.kdb.server.store;
 
 import cn.liubinbin.kdb.server.btree.Node;
+import cn.liubinbin.kdb.server.entity.KdbRow;
+import cn.liubinbin.kdb.server.entity.KdbRowValue;
 import cn.liubinbin.kdb.server.table.Column;
 import cn.liubinbin.kdb.server.table.ColumnType;
 import cn.liubinbin.kdb.utils.ByteArrayUtils;
@@ -56,6 +58,8 @@ public class Page {
         ByteArrayUtils.putInt(data, Contants.NODE_ID_SHIFT, node.getNodeId());
         // meta.status
         ByteArrayUtils.putInt(data, Contants.STATUS_SHIFT, overviewStatus);
+        // meta.rowCount
+        ByteArrayUtils.putInt(data, Contants.ROW_COUNT, node.getCurrentRowCount());
         // meta.childrenCount
         ByteArrayUtils.putInt(data, Contants.CHILDREN_COUNT_SHIFT, node.getChildrenCount());
         offset = Contants.CHILDREN_COUNT_SHIFT;
@@ -74,11 +78,28 @@ public class Page {
         }
         // row data
         offset = Contants.META_SHIFT;
-        node.getData();
-        // TODO
+        KdbRow[] kdbRows = node.getData();
+        for (int i = 0; i < node.getCurrentRowCount(); i++) {
+            KdbRow kdbRow = kdbRows[i];
+            // row.values
+            List<KdbRowValue> values = kdbRow.getValues();
+            for (int j = 0; j < values.size(); j++) {
+                KdbRowValue value = values.get(j);
+                if (value.getColumnType() == ColumnType.INTEGER) {
+                    ByteArrayUtils.putInt(data, offset, value.getIntValue());
+                    offset += Contants.INTEGER_SHIFT;
+                } else if (value.getColumnType() == ColumnType.VARCHAR) {
+                    ByteArrayUtils.putInt(data, offset, value.getStringValue().getBytes().length);
+                    offset += Contants.INTEGER_SHIFT;
+                    ByteArrayUtils.putBytes(data, offset, value.getStringValue().getBytes());
+                    offset += tableColumnList.get(j).getColumnParameter();
+                }
+            }
+        }
     }
 
     public Node readFrom() {
+        int offset = 0;
         // meta data
         // meta.nodeId
         Integer nodeId = ByteArrayUtils.toInt(data, Contants.NODE_ID_SHIFT);
@@ -87,8 +108,40 @@ public class Page {
         boolean isRoot = ByteUtils.getBitAsBool(overviewStatus, Contants.ROOT_BIT_SHIFT);
         boolean isLeaf = ByteUtils.getBitAsBool(overviewStatus, Contants.LEAF_BIT_SHIFT);
         Node node = new Node(isRoot, isLeaf, nodeId);
+        // meta.rowCount
+        Integer rowCount = ByteArrayUtils.toInt(data, Contants.ROW_COUNT);
+        // meta.children
+        Integer childrenCount = ByteArrayUtils.toInt(data, Contants.CHILDREN_COUNT_SHIFT);
+        offset = Contants.CHILDREN_COUNT_SHIFT;
+        for (int i = 0; i < childrenCount; i++){
+            System.out.println("NodeId " + ByteArrayUtils.toInt(data, offset));
+            offset += Contants.INTEGER_SHIFT;
+        }
+        // meta.children.sep
+        Integer childrenSepCount = ByteArrayUtils.toInt(data, offset);
+        for (int i = 0; i < childrenSepCount; i++){
+            System.out.println("childrenSep " + ByteArrayUtils.toInt(data, offset));
+            offset += Contants.INTEGER_SHIFT;
+        }
         // row data
-        // TODO
+        offset = Contants.META_SHIFT;
+        KdbRow[] kdbRows = new KdbRow[];
+        for (int i = 0; i < rowCount; i++) {
+            KdbRow temp = new KdbRow();
+            for (Column column: tableColumnList) {
+                if (column.getColumnType() == ColumnType.INTEGER) {
+                    temp.appendRowValue(new KdbRowValue(column.getColumnType(), ByteArrayUtils.toInt(data, offset)));
+                    offset += Contants.INTEGER_SHIFT;
+                } else if (column.getColumnType() == ColumnType.VARCHAR) {
+                    Integer length = ByteArrayUtils.toInt(data, offset);
+                    offset += Contants.INTEGER_SHIFT;
+                    byte[] bytes = ByteArrayUtils.getBytes(data, offset, length);
+                    temp.appendRowValue(new KdbRowValue(column.getColumnType(), new String(bytes)));
+                    offset += column.getColumnParameter();
+                }
+            }
+        }
+        node.setData(kdbRows);
         return node;
     }
 
@@ -99,7 +152,7 @@ public class Page {
         tableColumn.add(new Column(1, "name", ColumnType.VARCHAR, 128));
 
         System.out.println(node);
-        Page page = new Page(node, "test", null);
+        Page page = new Page(node, "test", tableColumn);
         // TODO
     }
 }

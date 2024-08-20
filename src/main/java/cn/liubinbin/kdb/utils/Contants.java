@@ -48,12 +48,14 @@ public class Contants {
 
     // nodeId
     // status  xxxxxxIsLeafIsRoot
+    // rowCount
     // ChildrenCount
     // Children.Nodeid
     // ChildrenSep
     public static int NODE_ID_SHIFT = 0;
     public static int STATUS_SHIFT = 4;
-    public static int CHILDREN_COUNT_SHIFT = 8;
+    public static int ROW_COUNT = 8;
+    public static int CHILDREN_COUNT_SHIFT = 12;
     // 1024
     public static int META_SHIFT = 1024;
 

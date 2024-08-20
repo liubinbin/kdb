@@ -10,20 +10,20 @@ public class KdbRowValue {
 
     private String StringValue;
     private Integer IntValue;
-    private ColumnType type;
+    private ColumnType columnType;
 
-    public KdbRowValue(ColumnType type, String StringValue) {
-        this.type = type;
+    public KdbRowValue(ColumnType columnType, String StringValue) {
+        this.columnType = columnType;
         this.StringValue = StringValue;
     }
 
-    public KdbRowValue(ColumnType type, Integer IntValue) {
-        this.type = type;
+    public KdbRowValue(ColumnType columnType, Integer IntValue) {
+        this.columnType = columnType;
         this.IntValue = IntValue;
     }
 
     public int compareTo(KdbRowValue o) {
-        if (type == ColumnType.INTEGER) {
+        if (columnType == ColumnType.INTEGER) {
             return IntValue.compareTo(o.IntValue);
         } else {
             return StringValue.compareTo(o.StringValue);
@@ -35,10 +35,14 @@ public class KdbRowValue {
     }
 
     public String getStringValue() {
-        if (type == ColumnType.INTEGER) {
+        if (columnType == ColumnType.INTEGER) {
             return Integer.toString(IntValue);
         }
         return StringValue;
+    }
+
+    public ColumnType getColumnType() {
+        return columnType;
     }
 
     @Override
@@ -46,7 +50,8 @@ public class KdbRowValue {
         return "KdbRowValue{" +
                 "StringValue='" + StringValue + '\'' +
                 ", IntValue=" + IntValue +
-                ", type=" + type +
+                ", type=" + columnType +
                 '}';
     }
+
 }
