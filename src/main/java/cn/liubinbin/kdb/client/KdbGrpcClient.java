@@ -69,11 +69,12 @@ public class KdbGrpcClient {
 
     private static void printRow(ProtocolStringList row) {
         // 格式化输出
+        StringBuilder rowStr = new StringBuilder();
+        rowStr.append(Contants.ROW_PRINT_SEPARATOR);
         for (String s : row) {
-            StringBuilder rowStr = new StringBuilder();
-            rowStr.append(Contants.ROW_PRINT_SEPARATOR).append(StringUtils.leftPadding(s, 10)).append(Contants.ROW_PRINT_SEPARATOR);
-            System.out.println(rowStr);
+            rowStr.append(StringUtils.leftPadding(s, 10)).append(Contants.ROW_PRINT_SEPARATOR);
         }
+        System.out.println(rowStr);
     }
 
     private static void printSeparator(int columnCount) {

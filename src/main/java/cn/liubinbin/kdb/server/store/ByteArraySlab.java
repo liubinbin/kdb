@@ -11,19 +11,26 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author liubinbin
  */
-public class ByteArraySlab extends Slab {
+public class ByteArraySlab {
 
     private byte[] data;
     private int nextFreeSlot;
     private byte status; // opening for put; being source of compact; being target of compact
     private long ttlInDays = 30;
+    private int slotsize;
+    private int slabSize;
+
+    private ByteArraySlab next;
     /*
         0 stands for haven't been added
      */
     private AtomicInteger dataTotalSize;
 
+
     public ByteArraySlab(int slotSize, int slabSize) {
-        super(slotSize, slabSize);
+        this.slotsize = slotSize;
+        this.slabSize = slabSize;
+        this.next = null;
         this.data = new byte[slabSize];
         this.dataTotalSize = new AtomicInteger(0);
         this.nextFreeSlot = 0;
@@ -281,5 +288,21 @@ public class ByteArraySlab extends Slab {
 
     public int getdataTotalSize() {
         return dataTotalSize.get();
+    }
+
+    public int getSlotsize() {
+        return slotsize;
+    }
+
+    public int getSlabSize() {
+        return slabSize;
+    }
+
+    public ByteArraySlab getNext() {
+        return next;
+    }
+
+    public void setNext(ByteArraySlab next) {
+        this.next = next;
     }
 }

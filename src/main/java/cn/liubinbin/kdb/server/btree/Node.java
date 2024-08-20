@@ -14,8 +14,8 @@ public class Node {
 
     private boolean isRoot;
     private boolean isLeaf;
+    // nodeId 和 pageId 合并为一个
     private Integer nodeId;
-    private Integer pageID;
 
     // 具体数据内容
     private KdbRow[] data;
@@ -34,6 +34,11 @@ public class Node {
 
     public Node(boolean isRoot, boolean isLeaf, Integer nodeId) {
         this.isRoot = isRoot;
+        if (this.isRoot) {
+            this.nodeId = 0;
+        } else {
+            this.nodeId = nodeId;
+        }
         this.isLeaf = isLeaf;
         this.nodeId = nodeId;
         this.data = new KdbRow[5];

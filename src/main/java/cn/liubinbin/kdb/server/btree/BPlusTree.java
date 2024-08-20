@@ -9,6 +9,7 @@ public class BPlusTree extends Engine {
 
     private Node root;
     private Integer order;
+    private Integer maxNodeId;
 
     BPlusTree(Integer order) {
 //        root = new Node();

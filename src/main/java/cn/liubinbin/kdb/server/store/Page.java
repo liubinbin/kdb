@@ -22,10 +22,11 @@ public class Page {
     }
 
     public void writeTo(Node node) {
-
+        //
     }
 
-    public void readFrom() {
-
+    public Node readFrom() {
+        Node node = new Node(false, false, null);
+        return node;
     }
 }

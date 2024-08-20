@@ -36,28 +36,6 @@ public class Contants {
     public static final String SUCCESS = "success";
     public static final String EXIT = "exit";
 
-    // --------------------------------------------------------------
-
-    public static final String KDB_RMI_PORT = "kdb.rmi.port";
-
-    // 132096 = 1024 * 129
-    public static final int DEFAULT_CACHE_SLAB_SIZE = 132096;
-
-    public static final int DEFAULT_CACHE_SLAB_MAX_COUNT = 128;
-
-    public static final boolean DEFAULT_PAN_METRICS_PRINT = false;
-
-    public static final String CACHE_TOTAL_SIZE = "pan.total.size";
-
-    public static final String SLOT_SIZE = "pan.slot.size";
-
-    public static final String HASH_MOD = "pan.hashmod";
-
-    public static final String DEFAULT_SLOT_SIZE = "128,512,132096";
-
-    public static final int DEFAULT_HASHMOD = 4;
-
-    public static final int DEFAULT_KDB_RMI_PORT = 1099;
 
     public static final String FILE_SEPARATOR = "/";
 

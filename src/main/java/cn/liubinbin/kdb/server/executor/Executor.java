@@ -35,24 +35,27 @@ public class Executor {
             case DESCRIBE_DATABASE:
                 header = Header.newBuilder().addHeader("tables").build();
                 List<String> tableNames = tableManage.ListTableName();
-                Row describeDatabaseRow = cn.liubinbin.kdb.grpc.Row.newBuilder().addAllValue(tableNames).build();
-                reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(describeDatabaseRow).build();
+                List<Row> rows = new ArrayList<>();
+                for (String tableName : tableNames){
+                    rows.add(cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(tableName).build());
+                }
+                reply = KdbSqlResponse.newBuilder().setHeader(header).addAllRow(rows).build();
                 break;
             case DESCRIBE_TABLE:
                 header = Header.newBuilder().addHeader("column").addHeader("type").addHeader("parameter").build();
                 DescribeTablePlan describeTablePlan = (DescribeTablePlan) plan;
                 List<Column> columns = tableManage.describeTable(describeTablePlan.getTableName());
-                List<Row> rows = new ArrayList<>();
+                List<Row> tableRows = new ArrayList<>();
                 for (Column curColumn : columns) {
                     if (curColumn.getColumnType() == ColumnType.INTEGER) {
-                        rows.add(cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(curColumn.getColumnName()).
+                        tableRows.add(cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(curColumn.getColumnName()).
                                 addValue(curColumn.getColumnType().name()).addValue("0").build());
                     } else {
-                        rows.add(cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(curColumn.getColumnName()).
+                        tableRows.add(cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(curColumn.getColumnName()).
                                 addValue(curColumn.getColumnType().name()).addValue(curColumn.getColumnParameter().toString()).build());
                     }
                 }
-                reply = KdbSqlResponse.newBuilder().setHeader(header).addAllRow(rows).build();
+                reply = KdbSqlResponse.newBuilder().setHeader(header).addAllRow(tableRows).build();
                 break;
             case CREATE_TABLE:
                 CreateTablePlan createTablePlan = (CreateTablePlan) plan;

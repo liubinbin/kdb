@@ -25,10 +25,6 @@ public class KdbConfig {
         return configuration.getInt(Contants.KDB_SERVER_PORT, Contants.DEFAULT_KDB_SERVER_PORT);
     }
 
-    public int getRmiPort() {
-        return configuration.getInt(Contants.KDB_METRICS_PRINT, Contants.DEFAULT_KDB_RMI_PORT);
-    }
-
     public String getTableMetaPath() {
         return configuration.getString(Contants.KDB_SERVER_FILE_ROOT_PATH, Contants.DEFAULT_KDB_SERVER_FILE_ROOT_PATH);
     }
