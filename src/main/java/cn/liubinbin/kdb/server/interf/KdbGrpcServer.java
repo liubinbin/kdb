@@ -24,6 +24,7 @@ import cn.liubinbin.kdb.server.executor.Executor;
 import cn.liubinbin.kdb.server.parser.Parser;
 import cn.liubinbin.kdb.server.planer.Plan;
 import cn.liubinbin.kdb.server.planer.Planer;
+import cn.liubinbin.kdb.server.store.StoreManage;
 import cn.liubinbin.kdb.server.table.TableManage;
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
@@ -45,10 +46,12 @@ public class KdbGrpcServer {
 
     private Server server;
     private final TableManage tableManage;
+    private final StoreManage storeManage;
     private final int kdbServerPort;
 
-    public KdbGrpcServer(KdbConfig kdbConfig, TableManage tableManage) {
+    public KdbGrpcServer(KdbConfig kdbConfig, TableManage tableManage, StoreManage storeManage) {
         this.tableManage = tableManage;
+        this.storeManage = storeManage;
         this.kdbServerPort = kdbConfig.getKdbServerPort();
     }
 
@@ -83,8 +86,9 @@ public class KdbGrpcServer {
     /**
      * Await termination on the main thread since the grpc library uses daemon threads.
      */
-    public void blockUntilShutdown() throws InterruptedException {
+    public void blockUntilShutdown() throws InterruptedException, IOException {
         tableManage.close();
+        storeManage.close();
         if (server != null) {
             server.awaitTermination();
         }

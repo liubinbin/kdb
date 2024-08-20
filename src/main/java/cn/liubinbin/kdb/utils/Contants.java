@@ -26,6 +26,10 @@ public class Contants {
 
     public static final String KDB_SERVER_BACKUP_FILE_EXTENSION = "kdb.server.backup.file.extension";
 
+    public static final String KDB_SERVER_DATA_FILE_EXTENSION = "kdb.server.data.file.extension";
+
+    public static final String DEFAULT_KDB_SERVER_DATA_FILE_EXTENSION = ".kdt";
+
     public static final String DEFAULT_KDB_SERVER_BACKUP_FILE_EXTENSION = ".bk";
 
     public static final String DEFAULT_KDB_DATABASE_NAME = "kdb";

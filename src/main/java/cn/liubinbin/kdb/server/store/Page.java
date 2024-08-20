@@ -9,6 +9,10 @@ import cn.liubinbin.kdb.utils.ByteArrayUtils;
 import cn.liubinbin.kdb.utils.ByteUtils;
 import cn.liubinbin.kdb.utils.Contants;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +52,10 @@ public class Page {
             }
         }
         return rowMaxSize / rowSize;
+    }
+
+    public int getPageSize() {
+        return PAGE_SIZE;
     }
 
     public void compressNodeToBytes(Node node) {
@@ -146,6 +154,16 @@ public class Page {
         return node;
     }
 
+    public void writeTo(RandomAccessFile file, int offset) throws IOException {
+        file.seek(offset);
+        file.write(this.data);
+    }
+
+    public void readFrom(RandomAccessFile file, int offset) throws IOException {
+        file.seek(offset);
+        file.read(this.data);
+    }
+
     public static KdbRow newMockRow(int intData, String strData) {
         List<KdbRowValue> values = new ArrayList<>();
         values.add(new KdbRowValue(ColumnType.INTEGER, intData));
@@ -153,7 +171,7 @@ public class Page {
         return new KdbRow(values);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Node node = new Node(true, true, 0);
 
         KdbRow rowOne = newMockRow(1, "Helloworld");
@@ -174,8 +192,16 @@ public class Page {
         Page page = new Page(node, "test", tableColumn);
         page.compressNodeToBytes(node);
 
+        try (RandomAccessFile raf = new RandomAccessFile(new File("/Users/liubinbin/Desktop/ok/test.file"), "rw")) {
+            page.writeTo(raf, 0);
+        }
+
         System.out.println("after exact");
-        Node newNode = page.exactFromBytes();
+        Page newPage = new Page(new Node(true, true, 0), "test", tableColumn);
+        try (RandomAccessFile raf = new RandomAccessFile(new File("/Users/liubinbin/Desktop/ok/test.file"), "rw")) {
+            newPage.readFrom(raf, 0);
+        }
+        Node newNode = newPage.exactFromBytes();
         newNode.print();
     }
 }

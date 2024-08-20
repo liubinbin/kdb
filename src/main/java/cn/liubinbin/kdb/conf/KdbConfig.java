@@ -25,7 +25,7 @@ public class KdbConfig {
         return configuration.getInt(Contants.KDB_SERVER_PORT, Contants.DEFAULT_KDB_SERVER_PORT);
     }
 
-    public String getTableMetaPath() {
+    public String getTableRootPath() {
         return configuration.getString(Contants.KDB_SERVER_FILE_ROOT_PATH, Contants.DEFAULT_KDB_SERVER_FILE_ROOT_PATH);
     }
 
@@ -42,10 +42,14 @@ public class KdbConfig {
     }
 
     public String getMetaFullPath() {
-        return getTableMetaPath() + Contants.FILE_SEPARATOR + getTableMetaFileName();
+        return getTableRootPath() + Contants.FILE_SEPARATOR + getTableMetaFileName();
     }
 
     public String getBackupFileExtension() {
         return configuration.getString(Contants.KDB_SERVER_BACKUP_FILE_EXTENSION, Contants.DEFAULT_KDB_SERVER_BACKUP_FILE_EXTENSION);
+    }
+
+    public String getDataFileExtension() {
+        return configuration.getString(Contants.KDB_SERVER_DATA_FILE_EXTENSION, Contants.DEFAULT_KDB_SERVER_DATA_FILE_EXTENSION);
     }
 }
