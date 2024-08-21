@@ -41,7 +41,6 @@ public class TableStore {
                 offset += page.getPageSize();
             }
         }
-        System.out.println("   offset  " + offset);
     }
 
     public Page getPage(Integer pageId) {

@@ -42,13 +42,11 @@ public class Contants {
 
     public static final String FILE_SEPARATOR = "/";
 
-    public static long MsInADay = 24 * 3600 * 1000;
-
     public static int ROOT_BIT_SHIFT = 0;
     public static int LEAF_BIT_SHIFT = 1;
-
-
     public static int INTEGER_SHIFT = 4;
+
+    public static int ROOT_NODE_ID = 0;
 
     // nodeId
     // status  xxxxxxIsLeafIsRoot

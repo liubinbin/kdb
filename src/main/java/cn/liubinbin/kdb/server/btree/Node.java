@@ -113,15 +113,20 @@ public class Node {
         return false;
     }
 
-    public void add(KdbRow row) {
+    /**
+     * 在节点插入记录，若返回 0，则插入成功，若返回 -1，则需要扩容
+     * @param row
+     * @return
+     */
+    public int add(KdbRow row) {
         if (curRowCount == 0) {
             data[0] = row;
             curRowCount++;
             updateMinAndMax();
-            return;
+            return 0;
         }
         if (curRowCount >= maxCount) {
-            return;
+            return -1;
         }
         for (int i = 0; i <= curRowCount - 1; i++) {
 //            System.out.println("data[" + i + "]:" + data[i].getRowKey() + " vs " + row.getRowKey());
@@ -140,6 +145,7 @@ public class Node {
         data[i + 1] = row;
         curRowCount++;
         updateMinAndMax();
+        return 0;
     }
 
     public KdbRow[] getData() {

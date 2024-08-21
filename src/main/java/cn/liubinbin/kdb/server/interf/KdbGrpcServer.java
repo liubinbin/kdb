@@ -87,11 +87,11 @@ public class KdbGrpcServer {
      * Await termination on the main thread since the grpc library uses daemon threads.
      */
     public void blockUntilShutdown() throws InterruptedException, IOException {
-        tableManage.close();
-        storeManage.close();
         if (server != null) {
             server.awaitTermination();
         }
+        tableManage.close();
+        storeManage.close();
     }
 
     class SqlRequestImpl extends KdbServiceGrpc.KdbServiceImplBase {
