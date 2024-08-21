@@ -92,7 +92,13 @@ public class Node {
         updateMinAndMax();
     }
 
-    public void removeExact(KdbRow row) {
+    /**
+     * 返回 0，则删除成功无需merge
+     * 返回 -1，则需 merge
+     * @param row
+     * @return
+     */
+    public int removeExact(KdbRow row) {
         int i = 0;
         while (i < curRowCount && data[i].compareTo(row) < 0) {
             i++;
@@ -104,6 +110,11 @@ public class Node {
         }
         curRowCount--;
         updateMinAndMax();
+        if (curRowCount < order / 2) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 
     public Integer getCurrentRowCount() {
@@ -126,7 +137,6 @@ public class Node {
 
     /**
      * 在节点插入记录，若返回 0，则插入成功，若返回 -1，则需要扩容
-     *
      * @param row
      * @return
      */
@@ -158,85 +168,6 @@ public class Node {
         updateMinAndMax();
         return 0;
     }
-
-    //
-//    public void splitInternalChildren(){
-//        // child 分为两个部分
-//        Integer splitRowKey = childrenSep[(childrenSepCount / 2) + 1];
-//        Integer[] leftNodeChildrenSep = new Integer[order];
-//        Integer leftNodeChildIdx = 0;
-//        Node[] leftNodeChildren = new Node[order + 1];
-//
-//        Integer curNodeChildSep = 0;
-//
-//        Integer[] rightNodeChildrenSep = new Integer[order];
-//        Integer rightNodeChildIdx = 0;
-//        Node[] rightNodeChildren = new Node[order + 1];
-//
-//        leftNodeChildrenSep[leftNodeChildIdx] = childrenSep[0];
-//        leftNodeChildren[leftNodeChildIdx] = children[0];
-//        leftNodeChildIdx++;
-//        for (int i = 1; i < childrenSepCount; i++) {
-//            if (i < childrenSepCount / 2) {
-//                leftNodeChildrenSep[leftNodeChildIdx] = childrenSep[i];
-//                leftNodeChildren[leftNodeChildIdx] = children[i];
-//                leftNodeChildIdx++;
-//            } if (i == childrenSepCount / 2) {
-//                curNodeChildSep = childrenSep[i];
-//            } else {
-//                rightNodeChildrenSep[rightNodeChildIdx] = childrenSep[i];
-//                rightNodeChildren[rightNodeChildIdx] = children[i];
-//                rightNodeChildIdx++;
-//            }
-//        }
-//
-//        Node leftChildren = new Node(false, false, null, order);
-//        Node rightChildren = new Node(false, false, null, order);
-//
-//        leftChildren.parent = this;
-//        rightChildren.parent = this;
-//
-//        // 更新父节点
-//        if (this.isRoot) {
-//
-//        } else {
-//            Node parent = this.getParent();
-//        }
-//    }
-
-//    public void splitLeafChildren(Node leftChildren, Node rightChildren, Integer childrenSepKey) {
-//        if (!rightChildren.getMinKey().equals(childrenSepKey)) {
-//            throw new RuntimeException("childrenSepKey is equal to minKey");
-//        }
-//
-//        // 暂不考虑分裂
-//        Integer oriChildSep = leftChildren.minKey;
-//        int idxToInsert = 0;
-//        if (childrenSepCount != 0) {
-//            for (int i = childrenSepCount - 1; i >= 0; i--) {
-//                if (childrenSep[i] > oriChildSep) {
-//                    childrenSep[i + 1] = childrenSep[i];
-//                    children[i + 2] = children[i + 1];
-//                } else {
-//                    idxToInsert = i + 1;
-//                    break;
-//                }
-//            }
-//        }
-//
-//        leftChildren.parent = this;
-//        rightChildren.parent = this;
-//
-//        children[idxToInsert] = leftChildren;
-//        children[idxToInsert + 1] = rightChildren;
-//        childrenSep[idxToInsert] = childrenSepKey;
-//
-//        childrenSepCount++;
-//
-//        if (childrenSepCount > order - 1) {
-//            splitInternalChildren();
-//        }
-//    }
 
     public void mergeChildren(Node leftChildren, Node rightChildren) {
         if (leftChildren.parent != rightChildren.parent) {

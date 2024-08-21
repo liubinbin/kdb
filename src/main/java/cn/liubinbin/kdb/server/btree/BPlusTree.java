@@ -40,6 +40,29 @@ public class BPlusTree extends Engine {
         return result;
     }
 
+    public void delete(KdbRow rowToDelete) {
+        // find Node2Insert
+        Node curNode = root;
+        Node tempNode = null;
+        while (!curNode.isLeaf()) {
+            tempNode = curNode.getChildren()[0];
+            for (int i = 0; i < curNode.getChildrenCount() - 1; i++) {
+                if (rowToDelete.getRowKey() > curNode.getChildrenSep()[i]) {
+                    tempNode = curNode.getChildren()[i+1];
+                } else {
+                    break;
+                }
+            }
+            curNode = tempNode;
+        }
+
+        // add and split by the result
+        int addRes = curNode.removeExact(rowToDelete);
+        if (addRes == 0) {
+            return;
+        }
+    }
+
     public void insert(KdbRow rowToInsert) {
         // find Node2Insert
         Node curNode = root;
@@ -91,7 +114,6 @@ public class BPlusTree extends Engine {
         if (curNode.getChildrenSepCount() <= order - 1) {
             return;
         }
-        System.out.println("--- should split ---");
         // child 分为两个部分
         Integer splitRowKey = curNode.getChildrenSep()[(curNode.getChildrenSepCount() / 2)];
         Integer[] leftNodeChildrenSep = new Integer[order];
@@ -133,10 +155,10 @@ public class BPlusTree extends Engine {
         rightChildren.setChildrenSep(rightNodeChildrenSep);
         rightChildren.setChildrenSepCount(rightNodeChildIdx);
 
-        System.out.println("print two child start");
-        leftChildren.printChildren();
-        rightChildren.printChildren();
-        System.out.println("print two child end");
+//        System.out.println("print two child start");
+//        leftChildren.printChildren();
+//        rightChildren.printChildren();
+//        System.out.println("print two child end");
 
         // 更新父节点
         if (curNode.isRoot()) {
@@ -164,8 +186,6 @@ public class BPlusTree extends Engine {
                 }
             }
         }
-
-        System.out.println("idxToInsert " + idxToInsert);
 
         leftChildren.setParent(curNode);
         rightChildren.setParent(curNode);
@@ -206,10 +226,6 @@ public class BPlusTree extends Engine {
         curNode.addChildrenSepCount();
 
         splitInternalChildren(curNode);
-    }
-
-    public void delete(KdbRow row) {
-
     }
 
     public void rangeScan(Integer lowerBound, Integer upperBound) {
