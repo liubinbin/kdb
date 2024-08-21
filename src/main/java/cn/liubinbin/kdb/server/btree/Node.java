@@ -7,6 +7,7 @@ import cn.liubinbin.kdb.utils.ByteUtils;
 import cn.liubinbin.kdb.utils.Contants;
 
 import java.util.Collections;
+import java.util.Iterator;
 
 /**
  * @author liubinbin
@@ -29,6 +30,7 @@ public class Node {
     private Node[] children;
     // 字节点个数
     private int childrenSepCount;
+
     // 字节点分割
     private Integer[] childrenSep;
     // key 的最大值
@@ -157,40 +159,84 @@ public class Node {
         return 0;
     }
 
-    public void splitChildren(Node leftChildren, Node rightChildren, Integer childrenSepKey) {
-        if (!rightChildren.getMinKey().equals(childrenSepKey)) {
-            throw new RuntimeException("childrenSepKey is equal to minKey");
-        }
+    //
+//    public void splitInternalChildren(){
+//        // child 分为两个部分
+//        Integer splitRowKey = childrenSep[(childrenSepCount / 2) + 1];
+//        Integer[] leftNodeChildrenSep = new Integer[order];
+//        Integer leftNodeChildIdx = 0;
+//        Node[] leftNodeChildren = new Node[order + 1];
+//
+//        Integer curNodeChildSep = 0;
+//
+//        Integer[] rightNodeChildrenSep = new Integer[order];
+//        Integer rightNodeChildIdx = 0;
+//        Node[] rightNodeChildren = new Node[order + 1];
+//
+//        leftNodeChildrenSep[leftNodeChildIdx] = childrenSep[0];
+//        leftNodeChildren[leftNodeChildIdx] = children[0];
+//        leftNodeChildIdx++;
+//        for (int i = 1; i < childrenSepCount; i++) {
+//            if (i < childrenSepCount / 2) {
+//                leftNodeChildrenSep[leftNodeChildIdx] = childrenSep[i];
+//                leftNodeChildren[leftNodeChildIdx] = children[i];
+//                leftNodeChildIdx++;
+//            } if (i == childrenSepCount / 2) {
+//                curNodeChildSep = childrenSep[i];
+//            } else {
+//                rightNodeChildrenSep[rightNodeChildIdx] = childrenSep[i];
+//                rightNodeChildren[rightNodeChildIdx] = children[i];
+//                rightNodeChildIdx++;
+//            }
+//        }
+//
+//        Node leftChildren = new Node(false, false, null, order);
+//        Node rightChildren = new Node(false, false, null, order);
+//
+//        leftChildren.parent = this;
+//        rightChildren.parent = this;
+//
+//        // 更新父节点
+//        if (this.isRoot) {
+//
+//        } else {
+//            Node parent = this.getParent();
+//        }
+//    }
 
-        // 暂不考虑分裂
-        Integer oriChildSep = leftChildren.minKey;
-        int idxToInsert = 0;
-        if (childrenSepCount != 0) {
-            for (int i = childrenSepCount - 1; i >= 0; i--) {
-                if (childrenSep[i] > oriChildSep) {
-                    childrenSep[i + 1] = childrenSep[i];
-                    children[i + 2] = children[i + 1];
-                } else {
-                    idxToInsert = i + 1;
-                    break;
-                }
-            }
-        }
-
-        leftChildren.parent = this;
-        rightChildren.parent = this;
-
-        children[idxToInsert] = leftChildren;
-        children[idxToInsert + 1] = rightChildren;
-        childrenSep[idxToInsert] = childrenSepKey;
-        System.out.println("idxToInsert " + idxToInsert + "  " + leftChildren.getMinKey() + " " + rightChildren.getMinKey());
-
-        childrenSepCount++;
-
-        if (childrenSepCount > order - 1) {
-            System.out.println("should split");
-        }
-    }
+//    public void splitLeafChildren(Node leftChildren, Node rightChildren, Integer childrenSepKey) {
+//        if (!rightChildren.getMinKey().equals(childrenSepKey)) {
+//            throw new RuntimeException("childrenSepKey is equal to minKey");
+//        }
+//
+//        // 暂不考虑分裂
+//        Integer oriChildSep = leftChildren.minKey;
+//        int idxToInsert = 0;
+//        if (childrenSepCount != 0) {
+//            for (int i = childrenSepCount - 1; i >= 0; i--) {
+//                if (childrenSep[i] > oriChildSep) {
+//                    childrenSep[i + 1] = childrenSep[i];
+//                    children[i + 2] = children[i + 1];
+//                } else {
+//                    idxToInsert = i + 1;
+//                    break;
+//                }
+//            }
+//        }
+//
+//        leftChildren.parent = this;
+//        rightChildren.parent = this;
+//
+//        children[idxToInsert] = leftChildren;
+//        children[idxToInsert + 1] = rightChildren;
+//        childrenSep[idxToInsert] = childrenSepKey;
+//
+//        childrenSepCount++;
+//
+//        if (childrenSepCount > order - 1) {
+//            splitInternalChildren();
+//        }
+//    }
 
     public void mergeChildren(Node leftChildren, Node rightChildren) {
         if (leftChildren.parent != rightChildren.parent) {
@@ -237,6 +283,33 @@ public class Node {
         return minKey;
     }
 
+    public void setParent(Node parent) {
+        this.parent = parent;
+    }
+
+    public void setChildrenSep(Integer[] childrenSep) {
+        this.childrenSep = childrenSep;
+    }
+
+    public void setChildrenSepCount(int childrenSepCount) {
+        this.childrenSepCount = childrenSepCount;
+    }
+
+    public void setChildren(Node[] children) {
+        this.children = children;
+    }
+
+    public void printChildren() {
+        for (int i = 0; i < childrenSepCount; i++) {
+            System.out.print("childrenSep data[" + i + "]:" + childrenSep[i] + "; ");
+        }
+        System.out.println();
+        for (int i = 0; i < childrenSepCount + 1; i++) {
+            System.out.print("childrenchildMinkey data[" + i + "]:" + children[i].getMinKey() + "; ");
+        }
+        System.out.println();
+    }
+
     public void printData() {
         for (int i = 0; i < curRowCount; i++) {
             System.out.print("leaf data[" + i + "]:" + data[i].getRowKey() + "; ");
@@ -258,15 +331,14 @@ public class Node {
             }
             System.out.println();
         } else {
-            System.out.println(prefix + "intermediate meta childrenCount: " + this.childrenSepCount);
+            System.out.println(prefix + "intermediate meta childrenSepCount: " + this.childrenSepCount);
             for (int i = 0; i < childrenSepCount; i++) {
                 System.out.print(prefix + "intermediate childRenSep[" + i + "]:" + childrenSep[i] + "; ");
             }
             System.out.println();
             for (int i = 0; i < childrenSepCount + 1; i++) {
-                children[i].treePrint(prefix + " " + i + " ");
+                children[i].treePrint(prefix + " " + children[i].getNodeId() + "." + i + " ");
             }
-            System.out.println();
         }
 
     }
@@ -307,6 +379,10 @@ public class Node {
 
     public int getChildrenSepCount() {
         return childrenSepCount;
+    }
+
+    public void addChildrenSepCount() {
+        childrenSepCount++;
     }
 
     public static void main(String[] args) {
