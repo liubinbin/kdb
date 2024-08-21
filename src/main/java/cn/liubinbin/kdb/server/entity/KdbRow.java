@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * @author liubinbin
  */
-public class KdbRow {
+public class KdbRow implements Comparable<KdbRow>{
 
     private Integer rowKey;
     private List<KdbRowValue> values;
@@ -34,6 +34,7 @@ public class KdbRow {
         return rowKey;
     }
 
+    @Override
     public int compareTo(KdbRow o) {
         return this.rowKey.compareTo(o.getRowKey());
     }

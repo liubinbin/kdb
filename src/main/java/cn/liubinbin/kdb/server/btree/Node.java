@@ -7,6 +7,7 @@ import cn.liubinbin.kdb.utils.ByteUtils;
 import cn.liubinbin.kdb.utils.Contants;
 
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * @author liubinbin
@@ -28,7 +29,7 @@ public class Node {
     // 子节点
     private Node[] children;
     // 字节点个数
-    private int childrenCount;
+    private int childrenSepCount;
     // 字节点分割
     private Integer[] childrenSep;
     // key 的最大值
@@ -57,7 +58,7 @@ public class Node {
         this.maxCount = order - 1;
         this.childrenSep = new Integer[order - 1];
         this.children = new Node[order];
-        this.childrenCount = 0;
+        this.childrenSepCount = 0;
     }
 
     public void removeBigThan(KdbRow row) {
@@ -157,10 +158,26 @@ public class Node {
     }
 
     public void splitChildren(Node leftChildren, Node rightChildren, Integer childrenSepKey) {
+        if (!rightChildren.getMinKey().equals(childrenSepKey)) {
+            throw new RuntimeException("childrenSepKey is equal to minKey");
+        }
         // TODO  如果 children 过多就需分裂
 
+
+        // 暂不考虑分裂
+        Integer oriChildSep = leftChildren.minKey;
         int idxToInsert = 0;
-        // TODO 分裂
+        if (childrenSepCount != 0) {
+            for (int i = childrenSepCount - 1; i >= 0; i--) {
+                if (childrenSep[i] > oriChildSep) {
+                    childrenSep[i + 1] = childrenSep[i];
+                    children[i + 2] = children[i + 1];
+                } else {
+                    idxToInsert = i + 1;
+                    break;
+                }
+            }
+        }
 
         leftChildren.parent = this;
         rightChildren.parent = this;
@@ -169,7 +186,7 @@ public class Node {
         children[idxToInsert + 1] = rightChildren;
         childrenSep[idxToInsert] = childrenSepKey;
 
-        childrenCount++;
+        childrenSepCount++;
     }
 
     public void mergeChildren(Node leftChildren, Node rightChildren) {
@@ -213,34 +230,35 @@ public class Node {
         return parent;
     }
 
+    public Integer getMinKey() {
+        return minKey;
+    }
+
     public void print() {
         print("");
     }
 
     public void print(String prefix) {
-        System.out.println("--------------------------");
-        System.out.println(prefix +"nodeId:" + nodeId);
-        System.out.println(prefix + "isRoot:" + isRoot);
-        System.out.println(prefix + "isLeaf:" + isLeaf);
-        System.out.println(prefix + "maxKey:" + maxKey);
-        System.out.println(prefix + "minKey:" + minKey);
+        System.out.println(prefix + "nodeId:" + nodeId + ", isRoot:" + isRoot + ", isLeaf:" + isLeaf + ", maxKey:" + maxKey + ", minKey:" + minKey);
         if (isLeaf) {
-            System.out.print(prefix);
-            for (int i = 0; i < childrenCount; i++) {
-                System.out.print("data[" + i + "]:" + childrenSep[i] + " ; ");
-            }
-            for (int i = 0; i < childrenCount; i++) {
-                children[i].print(prefix + "  ");
-            }
-        } else {
-            System.out.println(prefix + "curRowCount:" + curRowCount);
-            System.out.println(prefix + "maxCount:" + maxCount);
-            System.out.println(prefix);
+            // print Leaf
+            System.out.println(prefix + "leaf meta curRowCount:" + curRowCount + ", maxCount:" + maxCount);
             for (int i = 0; i < curRowCount; i++) {
-                System.out.print("data[" + i + "]:" + data[i].getRowKey() + " ; ");
+                System.out.print(prefix + "leaf data[" + i + "]:" + data[i].getRowKey() + "; ");
             }
+            System.out.println();
+        } else {
+            System.out.println(prefix + "intermediate meta childrenCount: " + this.childrenSepCount);
+            for (int i = 0; i < childrenSepCount; i++) {
+                System.out.print(prefix + "intermediate childRenSep[" + i + "]:" + childrenSep[i] + "; ");
+            }
+            System.out.println();
+            for (int i = 0; i < childrenSepCount + 1; i++) {
+                children[i].print(prefix + " " + i + " ");
+            }
+            System.out.println();
         }
-        System.out.println();
+
     }
 
     public Integer getNodeId() {
@@ -258,8 +276,9 @@ public class Node {
         return status;
     }
 
+
     public int getChildrenCount() {
-        return childrenCount;
+        return childrenSepCount + 1;
     }
 
     public Node[] getChildren() {
@@ -276,10 +295,9 @@ public class Node {
         updateMinAndMax();
     }
 
-    public void setChildrenCount(int childrenCount) {
-        this.childrenCount = childrenCount;
+    public int getChildrenSepCount() {
+        return childrenSepCount;
     }
-
 
     public static void main(String[] args) {
         KdbRow rowOne = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 1)));

@@ -20,7 +20,7 @@ public class NodeTest {
         KdbRow rowFour = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 4)));
         KdbRow rowFive = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 5)));
         KdbRow rowSix = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 6)));
-        Node node = new Node(true, true, 1);
+        Node node = new Node(true, true, 1, 6);
         node.add(rowOne);
         node.add(rowTwo);
         node.add(rowThree);
@@ -37,7 +37,7 @@ public class NodeTest {
     @Test
     public void addCannotDuplicate() {
         KdbRow rowOne = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 1)));
-        Node node = new Node(true, true, 1);
+        Node node = new Node(true, true, 1, 5);
         boolean canDuplicate = true;
         node.add(rowOne);
         try {
@@ -55,7 +55,7 @@ public class NodeTest {
         KdbRow rowThree = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 3)));
         KdbRow rowFour = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 4)));
         KdbRow rowFive = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 5)));
-        Node node = new Node(true, true, 1);
+        Node node = new Node(true, true, 1, 5);
         node.add(rowOne);
         node.add(rowTwo);
         node.add(rowFour);
@@ -73,7 +73,7 @@ public class NodeTest {
         KdbRow rowThree = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 3)));
         KdbRow rowFour = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 4)));
         KdbRow rowFive = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 5)));
-        Node node = new Node(true, true, 1);
+        Node node = new Node(true, true, 1, 5);
         node.add(rowOne);
         node.add(rowTwo);
         node.add(rowFour);

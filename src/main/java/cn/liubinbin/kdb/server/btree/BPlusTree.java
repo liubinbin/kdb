@@ -6,6 +6,7 @@ import cn.liubinbin.kdb.server.executor.Engine;
 import cn.liubinbin.kdb.server.table.ColumnType;
 import cn.liubinbin.kdb.utils.Contants;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -28,7 +29,15 @@ public class BPlusTree extends Engine {
     }
 
     public synchronized Integer getAndAddNodeId() {
-        return maxNodeId++;
+        return ++maxNodeId;
+    }
+
+    public KdbRow[] mergeKdbRowAndSort(KdbRow[] left, KdbRow right) {
+        KdbRow[] result = new KdbRow[left.length + 1];
+        System.arraycopy(left, 0, result, 0, left.length);
+        result[left.length] = right;
+        Arrays.sort(result);
+        return result;
     }
 
     public void insert(KdbRow rowToInsert) {
@@ -39,9 +48,9 @@ public class BPlusTree extends Engine {
             tempNode = curNode.getChildren()[0];
             for (int i = 0; i < curNode.getChildrenCount(); i++) {
                 if (rowToInsert.compareTo(curNode.getData()[i]) >= 0) {
+                    tempNode = curNode.getChildren()[i+1];
                     break;
                 }
-                tempNode = curNode.getChildren()[i+1];
             }
             curNode = tempNode;
         }
@@ -55,26 +64,24 @@ public class BPlusTree extends Engine {
         Node leftNode = new Node(false, true, getAndAddNodeId(), order);
         Node rightNode = new Node(false, true, getAndAddNodeId(), order);
         // 获取 splitkey
-        KdbRow rowSplitKey = curNode.getSplitKdbRow();
-        KdbRow[] curNodeData = curNode.getData();
-        for (int i = 0; i < curNode.getCurRowCount(); i++) {
-            if (curNodeData[i].compareTo(rowSplitKey) < 0) {
+        KdbRow[] curNodeData = mergeKdbRowAndSort(curNode.getData(), rowToInsert);
+
+        Integer splitRowKey = curNodeData[(curNodeData.length / 2) + 1].getRowKey();
+        for (int i = 0; i < curNodeData.length; i++) {
+            if (i <= curNodeData.length / 2) {
                 leftNode.add(curNodeData[i]);
             } else {
                 rightNode.add(curNodeData[i]);
             }
         }
 
-        // 添加 row
-        leftNode.add(rowToInsert);
-
         // 修改 split
         if (curNode.isRoot()) {
-            curNode.splitChildren(leftNode, rightNode, rowSplitKey.getRowKey());
+            curNode.splitChildren(leftNode, rightNode, splitRowKey);
             curNode.setRootNotLeaf();
         } else {
             Node parent = curNode.getParent();
-            parent.splitChildren(leftNode, rightNode, rowSplitKey.getRowKey());
+            parent.splitChildren(leftNode, rightNode, splitRowKey);
         }
 
     }
@@ -89,6 +96,7 @@ public class BPlusTree extends Engine {
 
     public void print() {
         root.print();
+        System.out.println("\n");
     }
 
     public Node getRoot() {
@@ -109,27 +117,27 @@ public class BPlusTree extends Engine {
         KdbRow rowFive = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 5)));
         KdbRow rowSix = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 6)));
         bPlusTree.insert(rowOne);
-        System.out.println("after insert rowOne ");
+        System.out.println("--- after insert rowOne ---");
         bPlusTree.print();
 
         bPlusTree.insert(rowTwo);
-        System.out.println("after insert rowTwo ");
+        System.out.println("--- after insert rowTwo --- ");
         bPlusTree.print();
 
         bPlusTree.insert(rowThree);
-        System.out.println("after insert rowThree ");
+        System.out.println("--- after insert rowThree --- ");
         bPlusTree.print();
 
         bPlusTree.insert(rowFour);
-        System.out.println("after insert rowFour ");
+        System.out.println("--- after insert rowFour --- ");
         bPlusTree.print();
 
         bPlusTree.insert(rowFive);
-        System.out.println("after insert rowFive ");
+        System.out.println("--- after insert rowFive --- ");
         bPlusTree.print();
 
         bPlusTree.insert(rowSix);
-        System.out.println("after insert rowSix ");
+        System.out.println("--- after insert rowSix --- ");
         bPlusTree.print();
 
     }
