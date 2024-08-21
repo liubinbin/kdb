@@ -29,7 +29,7 @@ public class NodeTest {
         assertEquals( 0,node.getCurrentRowCount() - 5);
         node.add(rowSix);
         assertEquals( 0,node.getCurrentRowCount() - 5);
-        node.print();
+        node.treePrint();
 
         node.add(rowOne);
     }
@@ -60,7 +60,7 @@ public class NodeTest {
         node.add(rowTwo);
         node.add(rowFour);
         node.add(rowFive);
-        node.print();
+        node.treePrint();
 
         node.removeBigThan(rowThree);
         assertEquals( 0,node.getCurrentRowCount() - 2);
@@ -78,7 +78,7 @@ public class NodeTest {
         node.add(rowTwo);
         node.add(rowFour);
         node.add(rowFive);
-        node.print();
+        node.treePrint();
 
         node.removeSmallThan(rowThree);
         assertEquals( 0,node.getCurrentRowCount() - 2);

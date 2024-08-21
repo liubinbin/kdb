@@ -7,7 +7,6 @@ import cn.liubinbin.kdb.utils.ByteUtils;
 import cn.liubinbin.kdb.utils.Contants;
 
 import java.util.Collections;
-import java.util.Objects;
 
 /**
  * @author liubinbin
@@ -56,8 +55,9 @@ public class Node {
         this.maxKey = Integer.MIN_VALUE;
         this.minKey = Integer.MAX_VALUE;
         this.maxCount = order - 1;
-        this.childrenSep = new Integer[order - 1];
-        this.children = new Node[order];
+        // childrenSep 实际长度只能为的 order -1，children 实际长度只能为 order。
+        this.childrenSep = new Integer[order];
+        this.children = new Node[order + 1];
         this.childrenSepCount = 0;
     }
 
@@ -161,8 +161,6 @@ public class Node {
         if (!rightChildren.getMinKey().equals(childrenSepKey)) {
             throw new RuntimeException("childrenSepKey is equal to minKey");
         }
-        // TODO  如果 children 过多就需分裂
-
 
         // 暂不考虑分裂
         Integer oriChildSep = leftChildren.minKey;
@@ -185,8 +183,13 @@ public class Node {
         children[idxToInsert] = leftChildren;
         children[idxToInsert + 1] = rightChildren;
         childrenSep[idxToInsert] = childrenSepKey;
+        System.out.println("idxToInsert " + idxToInsert + "  " + leftChildren.getMinKey() + " " + rightChildren.getMinKey());
 
         childrenSepCount++;
+
+        if (childrenSepCount > order - 1) {
+            System.out.println("should split");
+        }
     }
 
     public void mergeChildren(Node leftChildren, Node rightChildren) {
@@ -234,11 +237,18 @@ public class Node {
         return minKey;
     }
 
-    public void print() {
-        print("");
+    public void printData() {
+        for (int i = 0; i < curRowCount; i++) {
+            System.out.print("leaf data[" + i + "]:" + data[i].getRowKey() + "; ");
+        }
+        System.out.println();
     }
 
-    public void print(String prefix) {
+    public void treePrint() {
+        treePrint("");
+    }
+
+    public void treePrint(String prefix) {
         System.out.println(prefix + "nodeId:" + nodeId + ", isRoot:" + isRoot + ", isLeaf:" + isLeaf + ", maxKey:" + maxKey + ", minKey:" + minKey);
         if (isLeaf) {
             // print Leaf
@@ -254,7 +264,7 @@ public class Node {
             }
             System.out.println();
             for (int i = 0; i < childrenSepCount + 1; i++) {
-                children[i].print(prefix + " " + i + " ");
+                children[i].treePrint(prefix + " " + i + " ");
             }
             System.out.println();
         }
@@ -313,7 +323,7 @@ public class Node {
         node.add(rowFour);
         node.add(rowFive);
         node.add(rowSix);
-        node.print();
+        node.treePrint();
 
 
 //        node.removeBigThan(rowThree);

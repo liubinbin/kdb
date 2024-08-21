@@ -10,7 +10,6 @@ import cn.liubinbin.kdb.utils.ByteUtils;
 import cn.liubinbin.kdb.utils.Contants;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -185,7 +184,7 @@ public class Page {
         node.add(rowThree);
         node.add(rowFour);
         node.add(rowFive);
-        node.print();
+        node.treePrint();
 
         List<Column> tableColumn = new ArrayList<>();
         tableColumn.add(new Column(0, "id", ColumnType.INTEGER, 0));
@@ -203,6 +202,6 @@ public class Page {
             newPage.readFrom(raf, 0);
         }
         Node newNode = newPage.exactFromBytes(order);
-        newNode.print();
+        newNode.treePrint();
     }
 }

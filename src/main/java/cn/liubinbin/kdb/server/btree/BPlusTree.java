@@ -46,14 +46,16 @@ public class BPlusTree extends Engine {
         Node tempNode = null;
         while (!curNode.isLeaf()) {
             tempNode = curNode.getChildren()[0];
-            for (int i = 0; i < curNode.getChildrenCount(); i++) {
-                if (rowToInsert.compareTo(curNode.getData()[i]) >= 0) {
+            for (int i = 0; i < curNode.getChildrenCount() - 1; i++) {
+                if (rowToInsert.getRowKey() > curNode.getChildrenSep()[i]) {
                     tempNode = curNode.getChildren()[i+1];
+                } else {
                     break;
                 }
             }
             curNode = tempNode;
         }
+
         // add and split by the result
         int addRes = curNode.add(rowToInsert);
         if (addRes == 0) {
@@ -65,7 +67,6 @@ public class BPlusTree extends Engine {
         Node rightNode = new Node(false, true, getAndAddNodeId(), order);
         // 获取 splitkey
         KdbRow[] curNodeData = mergeKdbRowAndSort(curNode.getData(), rowToInsert);
-
         Integer splitRowKey = curNodeData[(curNodeData.length / 2) + 1].getRowKey();
         for (int i = 0; i < curNodeData.length; i++) {
             if (i <= curNodeData.length / 2) {
@@ -95,7 +96,7 @@ public class BPlusTree extends Engine {
     }
 
     public void print() {
-        root.print();
+        root.treePrint();
         System.out.println("\n");
     }
 
@@ -132,10 +133,12 @@ public class BPlusTree extends Engine {
         System.out.println("--- after insert rowFour --- ");
         bPlusTree.print();
 
+        System.out.println("--- before insert rowFive --- ");
         bPlusTree.insert(rowFive);
         System.out.println("--- after insert rowFive --- ");
         bPlusTree.print();
 
+        System.out.println("--- before insert rowSix --- ");
         bPlusTree.insert(rowSix);
         System.out.println("--- after insert rowSix --- ");
         bPlusTree.print();
