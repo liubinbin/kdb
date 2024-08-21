@@ -35,8 +35,13 @@ public class Node {
     private Integer maxKey;
     // key 的最小值
     private Integer minKey;
+    // 父节点
+    private Node parent;
+    // order 度
+    private Integer order;
 
-    public Node(boolean isRoot, boolean isLeaf, Integer nodeId) {
+    public Node(boolean isRoot, boolean isLeaf, Integer nodeId, Integer order) {
+        this.order = order;
         this.isRoot = isRoot;
         if (this.isRoot) {
             this.nodeId = 0;
@@ -45,11 +50,14 @@ public class Node {
         }
         this.isLeaf = isLeaf;
         this.nodeId = nodeId;
-        this.data = new KdbRow[5];
+        this.data = new KdbRow[order - 1];
         this.curRowCount = 0;
         this.maxKey = Integer.MIN_VALUE;
         this.minKey = Integer.MAX_VALUE;
-        this.maxCount = 5;
+        this.maxCount = order - 1;
+        this.childrenSep = new Integer[order - 1];
+        this.children = new Node[order];
+        this.childrenCount = 0;
     }
 
     public void removeBigThan(KdbRow row) {
@@ -91,7 +99,7 @@ public class Node {
                 data[j] = data[j + 1];
             }
         }
-        curRowCount --;
+        curRowCount--;
         updateMinAndMax();
     }
 
@@ -115,6 +123,7 @@ public class Node {
 
     /**
      * 在节点插入记录，若返回 0，则插入成功，若返回 -1，则需要扩容
+     *
      * @param row
      * @return
      */
@@ -129,7 +138,6 @@ public class Node {
             return -1;
         }
         for (int i = 0; i <= curRowCount - 1; i++) {
-//            System.out.println("data[" + i + "]:" + data[i].getRowKey() + " vs " + row.getRowKey());
             if (data[i].compareTo(row) == 0) {
                 throw new RuntimeException("insert duplicate row");
             }
@@ -148,6 +156,32 @@ public class Node {
         return 0;
     }
 
+    public void splitChildren(Node leftChildren, Node rightChildren, Integer childrenSepKey) {
+        // TODO  如果 children 过多就需分裂
+
+        int idxToInsert = 0;
+        // TODO 分裂
+
+        leftChildren.parent = this;
+        rightChildren.parent = this;
+
+        children[idxToInsert] = leftChildren;
+        children[idxToInsert + 1] = rightChildren;
+        childrenSep[idxToInsert] = childrenSepKey;
+
+        childrenCount++;
+    }
+
+    public void mergeChildren(Node leftChildren, Node rightChildren) {
+        if (leftChildren.parent != rightChildren.parent) {
+            throw new RuntimeException("leftChildren and rightChildren must have the same parent");
+        }
+    }
+
+    public KdbRow getSplitKdbRow() {
+        return data[curRowCount / 2];
+    }
+
     public KdbRow[] getData() {
         return data;
     }
@@ -164,30 +198,56 @@ public class Node {
         return isLeaf;
     }
 
+    public void setRootNotLeaf() {
+        if (isRoot) {
+            this.isLeaf = false;
+            this.curRowCount = 0;
+        }
+    }
+
     public Integer nodeId() {
         return nodeId;
     }
 
+    public Node getParent() {
+        return parent;
+    }
+
     public void print() {
-        System.out.println("----------------");
-        System.out.println("nodeId:" + nodeId);
-        System.out.println("isRoot:" + isRoot);
-        System.out.println("isLeaf:" + isLeaf);
-        System.out.println("curRowCount:" + curRowCount);
-        System.out.println("maxCount:" + maxCount);
-        for (int i = 0; i < curRowCount; i++) {
-            System.out.print("data[" + i + "]:" + data[i].getRowKey() + " ; ");
+        print("");
+    }
+
+    public void print(String prefix) {
+        System.out.println("--------------------------");
+        System.out.println(prefix +"nodeId:" + nodeId);
+        System.out.println(prefix + "isRoot:" + isRoot);
+        System.out.println(prefix + "isLeaf:" + isLeaf);
+        System.out.println(prefix + "maxKey:" + maxKey);
+        System.out.println(prefix + "minKey:" + minKey);
+        if (isLeaf) {
+            System.out.print(prefix);
+            for (int i = 0; i < childrenCount; i++) {
+                System.out.print("data[" + i + "]:" + childrenSep[i] + " ; ");
+            }
+            for (int i = 0; i < childrenCount; i++) {
+                children[i].print(prefix + "  ");
+            }
+        } else {
+            System.out.println(prefix + "curRowCount:" + curRowCount);
+            System.out.println(prefix + "maxCount:" + maxCount);
+            System.out.println(prefix);
+            for (int i = 0; i < curRowCount; i++) {
+                System.out.print("data[" + i + "]:" + data[i].getRowKey() + " ; ");
+            }
         }
         System.out.println();
-        System.out.println("maxKey:" + maxKey);
-        System.out.println("minKey:" + minKey);
     }
 
     public Integer getNodeId() {
         return nodeId;
     }
 
-    public Integer getStatus(){
+    public Integer getStatus() {
         Integer status = 0;
         if (isRoot) {
             status = ByteUtils.setBit(status, Contants.ROOT_BIT_SHIFT, 1);
@@ -228,14 +288,15 @@ public class Node {
         KdbRow rowFour = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 4)));
         KdbRow rowFive = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 5)));
         KdbRow rowSix = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 6)));
-        Node node = new Node(true, true, 1);
+        Node node = new Node(true, true, Contants.ROOT_NODE_ID, 4);
         node.add(rowOne);
         node.add(rowTwo);
         node.add(rowThree);
         node.add(rowFour);
         node.add(rowFive);
-//        node.add(rowSix);
+        node.add(rowSix);
         node.print();
+
 
 //        node.removeBigThan(rowThree);
 //        node.print();
@@ -243,8 +304,8 @@ public class Node {
 //        node.removeSmallThan(rowThree);
 //        node.print();
 
-        node.removeExact(rowThree);
-        node.print();
+//        node.removeExact(rowThree);
+//        node.print();
 
     }
 }

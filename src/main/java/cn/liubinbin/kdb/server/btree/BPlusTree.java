@@ -18,8 +18,8 @@ public class BPlusTree extends Engine {
     private Integer maxNodeId;
 
     BPlusTree(Integer order) {
-        this.root = new Node(true, true, Contants.ROOT_NODE_ID);
         this.order = order;
+        this.root = new Node(true, true, Contants.ROOT_NODE_ID, order);
         this.maxNodeId = Contants.ROOT_NODE_ID;
     }
 
@@ -27,28 +27,54 @@ public class BPlusTree extends Engine {
         this.maxNodeId = nodeId > maxNodeId ? nodeId : maxNodeId;
     }
 
-    public void insert(KdbRow row) {
+    public synchronized Integer getAndAddNodeId() {
+        return maxNodeId++;
+    }
+
+    public void insert(KdbRow rowToInsert) {
         // find Node2Insert
         Node curNode = root;
+        Node tempNode = null;
         while (!curNode.isLeaf()) {
+            tempNode = curNode.getChildren()[0];
             for (int i = 0; i < curNode.getChildrenCount(); i++) {
-                if (row.compareTo(curNode.getData()[i]) < 0) {
-                    curNode = curNode.getChildren()[i];
+                if (rowToInsert.compareTo(curNode.getData()[i]) >= 0) {
                     break;
                 }
+                tempNode = curNode.getChildren()[i+1];
             }
+            curNode = tempNode;
         }
-        int addRes = curNode.add(row);
+        // add and split by the result
+        int addRes = curNode.add(rowToInsert);
         if (addRes == 0) {
             return;
         }
-        if (addRes == 1) {
-            // split
-            Node newNode = new Node(false, false, maxNodeId + 1);
-            maxNodeId++;
-            newNode.updateData(curNode.getData(), curNode.getCurRowCount());
-            curNode.setChildrenCount(curNode.getChildrenCount() + 1);
-            curNode.getChildren()[curNode.getChildrenCount() - 1] = newNode;
+        // addRes != 0 means should split
+        // new data
+        Node leftNode = new Node(false, true, getAndAddNodeId(), order);
+        Node rightNode = new Node(false, true, getAndAddNodeId(), order);
+        // 获取 splitkey
+        KdbRow rowSplitKey = curNode.getSplitKdbRow();
+        KdbRow[] curNodeData = curNode.getData();
+        for (int i = 0; i < curNode.getCurRowCount(); i++) {
+            if (curNodeData[i].compareTo(rowSplitKey) < 0) {
+                leftNode.add(curNodeData[i]);
+            } else {
+                rightNode.add(curNodeData[i]);
+            }
+        }
+
+        // 添加 row
+        leftNode.add(rowToInsert);
+
+        // 修改 split
+        if (curNode.isRoot()) {
+            curNode.splitChildren(leftNode, rightNode, rowSplitKey.getRowKey());
+            curNode.setRootNotLeaf();
+        } else {
+            Node parent = curNode.getParent();
+            parent.splitChildren(leftNode, rightNode, rowSplitKey.getRowKey());
         }
 
     }
@@ -83,12 +109,28 @@ public class BPlusTree extends Engine {
         KdbRow rowFive = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 5)));
         KdbRow rowSix = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 6)));
         bPlusTree.insert(rowOne);
-        bPlusTree.insert(rowTwo);
-        bPlusTree.insert(rowThree);
-        bPlusTree.insert(rowFour);
-        bPlusTree.insert(rowFive);
-        bPlusTree.insert(rowSix);
-
+        System.out.println("after insert rowOne ");
         bPlusTree.print();
+
+        bPlusTree.insert(rowTwo);
+        System.out.println("after insert rowTwo ");
+        bPlusTree.print();
+
+        bPlusTree.insert(rowThree);
+        System.out.println("after insert rowThree ");
+        bPlusTree.print();
+
+        bPlusTree.insert(rowFour);
+        System.out.println("after insert rowFour ");
+        bPlusTree.print();
+
+        bPlusTree.insert(rowFive);
+        System.out.println("after insert rowFive ");
+        bPlusTree.print();
+
+        bPlusTree.insert(rowSix);
+        System.out.println("after insert rowSix ");
+        bPlusTree.print();
+
     }
 }

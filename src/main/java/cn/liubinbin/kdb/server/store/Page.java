@@ -106,7 +106,7 @@ public class Page {
         }
     }
 
-    public Node exactFromBytes() {
+    public Node exactFromBytes(Integer order) {
         int offset = 0;
         // meta data
         // meta.nodeId
@@ -115,7 +115,7 @@ public class Page {
         // meta.status
         boolean isRoot = ByteUtils.getBitAsBool(overviewStatus, Contants.ROOT_BIT_SHIFT);
         boolean isLeaf = ByteUtils.getBitAsBool(overviewStatus, Contants.LEAF_BIT_SHIFT);
-        Node node = new Node(isRoot, isLeaf, nodeId);
+        Node node = new Node(isRoot, isLeaf, nodeId, order);
         // meta.rowCount
         Integer rowCount = ByteArrayUtils.toInt(data, Contants.ROW_COUNT);
         // meta.children
@@ -172,7 +172,8 @@ public class Page {
     }
 
     public static void main(String[] args) throws IOException {
-        Node node = new Node(true, true, 0);
+        Integer order = 4;
+        Node node = new Node(true, true, 0, order);
 
         KdbRow rowOne = newMockRow(1, "Helloworld");
         KdbRow rowTwo = newMockRow(2, "wallstreet");
@@ -197,11 +198,11 @@ public class Page {
         }
 
         System.out.println("after exact");
-        Page newPage = new Page(new Node(true, true, 0), "test", tableColumn);
+        Page newPage = new Page(new Node(true, true, 0, order), "test", tableColumn);
         try (RandomAccessFile raf = new RandomAccessFile(new File("/Users/liubinbin/Desktop/ok/test.file"), "rw")) {
             newPage.readFrom(raf, 0);
         }
-        Node newNode = newPage.exactFromBytes();
+        Node newNode = newPage.exactFromBytes(order);
         newNode.print();
     }
 }
