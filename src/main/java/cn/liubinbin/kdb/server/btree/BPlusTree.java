@@ -56,10 +56,60 @@ public class BPlusTree extends Engine {
             curNode = tempNode;
         }
 
+        System.out.println("curNode " + curNode.getNodeId());
         // add and split by the result
         int addRes = curNode.removeExact(rowToDelete);
         if (addRes == 0) {
             return;
+        }
+
+        System.out.println("should merge");
+        Node parent = curNode.getParent();
+        mergeLeafChildren(curNode, parent);
+    }
+
+    public void mergeLeafChildren(Node curNode, Node parent) {
+        System.out.println("do some merge");
+        int childIdxInParent = 0;
+        for (int childIdxInParent = 0; childIdxInParent < parent.getChildrenCount(); childIdxInParent++) {
+            if (parent.getChildren()[childIdxInParent] == curNode) {
+                break;
+            }
+        }
+        Node leftNode = null;
+        Node rightNode = null;
+        if (childIdxInParent == 0) {
+            leftNode = parent.getChildren()[0];
+            rightNode = parent.getChildren()[1];
+        } else if (childIdxInParent == parent.getChildrenCount() - 1) {
+            leftNode = parent.getChildren()[childIdxInParent - 1];
+            rightNode = parent.getChildren()[childIdxInParent];
+            childIdxInParent --;
+        } else {
+            leftNode = parent.getChildren()[childIdxInParent];
+            rightNode = parent.getChildren()[childIdxInParent + 1];
+        }
+
+        Node newNode = new Node(false, true, getAndAddNodeId(), order);
+        for (int i = 0; i< leftNode.getCurRowCount(); i++) {
+            newNode.add(leftNode.getData()[i]);
+        }
+        for (int i = 0; i< rightNode.getCurRowCount(); i++) {
+            newNode.add(rightNode.getData()[i]);
+        }
+        newNode.setParent(parent);
+
+        // 移动 childrenSep 和 child
+        // TODO
+        if () {
+
+        }
+
+        if (parent.isRoot()) {
+            return;
+        } else {
+            Node newParent = parent.getParent();
+            mergeLeafChildren(parent, newParent);
         }
     }
 
@@ -255,11 +305,19 @@ public class BPlusTree extends Engine {
 //        KdbRow rowFive = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 5)));
 //        KdbRow rowSix = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 6)));
 
-        for(int i = 1; i <= 7; i++) {
+        for(int i = 1; i <= 6; i++) {
             KdbRow curRow = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, i)));
             System.out.println("--- before insert row " + i + " ---");
             bPlusTree.insert(curRow);
             System.out.println("--- after insert row " + i + " ---");
+            bPlusTree.print();
+        }
+
+        for(int i = 0; i <= 2; i++) {
+            KdbRow curRow = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, i)));
+            System.out.println("--- before delete row " + i + " ---");
+            bPlusTree.delete(curRow);
+            System.out.println("--- after delete row " + i + " ---");
             bPlusTree.print();
         }
 

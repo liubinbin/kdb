@@ -103,6 +103,9 @@ public class Node {
         while (i < curRowCount && data[i].compareTo(row) < 0) {
             i++;
         }
+        if (data[i].compareTo(row) != 0) {
+            return 0;
+        }
         if (i < curRowCount) {
             for (int j = i; j < curRowCount - 1; j++) {
                 data[j] = data[j + 1];
@@ -122,8 +125,14 @@ public class Node {
     }
 
     public void updateMinAndMax() {
-        maxKey = data[curRowCount - 1].getRowKey();
-        minKey = data[0].getRowKey();
+        if (curRowCount == 0) {
+            this.maxKey = Integer.MIN_VALUE;
+            this.minKey = Integer.MAX_VALUE;
+        } else {
+            maxKey = data[curRowCount - 1].getRowKey();
+            minKey = data[0].getRowKey();
+        }
+
     }
 
     public boolean isDuplicate(KdbRow row) {
@@ -314,6 +323,10 @@ public class Node {
 
     public void addChildrenSepCount() {
         childrenSepCount++;
+    }
+
+    public boolean IsSame(Node o) {
+        return nodeId.equals(o.nodeId);
     }
 
     public static void main(String[] args) {
