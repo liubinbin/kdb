@@ -11,4 +11,6 @@ import java.util.List;
 public interface Table {
 
     public List<KdbRow> limit(Integer limit);
+
+    public void insert(KdbRow rowToInsert);
 }

@@ -1,5 +1,6 @@
 package cn.liubinbin.kdb.server.table;
 
+import cn.liubinbin.kdb.server.btree.BPlusTree;
 import cn.liubinbin.kdb.server.entity.KdbRow;
 import cn.liubinbin.kdb.server.entity.KdbRowValue;
 
@@ -13,8 +14,14 @@ import java.util.List;
  */
 public class BtreeTable extends AbstTable {
 
+    private BPlusTree bPlusTree;
+
     public BtreeTable(String tableName, List<Column> columns) {
         super(tableName, columns, TableType.Btree);
+    }
+
+    public BtreeTable(String tableName, List<Column> columns, TableType tableType) {
+        super(tableName, columns, tableType);
     }
 
     @Override
@@ -26,5 +33,10 @@ public class BtreeTable extends AbstTable {
             list.add(temp);
         }
         return list;
+    }
+
+    @Override
+    public void insert(KdbRow rowToInsert) {
+        System.out.println("start to insert row");
     }
 }

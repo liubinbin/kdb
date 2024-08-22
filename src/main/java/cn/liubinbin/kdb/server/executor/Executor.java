@@ -68,6 +68,8 @@ public class Executor {
             case INSERT_TABLE:
                 System.out.println("this is insert table sql ");
                 InsertTablePlan insertTablePlan = (InsertTablePlan) plan;
+                KdbRow kdbRow = new KdbRow(insertTablePlan.getRowValueList());
+                tableManage.getTable(insertTablePlan.getTableName()).insert(kdbRow);
                 System.out.println("insertTablePlan  "  +  insertTablePlan);
                 break;
             case SELECT_TABLE:
