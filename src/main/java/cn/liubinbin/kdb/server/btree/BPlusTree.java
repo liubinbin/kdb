@@ -71,7 +71,7 @@ public class BPlusTree extends Engine {
     public void mergeLeafChildren(Node curNode, Node parent) {
         System.out.println("do some merge");
         int childIdxInParent = 0;
-        for (int childIdxInParent = 0; childIdxInParent < parent.getChildrenCount(); childIdxInParent++) {
+        for (childIdxInParent = 0; childIdxInParent < parent.getChildrenCount(); childIdxInParent++) {
             if (parent.getChildren()[childIdxInParent] == curNode) {
                 break;
             }
@@ -84,7 +84,7 @@ public class BPlusTree extends Engine {
         } else if (childIdxInParent == parent.getChildrenCount() - 1) {
             leftNode = parent.getChildren()[childIdxInParent - 1];
             rightNode = parent.getChildren()[childIdxInParent];
-            childIdxInParent --;
+            childIdxInParent--;
         } else {
             leftNode = parent.getChildren()[childIdxInParent];
             rightNode = parent.getChildren()[childIdxInParent + 1];
@@ -100,10 +100,15 @@ public class BPlusTree extends Engine {
         newNode.setParent(parent);
 
         // 移动 childrenSep 和 child
-        // TODO
-        if () {
-
+        //
+        parent.getChildren()[childIdxInParent] = newNode;
+        for(int i = childIdxInParent + 1; i < parent.getChildrenCount() - 1; i++){
+            parent.getChildren()[i] = parent.getChildren()[i + 1];
         }
+        for(int i = childIdxInParent; i < parent.getChildrenSepCount() - 1; i++){
+            parent.getChildrenSep()[i] = parent.getChildrenSep()[i + 1];
+        }
+        parent.minusChildrenSepCount();
 
         if (parent.isRoot()) {
             return;

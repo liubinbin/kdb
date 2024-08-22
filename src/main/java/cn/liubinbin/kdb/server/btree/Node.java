@@ -325,6 +325,10 @@ public class Node {
         childrenSepCount++;
     }
 
+    public void minusChildrenSepCount() {
+        childrenSepCount--;
+    }
+
     public boolean IsSame(Node o) {
         return nodeId.equals(o.nodeId);
     }
