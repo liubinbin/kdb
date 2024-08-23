@@ -38,22 +38,24 @@ public class Parser {
 //        sqls.add("select * from a");
 //        sqls.add("select * from a where b = 1");
 //        sqls.add("select * from a where b = 1 and c = 'haha'");
-//        sqls.add("select * from a order by b limit 10");
+        sqls.add("select * from stu where id = 1 order by b limit 10");
 //        sqls.add("describe database kdb");
 //        sqls.add("describe table a");
 //        sqls.add("delete from a where id = 3 and name = 'haha'");
-        sqls.add("select * from stu where id = 1 and name = 'haha'");
+        sqls.add("select id,name from stu where id = 1 and name = 'haha'");
 
         for (String sql : sqls) {
+            System.out.println("--- parse one sql ---");
             SqlNode sqlNode = parse(sql);
+            System.out.println(sqlNode.getClass());
             SqlSelect select = (SqlSelect) sqlNode;
             System.out.println("sqlNode select " + select);
-            System.out.println(select.getSelectList());
-            System.out.println(select.getFrom());
-            System.out.println(select.getWhere());
-            System.out.println(select.getOrderList());
-            System.out.println(select.getGroup());
-            System.out.println(select.getOffset());
+            System.out.println("1: " + select.getSelectList());
+            System.out.println("2: " + select.getFrom());
+            System.out.println("3: " + select.getWhere());
+            System.out.println("4: " + select.getOrderList());
+            System.out.println("5: " + select.getGroup());
+            System.out.println("6: " + select.getOffset());
 
 
 

@@ -61,4 +61,9 @@ public class BtreeTable extends AbstTable {
         // TODO
         bPlusTree.print();
     }
+
+    @Override
+    public void select() {
+
+    }
 }

@@ -37,4 +37,9 @@ public class FakeTable extends AbstTable {
     public void delete(List<BoolExpression> expressions) {
 
     }
+
+    @Override
+    public void select() {
+
+    }
 }

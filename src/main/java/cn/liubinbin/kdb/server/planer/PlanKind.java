@@ -13,6 +13,7 @@ public enum PlanKind {
     SELECT_TABLE(4),
     DELETE_TABLE(5),
     DROP_TABLE(6),
+    ORDER_BY_TABLE(7),
     DEFAULT(10);
 
     private final int kind;

@@ -103,6 +103,16 @@ public class Planer {
                     throw new RuntimeException("Expected an SELECT_TABLE statement but got: " + sqlNode.getKind());
                 }
                 break;
+            case ORDER_BY:
+                System.out.println("this is table order by");
+                if (sqlNode instanceof SqlOrderBy) {
+                    plan = new OrderByTablePlan(ParserUtils.getString(sqlNode));
+                    System.out.println("this is table order by");
+                    // TODO
+                } else {
+                    throw new RuntimeException("Expected an ORDER_BY_TABLE statement but got: " + sqlNode.getKind());
+                }
+                break;
             case OTHER:
                 System.out.println("do not support");
                 break;
