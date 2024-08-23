@@ -8,6 +8,7 @@ import cn.liubinbin.kdb.utils.Contants;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.concurrent.locks.ReadWriteLock;
 
 /**
  * @author liubinbin
@@ -15,8 +16,9 @@ import java.util.Collections;
 public class BPlusTree extends Engine {
 
     private Node root;
-    private Integer order;
+    private final Integer order;
     private Integer maxNodeId;
+    private ReadWriteLock lock;
 
     public BPlusTree(Integer order) {
         this.order = order;
@@ -68,7 +70,7 @@ public class BPlusTree extends Engine {
         mergeLeafChildren(curNode, parent);
     }
 
-    public void mergeLeafChildren(Node curNode, Node parent) {
+    private void mergeLeafChildren(Node curNode, Node parent) {
         System.out.println("do some merge");
         int childIdxInParent = 0;
         for (childIdxInParent = 0; childIdxInParent < parent.getChildrenCount(); childIdxInParent++) {

@@ -42,6 +42,7 @@ public class Contants {
 
     public static final String STATUS = "status";
     public static final String SUCCESS = "success";
+    public static final String TABLE_NOT_EXIST = "table not exist";
     public static final String EXIT = "exit";
 
     public static final String FILE_SEPARATOR = "/";

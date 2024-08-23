@@ -69,9 +69,16 @@ public class Executor {
                 System.out.println("this is insert table sql ");
                 InsertTablePlan insertTablePlan = (InsertTablePlan) plan;
                 KdbRow kdbRow = new KdbRow(insertTablePlan.getRowValueList());
-
-                tableManage.getTable(insertTablePlan.getTableName()).insert(kdbRow);
                 System.out.println("insertTablePlan  "  +  insertTablePlan);
+                header = Header.newBuilder().addHeader("status").build();
+                if(!tableManage.existTable(insertTablePlan.getTableName())) {
+                    cn.liubinbin.kdb.grpc.Row tableNotExistRow = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(Contants.TABLE_NOT_EXIST).build();
+                    reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(tableNotExistRow).build();
+                } else {
+                    tableManage.getTable(insertTablePlan.getTableName()).insert(kdbRow);
+                    cn.liubinbin.kdb.grpc.Row insertSuccess = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(Contants.SUCCESS).build();
+                    reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(insertSuccess).build();
+                }
                 break;
             case SELECT_TABLE:
                 List<KdbRow> kdbRows = tableManage.getTable("test").limit(1);

@@ -75,6 +75,10 @@ public class TableManage {
         writeTo();
     }
 
+    public boolean existTable(String tableName) {
+        return tableMap.containsKey(tableName);
+    }
+
     public AbstTable getTable(String tableName) {
         if (!tableMap.containsKey(tableName)) {
             return null;

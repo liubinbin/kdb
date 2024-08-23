@@ -89,6 +89,10 @@ public class KdbGrpcClient {
     }
 
     private static void printResponse(KdbSqlResponse response) {
+        if (response == null) {
+            System.out.println("No response received.");
+            return;
+        }
         printSeparator(response.getHeader().getHeaderCount());
         printRow(response.getHeader().getHeaderList());
         printSeparator(response.getHeader().getHeaderCount());
