@@ -38,7 +38,7 @@ public class Planer {
                     SqlCreateTable create = (SqlCreateTable) sqlNode;
                     List<Column> columns = new ArrayList<>();
                     for (int i = 0; i < create.columnList.size(); i++) {
-                        SqlColumnDeclaration columnDeclaration = (SqlColumnDeclaration) create.columnList.get(2);
+                        SqlColumnDeclaration columnDeclaration = (SqlColumnDeclaration) create.columnList.get(i);
                         SqlDataTypeSpec sqlDataTypeSpec = columnDeclaration.dataType;
                         SqlBasicTypeNameSpec sqlBasicTypeNameSpec = (SqlBasicTypeNameSpec)sqlDataTypeSpec.getTypeNameSpec();
                         columns.add(new Column(i, columnDeclaration.name.getSimple(),

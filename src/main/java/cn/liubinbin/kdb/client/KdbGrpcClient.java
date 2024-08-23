@@ -105,14 +105,14 @@ public class KdbGrpcClient {
     public static void main(String[] args) throws Exception {
         String kdbServerAddr = "localhost:50501";
 //        String sql = "describe database kdb";
-//        String sql = "describe table test1";
-//        String sql = "create table test3(id int, b int, c varchar(256))"; // id为主键
-//        String sql = "insert into a (id, name) VALUES (1, 'Alice')";
-//        String sql = "select * from a";
-//        String sql = "select * from a where b = 1";
-//        String sql = "select * from a where b = 1 and c = 'haha'";
-//        String sql = "select * from a order by b limit 10";
-//        String sql = "select a,b from c";
+//        String sql = "describe table stu";
+//        String sql = "create table stu(id int, name varchar(256), age int)"; // id为主键
+//        String sql = "insert into stu (id, name, age) VALUES (1, 'Alice', 29)";
+//        String sql = "select * from stu";
+//        String sql = "select * from stu where id = 1";
+//        String sql = "select * from stu where id = 1 and name = 'haha'";
+//        String sql = "select * from stu order by age limit 10";
+//        String sql = "select id,name from stu";
 
         ManagedChannel channel = Grpc.newChannelBuilder(kdbServerAddr, InsecureChannelCredentials.create())
                 .build();

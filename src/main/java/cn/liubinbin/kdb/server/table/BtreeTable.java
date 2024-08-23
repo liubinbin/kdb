@@ -17,7 +17,7 @@ public class BtreeTable extends AbstTable {
     private BPlusTree bPlusTree;
 
     public BtreeTable(String tableName, List<Column> columns) {
-        super(tableName, columns, TableType.Btree);
+        this(tableName, columns, TableType.Btree);
     }
 
     public BtreeTable(String tableName, List<Column> columns, TableType tableType) {
