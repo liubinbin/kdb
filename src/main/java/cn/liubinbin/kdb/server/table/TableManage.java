@@ -1,6 +1,7 @@
 package cn.liubinbin.kdb.server.table;
 
 import cn.liubinbin.kdb.conf.KdbConfig;
+import cn.liubinbin.kdb.server.interf.KdbGrpcServer;
 import cn.liubinbin.kdb.utils.Contants;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 
@@ -10,6 +11,8 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author liubinbin
@@ -23,6 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
  *  ref to tableMeta
  */
 public class TableManage {
+
+    private static final Logger logger = Logger.getLogger(TableManage.class.getName());
 
     private ConcurrentHashMap<String, AbstTable> tableMap;
     private TableType tableType;
@@ -69,6 +74,9 @@ public class TableManage {
     }
 
     public AbstTable getTable(String tableName) {
+        if (!tableMap.containsKey(tableName)) {
+            return null;
+        }
         return tableMap.get(tableName);
     }
 
@@ -100,9 +108,7 @@ public class TableManage {
             int tableLen = raf.readInt();
 
             // print db info
-            System.out.println("dbNameLength: " + dbNameLen);
-            System.out.println("dbName: " + dbName);
-            System.out.println("tableLen " + tableLen);
+            System.out.println("dbNameLength: " + dbNameLen + "dbName: " + dbName + "tableLen " + tableLen);
 
             for (int i = 0; i < tableLen; i++) {
                 AbstTable abstTable = AbstTable.readFrom(raf);
@@ -111,7 +117,7 @@ public class TableManage {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING, "read table meta failed");
         }
     }
 

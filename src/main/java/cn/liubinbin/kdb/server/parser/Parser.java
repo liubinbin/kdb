@@ -1,10 +1,7 @@
 package cn.liubinbin.kdb.server.parser;
 
 import org.apache.calcite.config.Lex;
-import org.apache.calcite.sql.SqlBasicCall;
-import org.apache.calcite.sql.SqlDelete;
-import org.apache.calcite.sql.SqlInsert;
-import org.apache.calcite.sql.SqlNode;
+import org.apache.calcite.sql.*;
 import org.apache.calcite.sql.parser.SqlParseException;
 import org.apache.calcite.sql.parser.SqlParser;
 import org.apache.calcite.sql.parser.ddl.SqlDdlParserImpl;
@@ -41,7 +38,7 @@ public class Parser {
 //        sqls.add("select * from a order by b limit 10");
 //        sqls.add("describe database kdb");
 //        sqls.add("describe table a");
-        sqls.add("delete from a where id = 3 and name = 'haha'");
+        sqls.add("delete from a where id <> 3 and name = 'haha'");
 
         for (String sql : sqls) {
             SqlNode sqlNode = parse(sql);
@@ -53,7 +50,7 @@ public class Parser {
             if (conditionList != null) {
                 for (SqlNode node : conditionList.getOperandList()) {
                     SqlBasicCall curCondition = (SqlBasicCall) node;
-                    System.out.println(curCondition.getOperator());
+                    System.out.println(curCondition.getOperator().kind);
                     System.out.println(curCondition.getOperandList());
                 }
             }

@@ -6,16 +6,13 @@ import java.util.List;
  * @author liubinbin
  * @info Created by liubinbin on 2024/08/17.
  */
-public class SelectTablePlan extends Plan {
+public class DeleteTablePlan extends Plan {
 
     private final String tableName;
-    private String columnOrderBy;
-    private Integer limit;
     private List<BoolExpression> whereBoolExpreList;
-    private String columnGroupBy;
 
-    public SelectTablePlan(String tableName) {
-        super(PlanKind.SELECT_TABLE);
+    public DeleteTablePlan(String tableName) {
+        super(PlanKind.DELETE_TABLE);
         this.tableName = tableName;
     }
 
