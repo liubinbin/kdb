@@ -105,6 +105,11 @@ public abstract class AbstTable implements Table {
         return abstTable;
     }
 
+    public void print() {
+        System.out.println(" AbstTable print");
+    }
+
+
     @Override
     public String toString() {
         return "AbstTable{" +

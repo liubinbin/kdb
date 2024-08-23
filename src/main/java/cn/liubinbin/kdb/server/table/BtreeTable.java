@@ -36,6 +36,11 @@ public class BtreeTable extends AbstTable {
     }
 
     @Override
+    public void print() {
+        bPlusTree.print();
+    }
+
+    @Override
     public void insert(KdbRow rowToInsert) {
         System.out.println("start to insert row");
     }

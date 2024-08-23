@@ -26,4 +26,9 @@ public class FakeTable extends AbstTable {
         }
         return list;
     }
+
+    @Override
+    public void insert(KdbRow rowToInsert) {
+
+    }
 }

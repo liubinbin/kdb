@@ -69,7 +69,9 @@ public class KdbGrpcServer {
                 System.err.println("*** shutting down KDB gRPC server since JVM is shutting down");
                 try {
                     KdbGrpcServer.this.stop();
-                } catch (InterruptedException e) {
+                    tableManage.close();
+                    storeManage.close();
+                } catch (InterruptedException | IOException e) {
                     e.printStackTrace(System.err);
                 }
                 System.err.println("*** server shut down");
@@ -90,8 +92,7 @@ public class KdbGrpcServer {
         if (server != null) {
             server.awaitTermination();
         }
-        tableManage.close();
-        storeManage.close();
+
     }
 
     class SqlRequestImpl extends KdbServiceGrpc.KdbServiceImplBase {
