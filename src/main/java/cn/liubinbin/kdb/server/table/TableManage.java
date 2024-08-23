@@ -86,6 +86,9 @@ public class TableManage {
 
 
     public void readFrom() {
+        if (!new File(tableMetaFullPath).exists()) {
+            return;
+        }
         try (RandomAccessFile raf = new RandomAccessFile(new File(tableMetaFullPath), "r")) {
             raf.seek(0);
 

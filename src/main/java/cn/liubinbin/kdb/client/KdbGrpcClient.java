@@ -95,6 +95,7 @@ public class KdbGrpcClient {
         for (cn.liubinbin.kdb.grpc.Row row : response.getRowList()) {
             printRow(row.getValueList());
         }
+
         printSeparator(response.getHeader().getHeaderCount());
     }
 
