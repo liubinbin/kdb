@@ -1,5 +1,8 @@
 package cn.liubinbin.kdb.server.parser;
 
+import cn.liubinbin.kdb.server.entity.KdbRowValue;
+import cn.liubinbin.kdb.server.planer.BoolExpression;
+import cn.liubinbin.kdb.server.planer.OperatorKind;
 import org.apache.calcite.config.Lex;
 import org.apache.calcite.sql.*;
 import org.apache.calcite.sql.parser.SqlParseException;
@@ -38,7 +41,7 @@ public class Parser {
 //        sqls.add("select * from a order by b limit 10");
 //        sqls.add("describe database kdb");
 //        sqls.add("describe table a");
-        sqls.add("delete from a where id <> 3 and name = 'haha'");
+        sqls.add("delete from a where id = 3 and name = 'haha'");
 
         for (String sql : sqls) {
             SqlNode sqlNode = parse(sql);
@@ -47,11 +50,23 @@ public class Parser {
             System.out.println(delete.getTargetTable().toString());
 
             SqlBasicCall conditionList = (SqlBasicCall) delete.getCondition();
+            List<BoolExpression> whereBoolExpreList = new ArrayList<>();
             if (conditionList != null) {
                 for (SqlNode node : conditionList.getOperandList()) {
                     SqlBasicCall curCondition = (SqlBasicCall) node;
-                    System.out.println(curCondition.getOperator().kind);
-                    System.out.println(curCondition.getOperandList());
+                    String columnName = curCondition.getOperandList().get(0).toString();
+                    KdbRowValue curKdbRowValue = ParserUtils.getRowValue(curCondition.getOperandList().get(1));
+                    switch (curCondition.getOperator().kind) {
+                        case EQUALS:
+                            whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.EQUAL, curKdbRowValue));
+                            break;
+                        case GREATER_THAN:
+                            whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.GREATER_THAN, curKdbRowValue));
+                            break;
+                        case LESS_THAN:
+                            whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.LESS_THAN, curKdbRowValue));
+                            break;
+                    }
                 }
             }
 

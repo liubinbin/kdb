@@ -3,6 +3,7 @@ package cn.liubinbin.kdb.server.table;
 import cn.liubinbin.kdb.server.btree.BPlusTree;
 import cn.liubinbin.kdb.server.entity.KdbRow;
 import cn.liubinbin.kdb.server.entity.KdbRowValue;
+import cn.liubinbin.kdb.server.planer.BoolExpression;
 import cn.liubinbin.kdb.utils.Contants;
 
 import java.util.ArrayList;
@@ -50,6 +51,14 @@ public class BtreeTable extends AbstTable {
     public void insert(KdbRow rowToInsert) {
         System.out.println("start to insert row");
         bPlusTree.insert(rowToInsert);
+        bPlusTree.print();
+    }
+
+    @Override
+    public void delete(List<BoolExpression> expressions) {
+        System.out.println("start to delete row");
+//        bPlusTree.delete(null);
+        // TODO
         bPlusTree.print();
     }
 }

@@ -2,6 +2,7 @@ package cn.liubinbin.kdb.server.table;
 
 import cn.liubinbin.kdb.server.entity.KdbRow;
 import cn.liubinbin.kdb.server.entity.KdbRowValue;
+import cn.liubinbin.kdb.server.planer.BoolExpression;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,11 @@ public class FakeTable extends AbstTable {
 
     @Override
     public void insert(KdbRow rowToInsert) {
+
+    }
+
+    @Override
+    public void delete(List<BoolExpression> expressions) {
 
     }
 }

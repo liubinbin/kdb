@@ -4,10 +4,7 @@ import cn.liubinbin.kdb.grpc.Header;
 import cn.liubinbin.kdb.grpc.KdbSqlResponse;
 import cn.liubinbin.kdb.grpc.Row;
 import cn.liubinbin.kdb.server.entity.KdbRow;
-import cn.liubinbin.kdb.server.planer.CreateTablePlan;
-import cn.liubinbin.kdb.server.planer.DescribeTablePlan;
-import cn.liubinbin.kdb.server.planer.InsertTablePlan;
-import cn.liubinbin.kdb.server.planer.Plan;
+import cn.liubinbin.kdb.server.planer.*;
 import cn.liubinbin.kdb.server.table.Column;
 import cn.liubinbin.kdb.server.table.ColumnType;
 import cn.liubinbin.kdb.server.table.TableManage;
@@ -76,6 +73,20 @@ public class Executor {
                     reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(tableNotExistRow).build();
                 } else {
                     tableManage.getTable(insertTablePlan.getTableName()).insert(kdbRow);
+                    cn.liubinbin.kdb.grpc.Row insertSuccess = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(Contants.SUCCESS).build();
+                    reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(insertSuccess).build();
+                }
+                break;
+            case DELETE_TABLE:
+                System.out.println("this is delete table sql ");
+                DeleteTablePlan deleteTablePlan = (DeleteTablePlan) plan;
+                header = Header.newBuilder().addHeader("status").build();
+                System.out.println(deleteTablePlan);
+                if(!tableManage.existTable(deleteTablePlan.getTableName())) {
+                    cn.liubinbin.kdb.grpc.Row tableNotExistRow = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(Contants.TABLE_NOT_EXIST).build();
+                    reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(tableNotExistRow).build();
+                } else {
+                    tableManage.getTable(deleteTablePlan.getTableName()).delete(deleteTablePlan.getWhereBoolExpreList());
                     cn.liubinbin.kdb.grpc.Row insertSuccess = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(Contants.SUCCESS).build();
                     reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(insertSuccess).build();
                 }

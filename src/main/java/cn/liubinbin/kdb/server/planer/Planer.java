@@ -63,8 +63,45 @@ public class Planer {
                     throw new RuntimeException("Expected an INSERT_TABLE statement but got: " + sqlNode.getKind());
                 }
                 break;
+            case DELETE:
+                System.out.println("this is table delete");
+                if (sqlNode instanceof SqlDelete) {
+                    SqlDelete delete = (SqlDelete) sqlNode;
+                    String tableName = ParserUtils.getString(delete.getTargetTable());
+                    List<BoolExpression> whereBoolExpreList = new ArrayList<>();
+                    SqlBasicCall conditionList = (SqlBasicCall) delete.getCondition();
+                    if (conditionList != null) {
+                        for (SqlNode node : conditionList.getOperandList()) {
+                            SqlBasicCall curCondition = (SqlBasicCall) node;
+                            String columnName = curCondition.getOperandList().get(0).toString();
+                            KdbRowValue curKdbRowValue = ParserUtils.getRowValue(curCondition.getOperandList().get(1));
+                            switch (curCondition.getOperator().kind) {
+                                case EQUALS:
+                                    whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.EQUAL, curKdbRowValue));
+                                    break;
+                                case GREATER_THAN:
+                                    whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.GREATER_THAN, curKdbRowValue));
+                                    break;
+                                case LESS_THAN:
+                                    whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.LESS_THAN, curKdbRowValue));
+                                    break;
+                            }
+                        }
+                    }
+                    plan = new DeleteTablePlan(tableName, whereBoolExpreList);
+                } else {
+                    throw new RuntimeException("Expected an DELETE_TABLE statement but got: " + sqlNode.getKind());
+                }
+                break;
             case SELECT:
                 System.out.println("this is table select");
+                if (sqlNode instanceof SqlSelect) {
+                    plan = new SelectTablePlan(ParserUtils.getString(sqlNode));
+                    System.out.println("this is table select");
+                    // TODO
+                } else {
+                    throw new RuntimeException("Expected an SELECT_TABLE statement but got: " + sqlNode.getKind());
+                }
                 break;
             case OTHER:
                 System.out.println("do not support");

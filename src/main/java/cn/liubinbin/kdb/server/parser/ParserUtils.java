@@ -24,6 +24,17 @@ public class ParserUtils {
         return columnNames;
     }
 
+    public static KdbRowValue getRowValue(SqlNode node) {
+        KdbRowValue kdbRowValue = null;
+        if (node instanceof SqlNumericLiteral) {
+            kdbRowValue = new KdbRowValue(ColumnType.INTEGER, ((SqlNumericLiteral) node).intValue(false));
+        } else if (node instanceof SqlCharStringLiteral ) {
+            kdbRowValue = new KdbRowValue(ColumnType.VARCHAR, ((SqlCharStringLiteral) node).getStringValue());
+        }
+
+        return kdbRowValue;
+    }
+
     public static List<KdbRowValue> getRowValueList(SqlBasicCall sqlBasicCall) {
         List<KdbRowValue> list = new ArrayList<>();
         for (SqlNode node : sqlBasicCall.getOperandList()) {
