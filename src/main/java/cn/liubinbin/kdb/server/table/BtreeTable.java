@@ -3,6 +3,7 @@ package cn.liubinbin.kdb.server.table;
 import cn.liubinbin.kdb.server.btree.BPlusTree;
 import cn.liubinbin.kdb.server.entity.KdbRow;
 import cn.liubinbin.kdb.server.entity.KdbRowValue;
+import cn.liubinbin.kdb.utils.Contants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +15,19 @@ import java.util.List;
  */
 public class BtreeTable extends AbstTable {
 
-    private BPlusTree bPlusTree;
+    private final BPlusTree bPlusTree;
 
-    public BtreeTable(String tableName, List<Column> columns) {
-        this(tableName, columns, TableType.Btree);
+    public BtreeTable(String tableName, List<Column> columns, Integer order) {
+        this(tableName, columns, TableType.Btree, order);
     }
 
-    public BtreeTable(String tableName, List<Column> columns, TableType tableType) {
+    public BtreeTable(String tableName, List<Column> columns) {
+        this(tableName, columns, TableType.Btree, Contants.DEFAULT_KDB_SERVER_TABLE_ENGINE_BTREE_ORDER);
+    }
+
+    public BtreeTable(String tableName, List<Column> columns, TableType tableType, Integer order) {
         super(tableName, columns, tableType);
+        this.bPlusTree = new BPlusTree(order);
     }
 
     @Override
@@ -43,5 +49,7 @@ public class BtreeTable extends AbstTable {
     @Override
     public void insert(KdbRow rowToInsert) {
         System.out.println("start to insert row");
+        bPlusTree.insert(rowToInsert);
+        bPlusTree.print();
     }
 }

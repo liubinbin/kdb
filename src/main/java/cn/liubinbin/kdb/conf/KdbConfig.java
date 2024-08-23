@@ -52,4 +52,8 @@ public class KdbConfig {
     public String getDataFileExtension() {
         return configuration.getString(Contants.KDB_SERVER_DATA_FILE_EXTENSION, Contants.DEFAULT_KDB_SERVER_DATA_FILE_EXTENSION);
     }
+
+    public Integer getBtreeOrder() {
+        return configuration.getInt(Contants.KDB_SERVER_TABLE_ENGINE_BTREE_ORDER, Contants.DEFAULT_KDB_SERVER_TABLE_ENGINE_BTREE_ORDER);
+    }
 }

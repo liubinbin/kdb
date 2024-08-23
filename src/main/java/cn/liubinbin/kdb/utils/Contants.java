@@ -28,6 +28,10 @@ public class Contants {
 
     public static final String KDB_SERVER_DATA_FILE_EXTENSION = "kdb.server.data.file.extension";
 
+    public static final String KDB_SERVER_TABLE_ENGINE_BTREE_ORDER = "kdb.server.table.engine.btree.order";
+
+    public static final int DEFAULT_KDB_SERVER_TABLE_ENGINE_BTREE_ORDER = 3;
+
     public static final String DEFAULT_KDB_SERVER_DATA_FILE_EXTENSION = ".kdt";
 
     public static final String DEFAULT_KDB_SERVER_BACKUP_FILE_EXTENSION = ".bk";

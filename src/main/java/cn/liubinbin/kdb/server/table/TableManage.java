@@ -33,12 +33,14 @@ public class TableManage {
     private TableType tableType;
     private String tableMetaFullPath;
     private String tableMetaFullBackupPath;
+    private Integer btreeOrder;
 
     public TableManage(KdbConfig kdbConfig) {
         this.tableMap = new ConcurrentHashMap<String, AbstTable>(16);
         this.tableType = kdbConfig.getTableType();
         this.tableMetaFullPath = kdbConfig.getMetaFullPath();
         this.tableMetaFullBackupPath = kdbConfig.getMetaFullPath() + kdbConfig.getBackupFileExtension();
+        this.btreeOrder = kdbConfig.getBtreeOrder();
         System.out.println("kdbConfig tableMetaFullPath " + tableMetaFullPath);
         System.out.println("kdbConfig tableMetaFullBackupPath "  + tableMetaFullBackupPath);
     }
@@ -63,10 +65,10 @@ public class TableManage {
             throw new RuntimeException("table already exists");
         }
         if (tableType == TableType.Btree) {
-            System.out.println("create btree table");
-            tableMap.put(tableName, new BtreeTable(tableName, columns));
+            System.out.println("create btree table " + tableName);
+            tableMap.put(tableName, new BtreeTable(tableName, columns, this.btreeOrder));
         } else {
-            System.out.println("create fake table");
+            System.out.println("create fake table " + tableName);
             tableMap.put(tableName, new FakeTable(tableName, columns));
         }
         // 保存文件
@@ -132,7 +134,7 @@ public class TableManage {
                 table.writeTo(raf);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING, "write table meta failed");
         }
         reNameBackupTableMeta();
     }

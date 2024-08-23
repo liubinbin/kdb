@@ -18,7 +18,7 @@ public class BPlusTree extends Engine {
     private Integer order;
     private Integer maxNodeId;
 
-    BPlusTree(Integer order) {
+    public BPlusTree(Integer order) {
         this.order = order;
         this.root = new Node(true, true, Contants.ROOT_NODE_ID, order);
         this.maxNodeId = Contants.ROOT_NODE_ID;
