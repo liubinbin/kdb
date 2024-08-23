@@ -16,4 +16,7 @@ public interface Table {
     public void insert(KdbRow rowToInsert);
 
     public void delete(List<BoolExpression> expressions);
+
+    public void select();
+
 }

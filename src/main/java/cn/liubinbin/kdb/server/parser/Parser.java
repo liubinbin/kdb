@@ -41,34 +41,45 @@ public class Parser {
 //        sqls.add("select * from a order by b limit 10");
 //        sqls.add("describe database kdb");
 //        sqls.add("describe table a");
-        sqls.add("delete from a where id = 3 and name = 'haha'");
+//        sqls.add("delete from a where id = 3 and name = 'haha'");
+        sqls.add("select * from stu where id = 1 and name = 'haha'");
 
         for (String sql : sqls) {
             SqlNode sqlNode = parse(sql);
-//            System.out.println("sqlNode " + sqlNode);
-            SqlDelete delete = (SqlDelete) sqlNode;
-            System.out.println(delete.getTargetTable().toString());
+            SqlSelect select = (SqlSelect) sqlNode;
+            System.out.println("sqlNode select " + select);
+            System.out.println(select.getSelectList());
+            System.out.println(select.getFrom());
+            System.out.println(select.getWhere());
+            System.out.println(select.getOrderList());
+            System.out.println(select.getGroup());
+            System.out.println(select.getOffset());
 
-            SqlBasicCall conditionList = (SqlBasicCall) delete.getCondition();
-            List<BoolExpression> whereBoolExpreList = new ArrayList<>();
-            if (conditionList != null) {
-                for (SqlNode node : conditionList.getOperandList()) {
-                    SqlBasicCall curCondition = (SqlBasicCall) node;
-                    String columnName = curCondition.getOperandList().get(0).toString();
-                    KdbRowValue curKdbRowValue = ParserUtils.getRowValue(curCondition.getOperandList().get(1));
-                    switch (curCondition.getOperator().kind) {
-                        case EQUALS:
-                            whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.EQUAL, curKdbRowValue));
-                            break;
-                        case GREATER_THAN:
-                            whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.GREATER_THAN, curKdbRowValue));
-                            break;
-                        case LESS_THAN:
-                            whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.LESS_THAN, curKdbRowValue));
-                            break;
-                    }
-                }
-            }
+
+
+//            SqlDelete delete = (SqlDelete) sqlNode;
+//            System.out.println(delete.getTargetTable().toString());
+//
+//            SqlBasicCall conditionList = (SqlBasicCall) delete.getCondition();
+//            List<BoolExpression> whereBoolExpreList = new ArrayList<>();
+//            if (conditionList != null) {
+//                for (SqlNode node : conditionList.getOperandList()) {
+//                    SqlBasicCall curCondition = (SqlBasicCall) node;
+//                    String columnName = curCondition.getOperandList().get(0).toString();
+//                    KdbRowValue curKdbRowValue = ParserUtils.getRowValue(curCondition.getOperandList().get(1));
+//                    switch (curCondition.getOperator().kind) {
+//                        case EQUALS:
+//                            whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.EQUAL, curKdbRowValue));
+//                            break;
+//                        case GREATER_THAN:
+//                            whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.GREATER_THAN, curKdbRowValue));
+//                            break;
+//                        case LESS_THAN:
+//                            whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.LESS_THAN, curKdbRowValue));
+//                            break;
+//                    }
+//                }
+//            }
 
 
 //            SqlNode sqlNode = parse(sql);
