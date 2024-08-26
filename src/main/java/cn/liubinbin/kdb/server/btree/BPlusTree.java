@@ -8,6 +8,7 @@ import cn.liubinbin.kdb.utils.Contants;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 
 /**
@@ -145,6 +146,7 @@ public class BPlusTree extends Engine {
         // new data
         Node leftNode = new Node(false, true, getAndAddNodeId(), order);
         Node rightNode = new Node(false, true, getAndAddNodeId(), order);
+        leftNode.setNext(rightNode);
         // 获取 splitkey
         KdbRow[] curNodeData = mergeKdbRowAndSort(curNode.getData(), rowToInsert);
         Integer splitRowKey = curNodeData[(curNodeData.length / 2) + 1].getRowKey();
@@ -212,6 +214,10 @@ public class BPlusTree extends Engine {
         rightChildren.setChildrenSep(rightNodeChildrenSep);
         rightChildren.setChildrenSepCount(rightNodeChildIdx);
 
+        Node leftChildInLeftChild = leftChildren.getChildren()[leftChildren.getChildrenCount() - 1];
+        Node rightChildInRightChild = rightChildren.getChildren()[0];
+        leftChildInLeftChild.setNext(rightChildInRightChild);
+
 //        System.out.println("print two child start");
 //        leftChildren.printChildren();
 //        rightChildren.printChildren();
@@ -250,8 +256,11 @@ public class BPlusTree extends Engine {
         curNode.getChildren()[idxToInsert] = leftChildren;
         curNode.getChildren()[idxToInsert + 1] = rightChildren;
         curNode.getChildrenSep()[idxToInsert] = newChildrenSep;
-
         curNode.addChildrenSepCount();
+
+        if (idxToInsert > 0) {
+            curNode.getChildren()[idxToInsert -1].setNext(leftChildren);
+        }
     }
 
     public void splitLeafChildren(Node curNode, Node leftChildren, Node rightChildren, Integer childrenSepKey) {
@@ -282,11 +291,30 @@ public class BPlusTree extends Engine {
 
         curNode.addChildrenSepCount();
 
+        if (idxToInsert > 0) {
+            curNode.getChildren()[idxToInsert -1].setNext(leftChildren);
+        }
+
         splitInternalChildren(curNode);
     }
 
-    public void rangeScan(Integer lowerBound, Integer upperBound) {
+    public List<KdbRow> rangeScan(Integer lowerBound, Integer upperBound) {
         // find in the most left node
+        Node curNode = root;
+        Node tempNode = null;
+        while (!curNode.isLeaf()) {
+            tempNode = curNode.getChildren()[0];
+            for (int i = 0; i < curNode.getChildrenCount() - 1; i++) {
+                if (lowerBound > curNode.getChildrenSep()[i]) {
+                    tempNode = curNode.getChildren()[i+1];
+                } else {
+                    break;
+                }
+            }
+            curNode = tempNode;
+        }
+        // TODO
+        return null;
     }
 
     public void print() {
@@ -320,13 +348,15 @@ public class BPlusTree extends Engine {
             bPlusTree.print();
         }
 
-        for(int i = 0; i <= 2; i++) {
+        for(int i = 0; i <= 6; i++) {
             KdbRow curRow = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, i)));
             System.out.println("--- before delete row " + i + " ---");
             bPlusTree.delete(curRow);
             System.out.println("--- after delete row " + i + " ---");
             bPlusTree.print();
         }
+
+        bPlusTree.rangeScan(-1, 100);
 
 //        bPlusTree.insert(rowOne);
 //        System.out.println("--- after insert rowOne ---");

@@ -41,6 +41,8 @@ public class Node {
     private Node parent;
     // order 度
     private Integer order;
+    // 下面一个
+    private Node next;
 
     public Node(boolean isRoot, boolean isLeaf, Integer nodeId, Integer order) {
         this.order = order;
@@ -61,6 +63,7 @@ public class Node {
         this.childrenSep = new Integer[order];
         this.children = new Node[order + 1];
         this.childrenSepCount = 0;
+        this.next = null;
     }
 
     public void removeBigThan(KdbRow row) {
@@ -262,7 +265,14 @@ public class Node {
     }
 
     public void treePrint(String prefix) {
-        System.out.println(prefix + "nodeId:" + nodeId + ", isRoot:" + isRoot + ", isLeaf:" + isLeaf + ", maxKey:" + maxKey + ", minKey:" + minKey);
+        System.out.print(prefix + "nodeId:" + nodeId + ", isRoot:" + isRoot + ", isLeaf:" + isLeaf + ", maxKey:" +
+                maxKey + ", minKey:" + minKey);
+        if (this.next != null) {
+            System.out.print( ", next nodeId:" + next.getNodeId());
+        } else {
+            System.out.print(", next nil");
+        }
+        System.out.println();
         if (isLeaf) {
             // print Leaf
             System.out.println(prefix + "leaf meta curRowCount:" + curRowCount + ", maxCount:" + maxCount);
@@ -331,6 +341,14 @@ public class Node {
 
     public boolean IsSame(Node o) {
         return nodeId.equals(o.nodeId);
+    }
+
+    public void setNext(Node next) {
+        this.next = next;
+    }
+
+    public void updateNext(Node next) {
+        this.next = next;
     }
 
     public static void main(String[] args) {

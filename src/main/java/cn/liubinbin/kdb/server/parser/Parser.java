@@ -48,14 +48,18 @@ public class Parser {
             System.out.println("--- parse one sql ---");
             SqlNode sqlNode = parse(sql);
             System.out.println(sqlNode.getClass());
-            SqlSelect select = (SqlSelect) sqlNode;
-            System.out.println("sqlNode select " + select);
-            System.out.println("1: " + select.getSelectList());
-            System.out.println("2: " + select.getFrom());
-            System.out.println("3: " + select.getWhere());
-            System.out.println("4: " + select.getOrderList());
-            System.out.println("5: " + select.getGroup());
-            System.out.println("6: " + select.getOffset());
+
+            SqlOrderBy orderby = (SqlOrderBy) sqlNode;
+            System.out.println(orderby.fetch.getClass());
+
+//            SqlSelect select = (SqlSelect) sqlNode;
+//            System.out.println("sqlNode select " + select);
+//            System.out.println("1: " + select.getSelectList());
+//            System.out.println("2: " + select.getFrom());
+//            System.out.println("3: " + select.getWhere());
+//            System.out.println("4: " + select.getOrderList());
+//            System.out.println("5: " + select.getGroup());
+//            System.out.println("6: " + select.getOffset());
 
 
 
