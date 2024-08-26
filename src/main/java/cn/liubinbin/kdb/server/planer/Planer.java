@@ -4,6 +4,7 @@ import cn.liubinbin.kdb.server.entity.KdbRowValue;
 import cn.liubinbin.kdb.server.parser.ParserUtils;
 import cn.liubinbin.kdb.server.table.Column;
 import cn.liubinbin.kdb.server.table.ColumnType;
+import jdk.nashorn.internal.runtime.linker.LinkerCallSite;
 import org.apache.calcite.sql.*;
 import org.apache.calcite.sql.ddl.SqlColumnDeclaration;
 import org.apache.calcite.sql.ddl.SqlCreateTable;
@@ -96,9 +97,33 @@ public class Planer {
             case SELECT:
                 System.out.println("this is table select");
                 if (sqlNode instanceof SqlSelect) {
-                    plan = new SelectTablePlan(ParserUtils.getString(sqlNode));
-                    System.out.println("this is table select");
-                    // TODO
+                    SqlSelect select = (SqlSelect) sqlNode;
+                    String tableName = select.getFrom().toString();
+
+                    List<String> columnList = ParserUtils.getColumnList(select.getSelectList());
+                    if (columnList.size() == 1 && columnList.get(0).isEmpty()) {
+                        columnList = new ArrayList<>();
+                    }
+
+                    SqlBasicCall curCondition = (SqlBasicCall) select.getWhere();
+
+                    List<BoolExpression> whereBoolExpreList = new ArrayList<>();
+                    boolean isWhereAnd = true;
+                    if (curCondition != null) {
+                        if (curCondition.getOperator().kind == SqlKind.AND || curCondition.getOperator().kind == SqlKind.OR) {
+                            if (curCondition.getOperator().kind == SqlKind.OR) {
+                                isWhereAnd = false;
+                            }
+                            for (SqlNode curNode : curCondition.getOperandList()) {
+                                SqlBasicCall curCondition1 = (SqlBasicCall) curNode;
+                                whereBoolExpreList.add(ParserUtils.getWhereBoolExpreList(curCondition1));
+                            }
+                        } else {
+                            whereBoolExpreList.add(ParserUtils.getWhereBoolExpreList(curCondition));
+                        }
+                    }
+
+                    plan = new SelectTablePlan(tableName, columnList, isWhereAnd, whereBoolExpreList);
                 } else {
                     throw new RuntimeException("Expected an SELECT_TABLE statement but got: " + sqlNode.getKind());
                 }

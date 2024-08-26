@@ -2,6 +2,8 @@ package cn.liubinbin.kdb.server.parser;
 
 
 import cn.liubinbin.kdb.server.entity.KdbRowValue;
+import cn.liubinbin.kdb.server.planer.BoolExpression;
+import cn.liubinbin.kdb.server.planer.OperatorKind;
 import cn.liubinbin.kdb.server.table.ColumnType;
 import org.apache.calcite.sql.*;
 
@@ -14,11 +16,31 @@ import java.util.List;
  */
 public class ParserUtils {
 
+    public static BoolExpression getWhereBoolExpreList(SqlBasicCall curCondition) {
+        BoolExpression boolExpression = null;
+        String columnName = curCondition.getOperandList().get(0).toString();
+        KdbRowValue curKdbRowValue = ParserUtils.getRowValue(curCondition.getOperandList().get(1));
+        switch (curCondition.getOperator().kind) {
+            case EQUALS:
+                boolExpression = new BoolExpression(columnName, OperatorKind.EQUAL, curKdbRowValue);
+                break;
+            case GREATER_THAN:
+                boolExpression =  new BoolExpression(columnName, OperatorKind.GREATER_THAN, curKdbRowValue);
+                break;
+            case LESS_THAN:
+                boolExpression = new BoolExpression(columnName, OperatorKind.LESS_THAN, curKdbRowValue);
+                break;
+        }
+        return boolExpression;
+    }
+
     public static List<String> getColumnList(List<SqlNode> sqlNodeList) {
         List<String> columnNames = new ArrayList<>();
         if (sqlNodeList != null) {
             for (SqlNode sqlNode : sqlNodeList) {
-                columnNames.add(getString(sqlNode));
+                if (sqlNode instanceof SqlIdentifier) {
+                    columnNames.add(getString(sqlNode));
+                }
             }
         }
         return columnNames;

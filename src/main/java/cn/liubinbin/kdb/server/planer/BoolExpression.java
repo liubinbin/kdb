@@ -10,12 +10,12 @@ public class BoolExpression {
 
     private String columnName;
     private OperatorKind operator;
-    private KdbRowValue groupBy;
+    private KdbRowValue value;
 
-    public BoolExpression(String columnName, OperatorKind operator, KdbRowValue groupBy) {
+    public BoolExpression(String columnName, OperatorKind operator, KdbRowValue value) {
         this.columnName = columnName;
         this.operator = operator;
-        this.groupBy = groupBy;
+        this.value = value;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class BoolExpression {
         return "BoolExpression{" +
                 "columnName='" + columnName + '\'' +
                 ", operator=" + operator +
-                ", groupBy=" + groupBy +
+                ", groupBy=" + value +
                 '}';
     }
 }
