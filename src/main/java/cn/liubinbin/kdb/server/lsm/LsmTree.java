@@ -7,5 +7,4 @@ import cn.liubinbin.kdb.server.executor.Engine;
  */
 public class LsmTree extends Engine {
 
-
 }

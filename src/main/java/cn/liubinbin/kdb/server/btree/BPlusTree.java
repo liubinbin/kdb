@@ -72,6 +72,9 @@ public class BPlusTree extends Engine {
     }
 
     private void mergeLeafChildren(Node curNode, Node parent) {
+        if (parent.isRoot() && parent.getChildrenCount() <= 1) {
+            parent.setLeaf(true);
+        }
         System.out.println("do some merge");
         int childIdxInParent = 0;
         for (childIdxInParent = 0; childIdxInParent < parent.getChildrenCount(); childIdxInParent++) {
@@ -101,9 +104,9 @@ public class BPlusTree extends Engine {
             newNode.add(rightNode.getData()[i]);
         }
         newNode.setParent(parent);
+        newNode.setNext(rightNode.getNext());
 
         // 移动 childrenSep 和 child
-        //
         parent.getChildren()[childIdxInParent] = newNode;
         for(int i = childIdxInParent + 1; i < parent.getChildrenCount() - 1; i++){
             parent.getChildren()[i] = parent.getChildren()[i + 1];
@@ -355,6 +358,12 @@ public class BPlusTree extends Engine {
             System.out.println("--- after delete row " + i + " ---");
             bPlusTree.print();
         }
+
+        KdbRow curRow = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 1)));
+        System.out.println("--- before insert row 1  ---");
+        bPlusTree.insert(curRow);
+        System.out.println("--- after insert row 1 ---");
+        bPlusTree.print();
 
         bPlusTree.rangeScan(-1, 100);
 

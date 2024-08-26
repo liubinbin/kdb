@@ -276,8 +276,9 @@ public class Node {
         if (isLeaf) {
             // print Leaf
             System.out.println(prefix + "leaf meta curRowCount:" + curRowCount + ", maxCount:" + maxCount);
+            System.out.print(prefix);
             for (int i = 0; i < curRowCount; i++) {
-                System.out.print(prefix + "leaf data[" + i + "]:" + data[i].getRowKey() + "; ");
+                System.out.print( " " + i + " leaf data[" + i + "]:" + data[i].getRowKey() + "; ");
             }
             System.out.println();
         } else {
@@ -345,6 +346,14 @@ public class Node {
 
     public void setNext(Node next) {
         this.next = next;
+    }
+
+    public Node getNext() {
+        return next;
+    }
+
+    public void setLeaf(boolean leaf) {
+        isLeaf = leaf;
     }
 
     public void updateNext(Node next) {
