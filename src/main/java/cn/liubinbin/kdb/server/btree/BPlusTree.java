@@ -6,6 +6,7 @@ import cn.liubinbin.kdb.server.executor.Engine;
 import cn.liubinbin.kdb.server.table.ColumnType;
 import cn.liubinbin.kdb.utils.Contants;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -314,12 +315,13 @@ public class BPlusTree extends Engine {
      */
     public List<KdbRow> rangeScan(Integer lowerBound, Integer upperBound) {
         // find in the most left node
+        List<KdbRow> rows = new ArrayList<>();
         Node curNode = root;
         Node tempNode = null;
         while (!curNode.isLeaf()) {
             tempNode = curNode.getChildren()[0];
             for (int i = 0; i < curNode.getChildrenCount() - 1; i++) {
-                if (lowerBound > curNode.getChildrenSep()[i]) {
+                if (lowerBound >= curNode.getChildrenSep()[i]) {
                     tempNode = curNode.getChildren()[i+1];
                 } else {
                     break;
@@ -327,8 +329,18 @@ public class BPlusTree extends Engine {
             }
             curNode = tempNode;
         }
-        // TODO
-        return null;
+        while (curNode != null) {
+            for (int i = 0; i < curNode.getCurRowCount(); i++) {
+                KdbRow row = curNode.getData()[i];
+                if (row.getRowKey() >= lowerBound && row.getRowKey() <= upperBound) {
+                    rows.add(row);
+                } else if (row.getRowKey() > upperBound) {
+                    break;
+                }
+            }
+            curNode = curNode.getNext();
+        }
+        return rows;
     }
 
     public void print() {
@@ -347,13 +359,6 @@ public class BPlusTree extends Engine {
     public static void main(String[] args) {
         BPlusTree bPlusTree = new BPlusTree(3);
 
-//        KdbRow rowOne = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 1)));
-//        KdbRow rowTwo = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 2)));
-//        KdbRow rowThree = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 3)));
-//        KdbRow rowFour = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 4)));
-//        KdbRow rowFive = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 5)));
-//        KdbRow rowSix = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 6)));
-
         for(int i = 1; i <= 6; i++) {
             KdbRow curRow = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, i)));
             System.out.println("--- before insert row " + i + " ---");
@@ -362,22 +367,36 @@ public class BPlusTree extends Engine {
             bPlusTree.print();
         }
 
-        for(int i = 0; i <= 6; i++) {
-            KdbRow curRow = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, i)));
-            System.out.println("--- before delete row " + i + " ---");
-            bPlusTree.delete(curRow);
-            System.out.println("--- after delete row " + i + " ---");
-            bPlusTree.print();
+//        for (int i = -1; i <= 6; i++) {
+//            System.out.println(" i  " + i);
+//            List<KdbRow> rows = bPlusTree.rangeScan(i, 100);
+//        }
+        List<KdbRow> rows = bPlusTree.rangeScan(4, 5);
+        System.out.println("rows size " + rows.size());
+        for (KdbRow row : rows) {
+            System.out.print(row.getRowKey() + ", ");
         }
 
-        KdbRow curRow = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 1)));
-        System.out.println("--- before insert row 1  ---");
-        bPlusTree.insert(curRow);
-        System.out.println("--- after insert row 1 ---");
-        bPlusTree.print();
+//        for(int i = 0; i <= 6; i++) {
+//            KdbRow curRow = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, i)));
+//            System.out.println("--- before delete row " + i + " ---");
+//            bPlusTree.delete(curRow);
+//            System.out.println("--- after delete row " + i + " ---");
+//            bPlusTree.print();
+//        }
+//
+//        KdbRow curRow = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 1)));
+//        System.out.println("--- before insert row 1  ---");
+//        bPlusTree.insert(curRow);
+//        System.out.println("--- after insert row 1 ---");
+//        bPlusTree.print();
 
-        bPlusTree.rangeScan(-1, 100);
-
+//        KdbRow rowOne = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 1)));
+//        KdbRow rowTwo = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 2)));
+//        KdbRow rowThree = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 3)));
+//        KdbRow rowFour = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 4)));
+//        KdbRow rowFive = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 5)));
+//        KdbRow rowSix = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, 6)));
 //        bPlusTree.insert(rowOne);
 //        System.out.println("--- after insert rowOne ---");
 //        bPlusTree.print();
