@@ -75,7 +75,7 @@ public class BPlusTree extends Engine {
         if (parent.isRoot() && parent.getChildrenCount() <= 1) {
             parent.setLeaf(true);
         }
-        System.out.println("do some merge");
+        System.out.println("do some merge for leaf children");
         int childIdxInParent = 0;
         for (childIdxInParent = 0; childIdxInParent < parent.getChildrenCount(); childIdxInParent++) {
             if (parent.getChildren()[childIdxInParent] == curNode) {
@@ -301,6 +301,17 @@ public class BPlusTree extends Engine {
         splitInternalChildren(curNode);
     }
 
+    public List<KdbRow> rangeScan() {
+        return this.rangeScan(Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+    /**
+     * range 搜索
+     * [lowerBound, upperBound]
+     * @param lowerBound
+     * @param upperBound
+     * @return
+     */
     public List<KdbRow> rangeScan(Integer lowerBound, Integer upperBound) {
         // find in the most left node
         Node curNode = root;

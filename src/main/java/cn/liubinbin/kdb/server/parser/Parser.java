@@ -38,16 +38,17 @@ public class Parser {
 //        sqls.add("select * from a");
 //        sqls.add("select * from a where b = 1");
 //        sqls.add("select * from a where b = 1 and c = 'haha'");
-        sqls.add("select * from stu where id = 1 order by b limit 10");
+//        sqls.add("select * from stu where id = 1 order by b limit 10");
 //        sqls.add("describe database kdb");
 //        sqls.add("describe table a");
 //        sqls.add("delete from a where id = 3 and name = 'haha'");
-        sqls.add("select id,name from stu where id = 1 and name = 'haha'");
+//        sqls.add("select id,name from stu where id = 1 and name = 'haha'");
+//        sqls.add("select age, count(*) from stu group by age"); // 不支持
 
         for (String sql : sqls) {
             System.out.println("--- parse one sql ---");
             SqlNode sqlNode = parse(sql);
-            System.out.println(sqlNode.getClass());
+            System.out.println(sqlNode.getKind());
 
             SqlOrderBy orderby = (SqlOrderBy) sqlNode;
             System.out.println(orderby.fetch.getClass());
