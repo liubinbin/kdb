@@ -2,7 +2,7 @@ package cn.liubinbin.kdb.server.executor;
 
 import cn.liubinbin.kdb.server.entity.KdbRow;
 
-public class ScanExePlan extends AbstrExePlan implements BaseExePlan{
+public class ScanExePlan extends AbstrExePlan {
 
     public ScanExePlan(int kind) {
         super(kind);

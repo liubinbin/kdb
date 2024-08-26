@@ -5,6 +5,7 @@ import cn.liubinbin.kdb.grpc.KdbSqlResponse;
 import cn.liubinbin.kdb.grpc.Row;
 import cn.liubinbin.kdb.server.entity.KdbRow;
 import cn.liubinbin.kdb.server.planer.*;
+import cn.liubinbin.kdb.server.table.AbstTable;
 import cn.liubinbin.kdb.server.table.Column;
 import cn.liubinbin.kdb.server.table.ColumnType;
 import cn.liubinbin.kdb.server.table.TableManage;
@@ -92,7 +93,20 @@ public class Executor {
                 }
                 break;
             case SELECT_TABLE:
-                List<KdbRow> kdbRows = tableManage.getTable("test").limit(1);
+                SelectTablePlan selectTablePlan = (SelectTablePlan) plan;
+
+                AbstTable table = tableManage.getTable(selectTablePlan.getTableName());
+                AbstrExePlan selectPhysicalPlan = Engine.getInstance().generatePhysicalPlan(selectTablePlan, table);
+
+                // 先生成物理计划
+                List<KdbRow> kdbRows = new ArrayList<>();
+                while (selectPhysicalPlan.hasMore()) {
+                    kdbRows.add(selectPhysicalPlan.onNext());
+                }
+
+
+
+                System.out.println();
                 header = Header.newBuilder().addHeader("bin header").build();
                 cn.liubinbin.kdb.grpc.Row dataRow = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(kdbRows.get(0).getValues().get(0).getStringValue()).build();
                 reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(dataRow).build();
