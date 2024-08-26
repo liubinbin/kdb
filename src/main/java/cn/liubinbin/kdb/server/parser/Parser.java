@@ -4,10 +4,7 @@ import cn.liubinbin.kdb.server.entity.KdbRowValue;
 import cn.liubinbin.kdb.server.planer.BoolExpression;
 import cn.liubinbin.kdb.server.planer.OperatorKind;
 import org.apache.calcite.config.Lex;
-import org.apache.calcite.sql.SqlBasicCall;
-import org.apache.calcite.sql.SqlKind;
-import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.sql.SqlSelect;
+import org.apache.calcite.sql.*;
 import org.apache.calcite.sql.parser.SqlParseException;
 import org.apache.calcite.sql.parser.SqlParser;
 import org.apache.calcite.sql.parser.ddl.SqlDdlParserImpl;
@@ -42,12 +39,14 @@ public class Parser {
 //        sqls.add("insert into a (id, name) VALUES (1, 'Alice')");
 
 //        sqls.add("select * from a");
-        sqls.add("select * from a where b = 1");
-        sqls.add("select * from a where b = 1 and c = 'haha'");
-        sqls.add("select id,name from stu where id = 1 and name = 'haha'");
+//        sqls.add("select * from a where b = 1");
+//        sqls.add("select * from a where b = 1 and c = 'haha'");
+//        sqls.add("select id,name from stu where id = 1 and name = 'haha'");
+
 //        sqls.add("select age, count(*) from stu group by age"); // 不支持
 
-//        sqls.add("select * from stu where id = 1 order by b limit 10");
+        sqls.add("select * from stu where id = 1 order by b limit 10");
+        sqls.add("select id,name from stu where id = 1 order by b limit 10");
 
 //        sqls.add("delete from a where id = 3 and name = 'haha'");
 
@@ -57,55 +56,61 @@ public class Parser {
             SqlNode sqlNode = parse(sql);
             System.out.println(sqlNode.getKind());
 
-            SqlSelect select = (SqlSelect) sqlNode;
-            System.out.println("sqlNode select " + select);
-            System.out.println("1: " + select.getSelectList());
-            List<String> columnList = ParserUtils.getColumnList(select.getSelectList());
-            System.out.println(columnList);
-            System.out.println("2: " + select.getFrom().toString());
-            System.out.println("3: " + select.getWhere().getClass());
-            SqlBasicCall curCondition = (SqlBasicCall) select.getWhere();
+            SqlOrderBy orderby = (SqlOrderBy) sqlNode;
+            System.out.println(orderby.orderList);
+            System.out.println(orderby.fetch);
+            System.out.println(orderby.query.getClass());
+
+
+//            SqlSelect select = (SqlSelect) sqlNode;
+//            System.out.println("sqlNode select " + select);
+//            System.out.println("1: " + select.getSelectList());
+//            List<String> columnList = ParserUtils.getColumnList(select.getSelectList());
+//            System.out.println(columnList);
+//            System.out.println("2: " + select.getFrom().toString());
+//            System.out.println("3: " + select.getWhere().getClass());
+//            SqlBasicCall curCondition = (SqlBasicCall) select.getWhere();
 
 //            SqlBasicCall curCondition = (SqlBasicCall) sqlBasicCall;
-            if (curCondition.getOperator().kind == SqlKind.AND || curCondition.getOperator().kind == SqlKind.OR) {
-                List<BoolExpression> whereBoolExpreList = new ArrayList<>();
-                for (SqlNode curNode : curCondition.getOperandList()) {
-                    SqlBasicCall curCondition1 = (SqlBasicCall) curNode;
-                    String columnName = curCondition1.getOperandList().get(0).toString();
-                    KdbRowValue curKdbRowValue = ParserUtils.getRowValue(curCondition1.getOperandList().get(1));
-                    switch (curCondition1.getOperator().kind) {
-                        case EQUALS:
-                            whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.EQUAL, curKdbRowValue));
-                            break;
-                        case GREATER_THAN:
-                            whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.GREATER_THAN, curKdbRowValue));
-                            break;
-                        case LESS_THAN:
-                            whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.LESS_THAN, curKdbRowValue));
-                            break;
-                    }
-                }
-                System.out.println("lbb whereBoolExpreList " + whereBoolExpreList);
-            } else {
-                String columnName = curCondition.getOperandList().get(0).toString();
-                List<BoolExpression> whereBoolExpreList = new ArrayList<>();
-                KdbRowValue curKdbRowValue = ParserUtils.getRowValue(curCondition.getOperandList().get(1));
-                switch (curCondition.getOperator().kind) {
-                    case EQUALS:
-                        whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.EQUAL, curKdbRowValue));
-                        break;
-                    case GREATER_THAN:
-                        whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.GREATER_THAN, curKdbRowValue));
-                        break;
-                    case LESS_THAN:
-                        whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.LESS_THAN, curKdbRowValue));
-                        break;
-                }
-                System.out.println("lbb whereBoolExpreList " + whereBoolExpreList);
-            }
+//            if (curCondition.getOperator().kind == SqlKind.AND || curCondition.getOperator().kind == SqlKind.OR) {
+//                List<BoolExpression> whereBoolExpreList = new ArrayList<>();
+//                for (SqlNode curNode : curCondition.getOperandList()) {
+//                    SqlBasicCall curCondition1 = (SqlBasicCall) curNode;
+//                    String columnName = curCondition1.getOperandList().get(0).toString();
+//                    KdbRowValue curKdbRowValue = ParserUtils.getRowValue(curCondition1.getOperandList().get(1));
+//                    switch (curCondition1.getOperator().kind) {
+//                        case EQUALS:
+//                            whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.EQUAL, curKdbRowValue));
+//                            break;
+//                        case GREATER_THAN:
+//                            whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.GREATER_THAN, curKdbRowValue));
+//                            break;
+//                        case LESS_THAN:
+//                            whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.LESS_THAN, curKdbRowValue));
+//                            break;
+//                    }
+//                }
+//                System.out.println("lbb whereBoolExpreList " + whereBoolExpreList);
+//            } else {
+//                String columnName = curCondition.getOperandList().get(0).toString();
+//                List<BoolExpression> whereBoolExpreList = new ArrayList<>();
+//                KdbRowValue curKdbRowValue = ParserUtils.getRowValue(curCondition.getOperandList().get(1));
+//                switch (curCondition.getOperator().kind) {
+//                    case EQUALS:
+//                        whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.EQUAL, curKdbRowValue));
+//                        break;
+//                    case GREATER_THAN:
+//                        whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.GREATER_THAN, curKdbRowValue));
+//                        break;
+//                    case LESS_THAN:
+//                        whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.LESS_THAN, curKdbRowValue));
+//                        break;
+//                }
+//                System.out.println("lbb whereBoolExpreList " + whereBoolExpreList);
+//            }
 //            System.out.println("4: " + select.getOrderList());
 //            System.out.println("5: " + select.getGroup());
-            System.out.println("6: " + select.getOffset());
+//            System.out.println("6: " + select.getOffset());
 
 //            SqlOrderBy orderby = (SqlOrderBy) sqlNode;
 //            System.out.println(orderby.fetch.getClass());

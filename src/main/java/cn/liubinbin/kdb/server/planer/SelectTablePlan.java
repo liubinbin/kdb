@@ -13,6 +13,9 @@ public class SelectTablePlan extends Plan {
     private List<String> columnList;
     private List<BoolExpression> whereBoolExpreList;
     private boolean isWhereAnd;
+    private boolean isOrderBy;
+    private String columnOrderBy;
+    private Integer limit;
 
     public SelectTablePlan(String tableName, List<String> columnList, boolean isWhereAnd, List<BoolExpression> whereBoolExpreList) {
         super(PlanKind.SELECT_TABLE);
@@ -23,6 +26,15 @@ public class SelectTablePlan extends Plan {
         }
         this.isWhereAnd = isWhereAnd;
         this.whereBoolExpreList = whereBoolExpreList;
+        this.isOrderBy = false;
+    }
+
+    public SelectTablePlan(String tableName, List<String> columnList, boolean isWhereAnd, List<BoolExpression> whereBoolExpreList,
+                           String columnOrderBy, Integer limit){
+        this(tableName, columnList, isWhereAnd, whereBoolExpreList);
+        this.isOrderBy = true;
+        this.columnOrderBy = columnOrderBy;
+        this.limit = limit;
     }
 
     public String getTableName() {
@@ -37,6 +49,9 @@ public class SelectTablePlan extends Plan {
                 ", columnList=" + columnList +
                 ", whereBoolExpreList=" + whereBoolExpreList +
                 ", isWhereAnd=" + isWhereAnd +
+                ", isOrderBy=" + isOrderBy +
+                ", columnOrderBy='" + columnOrderBy + '\'' +
+                ", limit=" + limit +
                 '}';
     }
 }

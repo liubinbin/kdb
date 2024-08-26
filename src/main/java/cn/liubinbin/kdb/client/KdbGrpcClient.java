@@ -127,7 +127,11 @@ public class KdbGrpcClient {
 
             while (true) {
                 System.out.print("> ");
-                String input = scanner.nextLine();
+                String input = scanner.nextLine().trim();
+
+                if (input.isEmpty()) {
+                    continue;
+                }
 
                 if (Contants.EXIT.equalsIgnoreCase(input)) {
                     System.out.println("Exiting...");

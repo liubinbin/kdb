@@ -131,9 +131,36 @@ public class Planer {
             case ORDER_BY:
                 System.out.println("this is table order by");
                 if (sqlNode instanceof SqlOrderBy) {
-                    plan = new OrderByTablePlan(ParserUtils.getString(sqlNode));
-                    System.out.println("this is table order by");
-                    // TODO
+                    SqlOrderBy orderBy = (SqlOrderBy) sqlNode;
+                    SqlSelect select = (SqlSelect) orderBy.query;
+                    String tableName = select.getFrom().toString();
+
+                    List<String> columnList = ParserUtils.getColumnList(select.getSelectList());
+                    if (columnList.size() == 1 && columnList.get(0).isEmpty()) {
+                        columnList = new ArrayList<>();
+                    }
+
+                    SqlBasicCall curCondition = (SqlBasicCall) select.getWhere();
+
+                    List<BoolExpression> whereBoolExpreList = new ArrayList<>();
+                    boolean isWhereAnd = true;
+                    if (curCondition != null) {
+                        if (curCondition.getOperator().kind == SqlKind.AND || curCondition.getOperator().kind == SqlKind.OR) {
+                            if (curCondition.getOperator().kind == SqlKind.OR) {
+                                isWhereAnd = false;
+                            }
+                            for (SqlNode curNode : curCondition.getOperandList()) {
+                                SqlBasicCall curCondition1 = (SqlBasicCall) curNode;
+                                whereBoolExpreList.add(ParserUtils.getWhereBoolExpreList(curCondition1));
+                            }
+                        } else {
+                            whereBoolExpreList.add(ParserUtils.getWhereBoolExpreList(curCondition));
+                        }
+                    }
+                    String columnOrderBy = orderBy.orderList.get(0).toString();
+                    Integer limit = orderBy.fetch.toString().isEmpty() ? null : Integer.parseInt(orderBy.fetch.toString());
+                    plan = new SelectTablePlan(tableName, columnList, isWhereAnd, whereBoolExpreList, columnOrderBy, limit);
+                    System.out.println(plan);
                 } else {
                     throw new RuntimeException("Expected an ORDER_BY_TABLE statement but got: " + sqlNode.getKind());
                 }

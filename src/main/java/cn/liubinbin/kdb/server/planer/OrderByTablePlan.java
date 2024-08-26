@@ -11,8 +11,6 @@ public class OrderByTablePlan extends Plan {
     private final String tableName;
     private String columnOrderBy;
     private Integer limit;
-    private List<BoolExpression> whereBoolExpreList;
-    private String columnGroupBy;
 
     public OrderByTablePlan(String tableName) {
         super(PlanKind.SELECT_TABLE);
