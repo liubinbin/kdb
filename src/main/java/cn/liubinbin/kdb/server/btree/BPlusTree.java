@@ -306,6 +306,23 @@ public class BPlusTree extends Engine {
         return this.rangeScan(Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 
+    public Node getRangeScanStartNode(Integer lowerBound) {
+        Node curNode = root;
+        Node tempNode = null;
+        while (!curNode.isLeaf()) {
+            tempNode = curNode.getChildren()[0];
+            for (int i = 0; i < curNode.getChildrenCount() - 1; i++) {
+                if (lowerBound >= curNode.getChildrenSep()[i]) {
+                    tempNode = curNode.getChildren()[i+1];
+                } else {
+                    break;
+                }
+            }
+            curNode = tempNode;
+        }
+        return curNode;
+    }
+
     /**
      * range 搜索
      * [lowerBound, upperBound]

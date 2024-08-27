@@ -1,6 +1,8 @@
 package cn.liubinbin.kdb.server.table;
 
 import cn.liubinbin.kdb.server.btree.BPlusTree;
+import cn.liubinbin.kdb.server.btree.Cursor;
+import cn.liubinbin.kdb.server.btree.Node;
 import cn.liubinbin.kdb.server.entity.KdbRow;
 import cn.liubinbin.kdb.server.entity.KdbRowValue;
 import cn.liubinbin.kdb.server.planer.BoolExpression;
@@ -54,11 +56,15 @@ public class BtreeTable extends AbstTable {
         bPlusTree.print();
     }
 
+    public Cursor getCursor() {
+        Node startNode = bPlusTree.getRangeScanStartNode(Integer.MIN_VALUE);
+        return new Cursor(startNode, 0);
+    }
+
     @Override
     public void delete(List<BoolExpression> expressions) {
         System.out.println("start to delete row");
 //        bPlusTree.delete(null);
-        // TODO
         bPlusTree.print();
     }
 

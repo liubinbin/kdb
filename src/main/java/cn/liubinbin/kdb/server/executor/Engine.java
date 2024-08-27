@@ -23,9 +23,12 @@ public class Engine {
     }
 
     public AbstrExePlan generatePhysicalPlan(SelectTablePlan plan, AbstTable table) {
+        AbstrExePlan curFirstNode = null;
         // scan
+        curFirstNode = new ScanExePlan(ExePlanKind.ScanTable, null, table);
 
         // whereFilter
+
 
         // order by
 
@@ -33,6 +36,6 @@ public class Engine {
 
         // limit
 
-        // return;
+        return curFirstNode;
     }
 }

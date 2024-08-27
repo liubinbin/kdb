@@ -114,7 +114,7 @@ public class TableManage {
             int tableLen = raf.readInt();
 
             // print db info
-            System.out.println("dbNameLength: " + dbNameLen + "dbName: " + dbName + "tableLen " + tableLen);
+            System.out.println("dbNameLength: " + dbNameLen + ", dbName: " + dbName + ", tableLen " + tableLen);
 
             for (int i = 0; i < tableLen; i++) {
                 AbstTable abstTable = AbstTable.readFrom(raf);
