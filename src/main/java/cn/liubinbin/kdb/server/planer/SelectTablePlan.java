@@ -41,6 +41,10 @@ public class SelectTablePlan extends Plan {
         return tableName;
     }
 
+    public List<String> getColumnList() {
+        return columnList;
+    }
+
     @Override
     public String toString() {
         return "SelectTablePlan{" +

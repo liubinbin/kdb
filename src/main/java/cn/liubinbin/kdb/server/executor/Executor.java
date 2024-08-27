@@ -4,6 +4,7 @@ import cn.liubinbin.kdb.grpc.Header;
 import cn.liubinbin.kdb.grpc.KdbSqlResponse;
 import cn.liubinbin.kdb.grpc.Row;
 import cn.liubinbin.kdb.server.entity.KdbRow;
+import cn.liubinbin.kdb.server.entity.KdbRowValue;
 import cn.liubinbin.kdb.server.planer.*;
 import cn.liubinbin.kdb.server.table.AbstTable;
 import cn.liubinbin.kdb.server.table.Column;
@@ -95,21 +96,40 @@ public class Executor {
             case SELECT_TABLE:
                 SelectTablePlan selectTablePlan = (SelectTablePlan) plan;
 
+                // 先生成物理计划
                 AbstTable table = tableManage.getTable(selectTablePlan.getTableName());
                 AbstrExePlan selectPhysicalPlan = Engine.getInstance().generatePhysicalPlan(selectTablePlan, table);
 
-                // 先生成物理计划
+                // 获取数据
                 List<KdbRow> kdbRows = new ArrayList<>();
                 while (selectPhysicalPlan.hasMore()) {
-                    kdbRows.add(selectPhysicalPlan.onNext());
+                    KdbRow tempRow = selectPhysicalPlan.onNext();
+                    if (tempRow != null) {
+                        kdbRows.add(tempRow);
+                    }
                 }
 
-
-
+                List<String> columNameList = selectTablePlan.getColumnList();
                 System.out.println();
-                header = Header.newBuilder().addHeader("bin header").build();
-                cn.liubinbin.kdb.grpc.Row dataRow = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(kdbRows.get(0).getValues().get(0).getStringValue()).build();
-                reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(dataRow).build();
+                header = Header.newBuilder().addAllHeader(columNameList).build();
+
+                List<Row> dataRows = new ArrayList<>();
+                for (KdbRow curKdbRow : kdbRows) {
+                    // 生成一个 Row
+                    List<String> rowValue = new ArrayList<>();
+                    for (KdbRowValue curColumn : curKdbRow.getValues()) {
+                        if (curColumn.getColumnType() == ColumnType.INTEGER) {
+                            rowValue.add(curColumn.getIntValue().toString());
+                        } else {
+                            rowValue.add(curColumn.getStringValue());
+                        }
+                    }
+
+                    Row tempRow = Row.newBuilder().addAllValue(rowValue).build();
+                    dataRows.add(tempRow);
+                }
+
+                reply = KdbSqlResponse.newBuilder().setHeader(header).addAllRow(dataRows).build();
                 break;
         }
         return reply;
