@@ -23,8 +23,10 @@ public class Cursor {
     }
 
     public boolean hasMore() {
-        if (curNode == null) {
+        if (curNode == null || dataIdx >= curNode.getCurrentRowCount()) {
             return false;
+        } else {
+            return true;
         }
     }
 

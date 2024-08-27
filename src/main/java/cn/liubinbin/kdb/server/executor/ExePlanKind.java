@@ -36,6 +36,9 @@ public enum ExePlanKind {
             case 3:
                 return ColumnFilter;
             case 4:
+                return Limit;
+            default:
+                return DEFAULT;
         }
     }
 }

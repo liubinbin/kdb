@@ -41,8 +41,7 @@ public class TableManage {
         this.tableMetaFullPath = kdbConfig.getMetaFullPath();
         this.tableMetaFullBackupPath = kdbConfig.getMetaFullPath() + kdbConfig.getBackupFileExtension();
         this.btreeOrder = kdbConfig.getBtreeOrder();
-        System.out.println("kdbConfig tableMetaFullPath " + tableMetaFullPath);
-        System.out.println("kdbConfig tableMetaFullBackupPath "  + tableMetaFullBackupPath);
+        System.out.println("kdbConfig tableMetaFullPath " + tableMetaFullPath + ", tableMetaFullBackupPath "  + tableMetaFullBackupPath);
     }
 
     public void init() {
