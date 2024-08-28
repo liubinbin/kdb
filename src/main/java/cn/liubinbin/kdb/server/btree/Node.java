@@ -7,7 +7,6 @@ import cn.liubinbin.kdb.utils.ByteUtils;
 import cn.liubinbin.kdb.utils.Contants;
 
 import java.util.Collections;
-import java.util.Iterator;
 
 /**
  * @author liubinbin

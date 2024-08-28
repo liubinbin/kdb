@@ -6,7 +6,6 @@ import cn.liubinbin.kdb.server.btree.Node;
 import cn.liubinbin.kdb.server.entity.KdbRow;
 import cn.liubinbin.kdb.server.entity.KdbRowValue;
 import cn.liubinbin.kdb.server.planer.BoolExpression;
-import cn.liubinbin.kdb.server.planer.Plan;
 import cn.liubinbin.kdb.utils.Contants;
 
 import java.util.ArrayList;

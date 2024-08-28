@@ -4,7 +4,6 @@ import cn.liubinbin.kdb.server.entity.KdbRowValue;
 import cn.liubinbin.kdb.server.parser.ParserUtils;
 import cn.liubinbin.kdb.server.table.Column;
 import cn.liubinbin.kdb.server.table.ColumnType;
-import jdk.nashorn.internal.runtime.linker.LinkerCallSite;
 import org.apache.calcite.sql.*;
 import org.apache.calcite.sql.ddl.SqlColumnDeclaration;
 import org.apache.calcite.sql.ddl.SqlCreateTable;

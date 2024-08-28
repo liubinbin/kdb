@@ -7,7 +7,6 @@ import cn.liubinbin.kdb.server.table.TableType;
 import cn.liubinbin.kdb.utils.Contants;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.List;
@@ -59,6 +58,19 @@ public class TableStore {
                 offset += page.getPageSize();
             }
         }
+        reNameBackupTableData();
+    }
+
+    private void reNameBackupTableData(){
+        File file = new File(tableDataFilePath);
+        File backFile = new File(tableDataBackupFilePath);
+        if (file.exists()) {
+            file.delete();
+        }
+        boolean renameIfSucc = backFile.renameTo(file);
+        if (!renameIfSucc) {
+            throw new RuntimeException("rename table data file failed");
+        }
     }
 
     public Page getPage(Integer pageId) {
@@ -67,5 +79,9 @@ public class TableStore {
 
     public void putPage(Integer pageId, Page page) {
         pageMap.put(pageId, page);
+    }
+
+    public static void main(String[] args) {
+
     }
 }

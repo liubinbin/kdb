@@ -1,7 +1,6 @@
 package cn.liubinbin.kdb.server.table;
 
 import cn.liubinbin.kdb.conf.KdbConfig;
-import cn.liubinbin.kdb.server.interf.KdbGrpcServer;
 import cn.liubinbin.kdb.utils.Contants;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 

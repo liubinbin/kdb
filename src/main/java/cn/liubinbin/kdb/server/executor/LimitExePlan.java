@@ -1,9 +1,7 @@
 package cn.liubinbin.kdb.server.executor;
 
-import cn.liubinbin.kdb.server.btree.Cursor;
 import cn.liubinbin.kdb.server.entity.KdbRow;
 import cn.liubinbin.kdb.server.table.AbstTable;
-import cn.liubinbin.kdb.server.table.BtreeTable;
 
 
 /**
