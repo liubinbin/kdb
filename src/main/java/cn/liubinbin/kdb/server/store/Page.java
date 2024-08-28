@@ -38,6 +38,10 @@ public class Page {
         this.data = new byte[PAGE_SIZE];
     }
 
+    public Node getNode() {
+        return node;
+    }
+
     public Page(Node node, String tableName, List<Column> tableColumnList) {
        this(node, tableColumnList);
 //        this.tableName = tableName;

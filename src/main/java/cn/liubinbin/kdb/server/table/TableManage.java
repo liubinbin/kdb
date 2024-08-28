@@ -49,6 +49,10 @@ public class TableManage {
         // read meta data
         readFrom();
 
+        for (AbstTable table : tableMap.values()) {
+            table.init();
+        }
+
 //        // init fake table
 //        ArrayList<Column> columns = new ArrayList<Column>();
 //        Column column1 = new Column(0, "id", ColumnType.INTEGER, 0);
@@ -119,12 +123,12 @@ public class TableManage {
             int tableLen = raf.readInt();
 
             // print db info
-            System.out.println("dbNameLength: " + dbNameLen + ", dbName: " + dbName + ", tableLen " + tableLen);
+            System.out.println("DB META: dbName: " + dbName + ", tableLen " + tableLen);
 
             for (int i = 0; i < tableLen; i++) {
                 AbstTable abstTable = AbstTable.readFrom(raf, kdbConfig);
                 this.tableMap.put(abstTable.getTableName(), abstTable);
-                System.out.println(abstTable);
+                System.out.println("DB {" + dbName + "} add table {" + abstTable.getTableName() + "} " + abstTable);
             }
 
         } catch (IOException e) {

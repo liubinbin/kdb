@@ -3,13 +3,13 @@ package cn.liubinbin.kdb.server.store;
 import cn.liubinbin.kdb.conf.KdbConfig;
 import cn.liubinbin.kdb.server.btree.Node;
 import cn.liubinbin.kdb.server.table.Column;
-import cn.liubinbin.kdb.server.table.Table;
 import cn.liubinbin.kdb.server.table.TableType;
 import cn.liubinbin.kdb.utils.Contants;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -50,7 +50,7 @@ public class TableStore {
         this.order = kdbConfig.getBtreeOrder();
     }
 
-    public void init() {
+    public void readDataFile() {
         int offset = 0;
         try (RandomAccessFile raf = new RandomAccessFile(new File(tableDataFilePath), "rw")) {
             while (offset < raf.length()) {
@@ -64,6 +64,14 @@ public class TableStore {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public HashMap<Integer, Node> getNodeMap() {
+        HashMap<Integer, Node> nodeMap = new HashMap<Integer, Node>();
+        for (Page page : pageMap.values()) {
+            nodeMap.put(page.getNode().getNodeId(), page.getNode());
+        }
+        return nodeMap;
     }
 
     public void close() throws IOException {

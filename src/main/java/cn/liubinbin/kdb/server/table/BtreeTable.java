@@ -12,8 +12,8 @@ import cn.liubinbin.kdb.utils.Contants;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -40,6 +40,18 @@ public class BtreeTable extends AbstTable {
             this.tableStore = new TableStore(tableName, dataFilePath, dataBackupFilePath, columns, tableType, order);
         }
         this.bPlusTree = new BPlusTree(order, this.tableStore);
+    }
+
+    @Override
+    public void init() {
+        System.out.println("BtreeNode init");
+        if (tableStore != null) {
+            System.out.println("--- init lbb tableStore not null --- ");
+            tableStore.readDataFile();
+            HashMap<Integer, Node> nodeMap = tableStore.getNodeMap();
+            System.out.println("--- init lbb nodeMap --- " + nodeMap.size() + "    " + nodeMap.keySet());
+            this.bPlusTree.initBtreeFromNodeMap(nodeMap);
+        }
     }
 
     @Override

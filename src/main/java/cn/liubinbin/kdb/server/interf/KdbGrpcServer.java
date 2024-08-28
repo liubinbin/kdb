@@ -24,7 +24,6 @@ import cn.liubinbin.kdb.server.executor.Executor;
 import cn.liubinbin.kdb.server.parser.Parser;
 import cn.liubinbin.kdb.server.planer.Plan;
 import cn.liubinbin.kdb.server.planer.Planer;
-import cn.liubinbin.kdb.server.store.StoreManage;
 import cn.liubinbin.kdb.server.table.TableManage;
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
@@ -46,12 +45,12 @@ public class KdbGrpcServer {
 
     private Server server;
     private final TableManage tableManage;
-    private final StoreManage storeManage;
+//    private final StoreManage storeManage;
     private final int kdbServerPort;
 
-    public KdbGrpcServer(KdbConfig kdbConfig, TableManage tableManage, StoreManage storeManage) {
+    public KdbGrpcServer(KdbConfig kdbConfig, TableManage tableManage) {
         this.tableManage = tableManage;
-        this.storeManage = storeManage;
+//        this.storeManage = storeManage;
         this.kdbServerPort = kdbConfig.getKdbServerPort();
     }
 

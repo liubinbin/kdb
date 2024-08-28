@@ -29,7 +29,7 @@ public class StoreManage {
         for (String tableName : tableNameList) {
             TableStore tableStore = new TableStore(tableName, kdbConfig, tableManage.getTable(tableName).getColumns(),
                     tableManage.getTable(tableName).getTableType());
-            tableStore.init();
+            tableStore.readDataFile();
             tableStoreMap.put(tableName, tableStore);
         }
     }

@@ -7,11 +7,7 @@ import cn.liubinbin.kdb.server.store.TableStore;
 import cn.liubinbin.kdb.server.table.ColumnType;
 import cn.liubinbin.kdb.utils.Contants;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 
 /**
@@ -26,11 +22,45 @@ public class BPlusTree extends Engine {
     private TableStore tableStore;
 
     public BPlusTree(Integer order, TableStore tableStore) {
+        this(order, tableStore, true);
+    }
+
+    public BPlusTree(Integer order, TableStore tableStore, boolean initBtree) {
         this.order = order;
-        this.root = new Node(true, true, Contants.ROOT_NODE_ID, order);
-        this.maxNodeId = Contants.ROOT_NODE_ID;
+        if (initBtree) {
+            this.root = new Node(true, true, Contants.ROOT_NODE_ID, order);
+            this.maxNodeId = Contants.ROOT_NODE_ID;
+            addNode(this.root);
+        }
         this.tableStore = tableStore;
-        addNode(this.root);
+    }
+
+    public void initBtreeFromNodeMap(HashMap<Integer, Node> nodeMap){
+        if (nodeMap == null || nodeMap.isEmpty()) {
+            return;
+        }
+        Node root = null;
+        Integer maxNodeId = Integer.MIN_VALUE;
+        for (Node node : nodeMap.values()) {
+            if (node.getNodeId() > maxNodeId) {
+                maxNodeId = node.getNodeId();
+            }
+            if (node.isRoot()) {
+                if (root == null) {
+                    root = node;
+                } else if (node.getNodeId() > root.getNodeId()) {
+                    root = node;
+                }
+            }
+        }
+        System.out.println("root.id: " + root.getNodeId() + " maxNodeId: " + maxNodeId );
+        this.initBtree(root, maxNodeId);
+    }
+
+    public void initBtree(Node root, Integer maxNodeId) {
+        this.root = root;
+        this.maxNodeId = maxNodeId;
+        addNode(root);
     }
 
     public void addNode(Node node) {

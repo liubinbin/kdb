@@ -50,6 +50,16 @@ public abstract class AbstTable implements Table {
         this.columns = columns;
     }
 
+    public void init(){
+        if (tableType == TableType.Btree) {
+            BtreeTable btreeTable = (BtreeTable) this;
+            btreeTable.init();
+        } else if (tableType == TableType.Fake) {
+            FakeTable fakeTable = (FakeTable) this;
+            fakeTable.init();
+        }
+    }
+
     public void writeMetaTo(RandomAccessFile raf) throws IOException {
         // tableName
         raf.writeInt(this.tableName.getBytes().length);
