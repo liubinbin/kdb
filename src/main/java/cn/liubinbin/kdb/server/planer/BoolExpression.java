@@ -9,7 +9,7 @@ import cn.liubinbin.kdb.server.entity.KdbRowValue;
 public class BoolExpression {
 
     private String columnName;
-    private String columnId;
+    private Integer columnIdx;
     private OperatorKind operator;
     private KdbRowValue value;
 
@@ -17,6 +17,27 @@ public class BoolExpression {
         this.columnName = columnName;
         this.operator = operator;
         this.value = value;
+        this.columnIdx = -1;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnIdx(Integer columnIdx) {
+        this.columnIdx = columnIdx;
+    }
+
+    public Integer getColumnIdx() {
+        return columnIdx;
+    }
+
+    public OperatorKind getOperator() {
+        return operator;
+    }
+
+    public KdbRowValue getValue() {
+        return value;
     }
 
     @Override
@@ -25,6 +46,7 @@ public class BoolExpression {
                 "columnName='" + columnName + '\'' +
                 ", operator=" + operator +
                 ", groupBy=" + value +
+                ", columnIdx=" + columnIdx +
                 '}';
     }
 }

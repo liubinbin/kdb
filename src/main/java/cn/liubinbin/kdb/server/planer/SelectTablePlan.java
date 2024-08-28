@@ -49,6 +49,10 @@ public class SelectTablePlan extends Plan {
         return whereBoolExpreList;
     }
 
+    public boolean isWhereAnd() {
+        return isWhereAnd;
+    }
+
     @Override
     public String toString() {
         return "SelectTablePlan{" +

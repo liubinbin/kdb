@@ -31,7 +31,8 @@ public class Engine {
         curFirstNode = new ScanExePlan(ExePlanKind.ScanTable, null, table);
 
         // whereFilter
-        AbstrExePlan whereFilter = new WhereExePlan(ExePlanKind.WhereFilter, curFirstNode, table, plan.getWhereBoolExpreList());
+        AbstrExePlan whereFilter = new WhereExePlan(ExePlanKind.WhereFilter, curFirstNode, table, plan.getWhereBoolExpreList(),
+                plan.isWhereAnd());
         curFirstNode = whereFilter;
 
         // order by
