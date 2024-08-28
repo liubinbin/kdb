@@ -30,7 +30,12 @@ public class FakeTable extends AbstTable {
 
     @Override
     public void insert(KdbRow rowToInsert) {
+        System.out.println("insert row into table");
+    }
 
+    @Override
+    public boolean isValid(KdbRow rowToCheck) {
+        return true;
     }
 
     @Override

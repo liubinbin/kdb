@@ -15,6 +15,8 @@ public interface Table {
 
     public void insert(KdbRow rowToInsert);
 
+    public boolean isValid(KdbRow rowToCheck);
+
     public void delete(List<BoolExpression> expressions);
 
     public void select();

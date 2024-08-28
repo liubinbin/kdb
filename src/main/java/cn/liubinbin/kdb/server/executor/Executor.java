@@ -74,9 +74,14 @@ public class Executor {
                     cn.liubinbin.kdb.grpc.Row tableNotExistRow = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(Contants.TABLE_NOT_EXIST).build();
                     reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(tableNotExistRow).build();
                 } else {
-                    tableManage.getTable(insertTablePlan.getTableName()).insert(kdbRow);
-                    cn.liubinbin.kdb.grpc.Row insertSuccess = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(Contants.SUCCESS).build();
-                    reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(insertSuccess).build();
+                    if(!tableManage.getTable(insertTablePlan.getTableName()).isValid(kdbRow)) {
+                        cn.liubinbin.kdb.grpc.Row invalidRow = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue("invalid row").build();
+                        reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(invalidRow).build();
+                    } else {
+                        tableManage.getTable(insertTablePlan.getTableName()).insert(kdbRow);
+                        cn.liubinbin.kdb.grpc.Row insertSuccess = cn.liubinbin.kdb.grpc.Row.newBuilder().addValue(Contants.SUCCESS).build();
+                        reply = KdbSqlResponse.newBuilder().setHeader(header).addRow(insertSuccess).build();
+                    }
                 }
                 break;
             case DELETE_TABLE:

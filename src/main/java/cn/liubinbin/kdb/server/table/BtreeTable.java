@@ -6,6 +6,7 @@ import cn.liubinbin.kdb.server.btree.Node;
 import cn.liubinbin.kdb.server.entity.KdbRow;
 import cn.liubinbin.kdb.server.entity.KdbRowValue;
 import cn.liubinbin.kdb.server.planer.BoolExpression;
+import cn.liubinbin.kdb.server.planer.Plan;
 import cn.liubinbin.kdb.utils.Contants;
 
 import java.util.ArrayList;
@@ -51,10 +52,39 @@ public class BtreeTable extends AbstTable {
 
     @Override
     public void insert(KdbRow rowToInsert) {
-        System.out.println("start to insert row");
         bPlusTree.insert(rowToInsert);
         bPlusTree.print();
     }
+
+    @Override
+    public boolean isValid(KdbRow rowToCheck) {
+        List<Column> columns = getColumns();
+        if (rowToCheck == null || rowToCheck.getValues() == null || rowToCheck.getValues().isEmpty()) {
+            return false;
+        }
+        if (rowToCheck.getValues().size() != columns.size()) {
+            return false;
+        }
+        for (int i = 0; i < columns.size(); i++) {
+            ColumnType columnType = columns.get(i).getColumnType();
+            KdbRowValue value = rowToCheck.getValues().get(i);
+            switch (columnType) {
+                case INTEGER:
+                    if (value.getColumnType() != ColumnType.INTEGER) {
+                        return false;
+                    }
+                    break;
+                case VARCHAR:
+                    if (value.getColumnType() != ColumnType.VARCHAR) {
+                        return false;
+                    }
+                    break;
+               default:
+            }
+        }
+        return true;
+    }
+
 
     public Cursor getCursor() {
         Node startNode = bPlusTree.getRangeScanStartNode(Integer.MIN_VALUE);
