@@ -30,8 +30,8 @@ public class TableStore {
         this.tableName = tableName;
         this.pageMap = new ConcurrentHashMap<Integer, Page>();
         this.kdbConfig = kdbConfig;
-        this.tableDataBackupFilePath = kdbConfig.getTableRootPath() + Contants.FILE_SEPARATOR + tableName + kdbConfig.getBackupFileExtension();
         this.tableDataFilePath = kdbConfig.getTableRootPath() + Contants.FILE_SEPARATOR + tableName + kdbConfig.getDataFileExtension();
+        this.tableDataBackupFilePath = this.tableDataFilePath + kdbConfig.getBackupFileExtension();
     }
 
     public void init() {
@@ -75,6 +75,15 @@ public class TableStore {
 
     public Page getPage(Integer pageId) {
         return pageMap.get(pageId);
+    }
+
+    public void addNode(Node node) {
+        Page page = new Page(node, tableName, columns);
+        putPage(node.getNodeId(), page);
+    }
+
+    public void deleteNode(Node node) {
+        pageMap.remove(node.getNodeId());
     }
 
     public void putPage(Integer pageId, Page page) {
