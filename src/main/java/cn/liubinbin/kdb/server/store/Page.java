@@ -167,6 +167,7 @@ public class Page {
     }
 
     public void writeTo(RandomAccessFile file, int offset) throws IOException {
+        compressNodeToBytes(node);
         file.seek(offset);
         file.write(this.data);
     }

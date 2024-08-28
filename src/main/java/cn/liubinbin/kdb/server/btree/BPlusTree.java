@@ -27,12 +27,12 @@ public class BPlusTree extends Engine {
 
     public BPlusTree(Integer order, TableStore tableStore, boolean initBtree) {
         this.order = order;
+        this.tableStore = tableStore;
         if (initBtree) {
             this.root = new Node(true, true, Contants.ROOT_NODE_ID, order);
             this.maxNodeId = Contants.ROOT_NODE_ID;
             addNode(this.root);
         }
-        this.tableStore = tableStore;
     }
 
     public void initBtreeFromNodeMap(HashMap<Integer, Node> nodeMap){

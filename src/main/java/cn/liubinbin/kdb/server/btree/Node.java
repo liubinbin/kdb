@@ -310,7 +310,7 @@ public class Node {
 
 
     public int getChildrenCount() {
-        return childrenSepCount + 1;
+        return childrenSepCount == 0 ? 0 : childrenSepCount + 1;
     }
 
     public Node[] getChildren() {

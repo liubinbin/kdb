@@ -46,10 +46,8 @@ public class BtreeTable extends AbstTable {
     public void init() {
         System.out.println("BtreeNode init");
         if (tableStore != null) {
-            System.out.println("--- init lbb tableStore not null --- ");
             tableStore.readDataFile();
             HashMap<Integer, Node> nodeMap = tableStore.getNodeMap();
-            System.out.println("--- init lbb nodeMap --- " + nodeMap.size() + "    " + nodeMap.keySet());
             this.bPlusTree.initBtreeFromNodeMap(nodeMap);
         }
     }
@@ -68,10 +66,12 @@ public class BtreeTable extends AbstTable {
     @Override
     public void writeDataTo() {
         try{
+            this.bPlusTree.print();
             if (this.tableStore != null) {
                 this.tableStore.close();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("BtreeTable writeDataTo error " + e.getMessage());
         }
     }

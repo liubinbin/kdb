@@ -78,7 +78,9 @@ public class TableStore {
         int offset = 0;
         try (RandomAccessFile raf = new RandomAccessFile(new File(tableDataBackupFilePath), "rw")) {
             for (Page page : pageMap.values()) {
-                System.out.println(page);
+                if (page.getNode().isRoot() && page.getNode().isLeaf() && page.getNode().getCurRowCount() < 1) {
+                    continue;
+                }
                 page.writeTo(raf, offset);
                 offset += page.getPageSize();
             }
