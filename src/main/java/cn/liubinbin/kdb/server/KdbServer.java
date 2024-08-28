@@ -24,7 +24,7 @@ public class KdbServer {
 
         // 存储初始化
         StoreManage storeManage = new StoreManage(kdbConfig, tableManage);
-        storeManage.init();
+//        storeManage.init();
 
         // gRPC server 初始化和启动
         final KdbGrpcServer server = new KdbGrpcServer(kdbConfig, tableManage, storeManage);

@@ -33,6 +33,7 @@ public class TableManage {
     private String tableMetaFullPath;
     private String tableMetaFullBackupPath;
     private Integer btreeOrder;
+    private KdbConfig kdbConfig;
 
     public TableManage(KdbConfig kdbConfig) {
         this.tableMap = new ConcurrentHashMap<String, AbstTable>(16);
@@ -40,6 +41,7 @@ public class TableManage {
         this.tableMetaFullPath = kdbConfig.getMetaFullPath();
         this.tableMetaFullBackupPath = kdbConfig.getMetaFullPath() + kdbConfig.getBackupFileExtension();
         this.btreeOrder = kdbConfig.getBtreeOrder();
+        this.kdbConfig = kdbConfig;
         System.out.println("kdbConfig tableMetaFullPath " + tableMetaFullPath + ", tableMetaFullBackupPath "  + tableMetaFullBackupPath);
     }
 
@@ -64,13 +66,15 @@ public class TableManage {
         }
         if (tableType == TableType.Btree) {
             System.out.println("create btree table " + tableName);
-            tableMap.put(tableName, new BtreeTable(tableName, columns, this.btreeOrder));
+            String tableDataFilePath = kdbConfig.getTableRootPath() + Contants.FILE_SEPARATOR + tableName + kdbConfig.getDataFileExtension();
+            String tableDataBackupFilePath = tableDataFilePath + kdbConfig.getBackupFileExtension();
+            tableMap.put(tableName, new BtreeTable(tableName, columns, this.btreeOrder, tableDataFilePath, tableDataBackupFilePath));
         } else {
             System.out.println("create fake table " + tableName);
             tableMap.put(tableName, new FakeTable(tableName, columns));
         }
         // 保存文件
-        writeTo();
+        writeTableMetaTo();
     }
 
     public boolean existTable(String tableName) {
@@ -93,7 +97,10 @@ public class TableManage {
     }
 
     public void close() {
-        writeTo();
+        writeTableMetaTo();
+        for (AbstTable table : tableMap.values()) {
+            table.writeDataTo();
+        }
     }
 
 
@@ -115,7 +122,7 @@ public class TableManage {
             System.out.println("dbNameLength: " + dbNameLen + ", dbName: " + dbName + ", tableLen " + tableLen);
 
             for (int i = 0; i < tableLen; i++) {
-                AbstTable abstTable = AbstTable.readFrom(raf);
+                AbstTable abstTable = AbstTable.readFrom(raf, kdbConfig);
                 this.tableMap.put(abstTable.getTableName(), abstTable);
                 System.out.println(abstTable);
             }
@@ -125,7 +132,7 @@ public class TableManage {
         }
     }
 
-    public void writeTo() {
+    public void writeTableMetaTo() {
         try (RandomAccessFile raf = new RandomAccessFile(new File(tableMetaFullBackupPath), "rw")) {
             // db meta
             raf.writeInt(Contants.DEFAULT_KDB_DATABASE_NAME.getBytes().length);
@@ -133,7 +140,7 @@ public class TableManage {
             raf.writeInt(this.tableMap.size());
 
             for (AbstTable table : tableMap.values()) {
-                table.writeTo(raf);
+                table.writeMetaTo(raf);
             }
         } catch (IOException e) {
             logger.log(Level.WARNING, "write table meta failed");
@@ -158,7 +165,7 @@ public class TableManage {
         TableManage tableManage = new TableManage(kdbConfig);
 
         tableManage.init();
-        tableManage.writeTo();
+        tableManage.writeTableMetaTo();
         tableManage.readFrom();
     }
 }

@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author liubinbin
  * 管理 TableStore
+ * @Deprecated
  */
 public class StoreManage {
 

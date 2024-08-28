@@ -3,6 +3,7 @@ package cn.liubinbin.kdb.server.btree;
 import cn.liubinbin.kdb.server.entity.KdbRow;
 import cn.liubinbin.kdb.server.entity.KdbRowValue;
 import cn.liubinbin.kdb.server.executor.Engine;
+import cn.liubinbin.kdb.server.store.TableStore;
 import cn.liubinbin.kdb.server.table.ColumnType;
 import cn.liubinbin.kdb.utils.Contants;
 
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 
 /**
@@ -21,11 +23,26 @@ public class BPlusTree extends Engine {
     private final Integer order;
     private Integer maxNodeId;
     private ReadWriteLock lock;
+    private TableStore tableStore;
 
-    public BPlusTree(Integer order) {
+    public BPlusTree(Integer order, TableStore tableStore) {
         this.order = order;
         this.root = new Node(true, true, Contants.ROOT_NODE_ID, order);
         this.maxNodeId = Contants.ROOT_NODE_ID;
+        this.tableStore = tableStore;
+        addNode(this.root);
+    }
+
+    public void addNode(Node node) {
+        if (this.tableStore != null) {
+            this.tableStore.addNode(node);
+        }
+    }
+
+    public void deleteNode(Node node) {
+        if (this.tableStore != null) {
+            this.tableStore.deleteNode(node);
+        }
     }
 
     public void updateNodeId(Integer nodeId) {
@@ -374,7 +391,7 @@ public class BPlusTree extends Engine {
     }
 
     public static void main(String[] args) {
-        BPlusTree bPlusTree = new BPlusTree(3);
+        BPlusTree bPlusTree = new BPlusTree(3, null);
 
         for(int i = 1; i <= 6; i++) {
             KdbRow curRow = new KdbRow(Collections.singletonList(new KdbRowValue(ColumnType.INTEGER, i)));

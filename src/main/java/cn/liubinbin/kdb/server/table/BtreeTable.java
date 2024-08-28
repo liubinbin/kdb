@@ -1,13 +1,18 @@
 package cn.liubinbin.kdb.server.table;
 
+import cn.liubinbin.kdb.conf.KdbConfig;
 import cn.liubinbin.kdb.server.btree.BPlusTree;
 import cn.liubinbin.kdb.server.btree.Cursor;
 import cn.liubinbin.kdb.server.btree.Node;
 import cn.liubinbin.kdb.server.entity.KdbRow;
 import cn.liubinbin.kdb.server.entity.KdbRowValue;
 import cn.liubinbin.kdb.server.planer.BoolExpression;
+import cn.liubinbin.kdb.server.store.TableStore;
 import cn.liubinbin.kdb.utils.Contants;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,18 +24,22 @@ import java.util.List;
 public class BtreeTable extends AbstTable {
 
     private final BPlusTree bPlusTree;
-
-    public BtreeTable(String tableName, List<Column> columns, Integer order) {
-        this(tableName, columns, TableType.Btree, order);
-    }
+    private TableStore tableStore = null;
 
     public BtreeTable(String tableName, List<Column> columns) {
-        this(tableName, columns, TableType.Btree, Contants.DEFAULT_KDB_SERVER_TABLE_ENGINE_BTREE_ORDER);
+        this(tableName, columns, TableType.Btree, Contants.DEFAULT_KDB_SERVER_TABLE_ENGINE_BTREE_ORDER, null, null);
     }
 
-    public BtreeTable(String tableName, List<Column> columns, TableType tableType, Integer order) {
+    public BtreeTable(String tableName, List<Column> columns, Integer order, String dataFilePath, String dataBackupFilePath) {
+        this(tableName, columns, TableType.Btree, order, dataFilePath, dataBackupFilePath);
+    }
+
+    public BtreeTable(String tableName, List<Column> columns, TableType tableType, Integer order, String dataFilePath, String dataBackupFilePath) {
         super(tableName, columns, tableType);
-        this.bPlusTree = new BPlusTree(order);
+        if (dataFilePath != null) {
+            this.tableStore = new TableStore(tableName, dataFilePath, dataBackupFilePath, columns, tableType, order);
+        }
+        this.bPlusTree = new BPlusTree(order, this.tableStore);
     }
 
     @Override
@@ -42,6 +51,17 @@ public class BtreeTable extends AbstTable {
             list.add(temp);
         }
         return list;
+    }
+
+    @Override
+    public void writeDataTo() {
+        try{
+            if (this.tableStore != null) {
+                this.tableStore.close();
+            }
+        } catch (Exception e) {
+            System.out.println("BtreeTable writeDataTo error " + e.getMessage());
+        }
     }
 
     @Override
@@ -100,5 +120,10 @@ public class BtreeTable extends AbstTable {
     @Override
     public void select() {
 
+    }
+
+    public static void main(String[] args) throws ConfigurationException, IOException {
+        KdbConfig kdbConfig =  new KdbConfig();
+        BtreeTable btreeTable = new BtreeTable("test", null);
     }
 }

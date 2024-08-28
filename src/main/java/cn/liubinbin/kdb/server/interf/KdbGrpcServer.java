@@ -70,8 +70,8 @@ public class KdbGrpcServer {
                 try {
                     KdbGrpcServer.this.stop();
                     tableManage.close();
-                    storeManage.close();
-                } catch (InterruptedException | IOException e) {
+//                    storeManage.close();
+                } catch (InterruptedException e) {
                     e.printStackTrace(System.err);
                 }
                 System.err.println("*** server shut down");

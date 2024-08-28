@@ -31,12 +31,16 @@ public class Page {
     private String tableName;
     private List<Column> tableColumnList;
 
-    public Page(Node node, String tableName, List<Column> tableColumnList) {
+    public Page(Node node, List<Column> tableColumnList) {
         this.node = node;
-        this.tableName = tableName;
         this.tableColumnList = tableColumnList;
         this.curOffset = 0;
         this.data = new byte[PAGE_SIZE];
+    }
+
+    public Page(Node node, String tableName, List<Column> tableColumnList) {
+       this(node, tableColumnList);
+//        this.tableName = tableName;
     }
 
     public int getRowMaxSize() {
@@ -194,7 +198,7 @@ public class Page {
         List<Column> tableColumn = new ArrayList<>();
         tableColumn.add(new Column(0, "id", ColumnType.INTEGER, 0));
         tableColumn.add(new Column(1, "name", ColumnType.VARCHAR, 128));
-        Page page = new Page(node, "test", tableColumn);
+        Page page = new Page(node, tableColumn);
         page.compressNodeToBytes(node);
 
         try (RandomAccessFile raf = new RandomAccessFile(new File("/Users/liubinbin/Desktop/ok/test.file"), "rw")) {
@@ -202,7 +206,7 @@ public class Page {
         }
 
         System.out.println("after exact");
-        Page newPage = new Page(new Node(true, true, 0, order), "test", tableColumn);
+        Page newPage = new Page(new Node(true, true, 0, order), tableColumn);
         try (RandomAccessFile raf = new RandomAccessFile(new File("/Users/liubinbin/Desktop/ok/test.file"), "rw")) {
             newPage.readFrom(raf, 0);
         }

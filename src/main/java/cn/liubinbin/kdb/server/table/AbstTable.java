@@ -1,5 +1,8 @@
 package cn.liubinbin.kdb.server.table;
 
+import cn.liubinbin.kdb.conf.KdbConfig;
+import cn.liubinbin.kdb.utils.Contants;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -47,7 +50,7 @@ public abstract class AbstTable implements Table {
         this.columns = columns;
     }
 
-    public void writeTo(RandomAccessFile raf) throws IOException {
+    public void writeMetaTo(RandomAccessFile raf) throws IOException {
         // tableName
         raf.writeInt(this.tableName.getBytes().length);
         raf.write(this.tableName.getBytes());
@@ -68,18 +71,22 @@ public abstract class AbstTable implements Table {
         }
     }
 
+    public void writeDataTo(){
+        System.out.println("AbstTable writeDataTo");
+    }
+
     public TableType getTableType() {
         return tableType;
     }
 
-    public static AbstTable readFrom(RandomAccessFile raf) throws IOException {
+    public static AbstTable readFrom(RandomAccessFile raf, KdbConfig kdbConfig) throws IOException {
         AbstTable abstTable = null;
 
         // tableName
         int tableNameLen = raf.readInt();
         byte[] tableNameBytes = new byte[tableNameLen];
         raf.read(tableNameBytes);
-        String dbName = new String(tableNameBytes);
+        String tableName = new String(tableNameBytes);
 
         // tableType
         int tableTypeInt = raf.readInt();
@@ -101,9 +108,11 @@ public abstract class AbstTable implements Table {
             columns.add(curColumn);
         }
         if (tableType == TableType.Btree) {
-            abstTable = new BtreeTable(dbName, columns);
+            String tableDataFilePath = kdbConfig.getTableRootPath() + Contants.FILE_SEPARATOR + tableName + kdbConfig.getDataFileExtension();
+            String tableDataBackupFilePath = tableDataFilePath + kdbConfig.getBackupFileExtension();
+            abstTable = new BtreeTable(tableName, columns, kdbConfig.getBtreeOrder(), tableDataFilePath, tableDataBackupFilePath);
         } else if (tableType == TableType.Fake) {
-            abstTable = new FakeTable(dbName, columns);
+            abstTable = new FakeTable(tableName, columns);
         }
 
         return abstTable;

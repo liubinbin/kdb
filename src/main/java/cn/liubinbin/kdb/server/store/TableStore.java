@@ -3,6 +3,7 @@ package cn.liubinbin.kdb.server.store;
 import cn.liubinbin.kdb.conf.KdbConfig;
 import cn.liubinbin.kdb.server.btree.Node;
 import cn.liubinbin.kdb.server.table.Column;
+import cn.liubinbin.kdb.server.table.Table;
 import cn.liubinbin.kdb.server.table.TableType;
 import cn.liubinbin.kdb.utils.Contants;
 
@@ -25,23 +26,38 @@ public class TableStore {
     private String tableDataFilePath;
     private List<Column> columns;
     private TableType tableType;
+    private Integer order;
 
-    public TableStore(String tableName, KdbConfig kdbConfig, List<Column> columns, TableType tableType) {
+    public TableStore(String tableName, String tableDataFilePath, String tableDataBackupFilePath, List<Column> columns, TableType tableType, Integer order) {
         this.tableName = tableName;
         this.pageMap = new ConcurrentHashMap<Integer, Page>();
-        this.kdbConfig = kdbConfig;
-        this.tableDataFilePath = kdbConfig.getTableRootPath() + Contants.FILE_SEPARATOR + tableName + kdbConfig.getDataFileExtension();
-        this.tableDataBackupFilePath = this.tableDataFilePath + kdbConfig.getBackupFileExtension();
+        this.tableDataFilePath = tableDataFilePath;
+        this.tableDataBackupFilePath = tableDataBackupFilePath;
+        this.columns = columns;
+        this.tableType = tableType;
+        this.order = order;
+    }
+
+    public TableStore(String tableName, KdbConfig kdbConfig, List<Column> columns, TableType tableType) {
+        String tableDataFilePath = kdbConfig.getTableRootPath() + Contants.FILE_SEPARATOR + tableName + kdbConfig.getDataFileExtension();
+        String tableDataBackupFilePath = tableDataFilePath + kdbConfig.getBackupFileExtension();
+        this.tableName = tableName;
+        this.pageMap = new ConcurrentHashMap<Integer, Page>();
+        this.tableDataFilePath = tableDataFilePath;
+        this.tableDataBackupFilePath = tableDataBackupFilePath;
+        this.columns = columns;
+        this.tableType = tableType;
+        this.order = kdbConfig.getBtreeOrder();
     }
 
     public void init() {
         int offset = 0;
-        try (RandomAccessFile raf = new RandomAccessFile(new File(tableDataBackupFilePath), "rw")) {
+        try (RandomAccessFile raf = new RandomAccessFile(new File(tableDataFilePath), "rw")) {
             while (offset < raf.length()) {
-                Node node = new Node(false, false,null, kdbConfig.getBtreeOrder());
-                Page page = new Page(node, tableName, columns);
+                Node node = new Node(false, false,null, order);
+                Page page = new Page(node, columns);
                 page.readFrom(raf, offset);
-                node = page.exactFromBytes(kdbConfig.getBtreeOrder());
+                node = page.exactFromBytes(order);
                 offset += page.getPageSize();
                 pageMap.put(node.getNodeId(), page);
             }
@@ -54,6 +70,7 @@ public class TableStore {
         int offset = 0;
         try (RandomAccessFile raf = new RandomAccessFile(new File(tableDataBackupFilePath), "rw")) {
             for (Page page : pageMap.values()) {
+                System.out.println(page);
                 page.writeTo(raf, offset);
                 offset += page.getPageSize();
             }
@@ -78,7 +95,7 @@ public class TableStore {
     }
 
     public void addNode(Node node) {
-        Page page = new Page(node, tableName, columns);
+        Page page = new Page(node, columns);
         putPage(node.getNodeId(), page);
     }
 
@@ -90,7 +107,4 @@ public class TableStore {
         pageMap.put(pageId, page);
     }
 
-    public static void main(String[] args) {
-
-    }
 }
