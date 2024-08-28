@@ -123,7 +123,7 @@ public class KdbGrpcClient {
         try {
             KdbGrpcClient client = new KdbGrpcClient(channel);
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Enter sql or 'exit' to quit: ");
+            System.out.println("Enter sql to query or 'exit' to quit: ");
 
             while (true) {
                 System.out.print("> ");

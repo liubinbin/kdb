@@ -45,6 +45,10 @@ public class SelectTablePlan extends Plan {
         return columnList;
     }
 
+    public List<BoolExpression> getWhereBoolExpreList() {
+        return whereBoolExpreList;
+    }
+
     @Override
     public String toString() {
         return "SelectTablePlan{" +

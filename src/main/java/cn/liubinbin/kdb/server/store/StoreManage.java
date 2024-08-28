@@ -26,7 +26,8 @@ public class StoreManage {
     public void init() {
         List<String> tableNameList = tableManage.ListTableName();
         for (String tableName : tableNameList) {
-            TableStore tableStore = new TableStore(tableName, kdbConfig);
+            TableStore tableStore = new TableStore(tableName, kdbConfig, tableManage.getTable(tableName).getColumns(),
+                    tableManage.getTable(tableName).getTableType());
             tableStore.init();
             tableStoreMap.put(tableName, tableStore);
         }

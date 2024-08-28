@@ -9,6 +9,7 @@ import cn.liubinbin.kdb.server.entity.KdbRowValue;
 public class BoolExpression {
 
     private String columnName;
+    private String columnId;
     private OperatorKind operator;
     private KdbRowValue value;
 

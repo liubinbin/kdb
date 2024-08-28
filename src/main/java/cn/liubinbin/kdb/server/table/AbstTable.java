@@ -68,6 +68,10 @@ public abstract class AbstTable implements Table {
         }
     }
 
+    public TableType getTableType() {
+        return tableType;
+    }
+
     public static AbstTable readFrom(RandomAccessFile raf) throws IOException {
         AbstTable abstTable = null;
 

@@ -150,7 +150,12 @@ public class Page {
             kdbRows[i] = temp;
         }
         node.updateData(kdbRows, rowCount);
+        setNode(node);
         return node;
+    }
+
+    private void setNode(Node node) {
+        this.node = node;
     }
 
     public void writeTo(RandomAccessFile file, int offset) throws IOException {

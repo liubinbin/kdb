@@ -1,9 +1,10 @@
 package cn.liubinbin.kdb.server.executor;
 
-import cn.liubinbin.kdb.server.btree.Cursor;
 import cn.liubinbin.kdb.server.entity.KdbRow;
+import cn.liubinbin.kdb.server.planer.BoolExpression;
 import cn.liubinbin.kdb.server.table.AbstTable;
-import cn.liubinbin.kdb.server.table.BtreeTable;
+
+import java.util.List;
 
 
 /**
@@ -13,23 +14,21 @@ import cn.liubinbin.kdb.server.table.BtreeTable;
 public class WhereExePlan extends AbstrExePlan {
 
     AbstTable table;
-    Cursor cursor;
+    private List<BoolExpression> boolExpressions;
 
-    public WhereExePlan(ExePlanKind kind, AbstrExePlan next, AbstTable table) {
-        super(kind, next);
+    public WhereExePlan(ExePlanKind kind, AbstrExePlan nextPlan, AbstTable table, List<BoolExpression> boolExpressions) {
+        super(kind, nextPlan);
         this.table = table;
-        if (table instanceof BtreeTable) {
-            cursor = ((BtreeTable) table).getCursor();
-        }
+        this.boolExpressions = boolExpressions;
     }
 
     @Override
     public boolean hasMore() {
-        return cursor.hasMore();
+        return next.hasMore();
     }
 
     @Override
     public KdbRow onNext() {
-        return cursor.next();
+        return next.onNext();
     }
 }

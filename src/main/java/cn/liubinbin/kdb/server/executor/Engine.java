@@ -1,7 +1,10 @@
 package cn.liubinbin.kdb.server.executor;
 
+import cn.liubinbin.kdb.server.planer.BoolExpression;
 import cn.liubinbin.kdb.server.planer.SelectTablePlan;
 import cn.liubinbin.kdb.server.table.AbstTable;
+
+import java.util.List;
 
 /**
  * @author liubinbin
@@ -28,7 +31,8 @@ public class Engine {
         curFirstNode = new ScanExePlan(ExePlanKind.ScanTable, null, table);
 
         // whereFilter
-
+        AbstrExePlan whereFilter = new WhereExePlan(ExePlanKind.WhereFilter, curFirstNode, table, plan.getWhereBoolExpreList());
+        curFirstNode = whereFilter;
 
         // order by
 

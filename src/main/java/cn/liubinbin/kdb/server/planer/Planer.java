@@ -159,8 +159,8 @@ public class Planer {
                     }
                     String columnOrderBy = orderBy.orderList.get(0).toString();
                     Integer limit = orderBy.fetch.toString().isEmpty() ? null : Integer.parseInt(orderBy.fetch.toString());
+
                     plan = new SelectTablePlan(tableName, columnList, isWhereAnd, whereBoolExpreList, columnOrderBy, limit);
-                    System.out.println(plan);
                 } else {
                     throw new RuntimeException("Expected an ORDER_BY_TABLE statement but got: " + sqlNode.getKind());
                 }

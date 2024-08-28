@@ -110,7 +110,6 @@ public class Executor {
                 }
 
                 List<String> columNameList = selectTablePlan.getColumnList();
-                System.out.println();
                 header = Header.newBuilder().addAllHeader(columNameList).build();
 
                 List<Row> dataRows = new ArrayList<>();
