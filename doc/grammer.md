@@ -1,11 +1,31 @@
-计划支持的语法类型如下
+计划支持的语句例子如下
 
-create
+describe database kdb
 
-insert
+describe table stu
 
-select + where + group + order 
+create table stu(id int, age int, name varchar(256))
 
-delete
+insert into stu (id, age, name) VALUES (1, 29, 'Alice')
 
-transaction
+insert into stu (id, age, name) VALUES (1, 29, 'Alice'),(2, 32, 'Bin')
+
+select count(*) from stu
+
+select id,age,name from stu
+
+select id,age from stu
+
+select id from stu
+
+select * from stu where id = 1
+
+select * from stu where id = 1 and name = 'haha'
+
+select id,name from stu
+
+select * from stu order by age limit 10
+
+select * from stu where id = 1 order by b limit 10
+
+select id,name from stu where id = 1 order by b limit 10
