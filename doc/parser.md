@@ -4,4 +4,4 @@ LibPQ - PostgreSQL客户端库，包含SQL解析功能。
 HeidiSQL - 虽然主要是一个数据库前端工具，但它也包含了SQL解析能力。
 SQLParser - 一个通用的SQL解析库。
 
-实验后，选定 Apache Calcite。
+实验后，决定选定 Apache Calcite。
