@@ -23,8 +23,11 @@ import cn.liubinbin.kdb.utils.Contants;
 import cn.liubinbin.kdb.utils.StringUtils;
 import com.google.protobuf.ProtocolStringList;
 import io.grpc.*;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -122,28 +125,58 @@ public class KdbGrpcClient {
                 .build();
         try {
             KdbGrpcClient client = new KdbGrpcClient(channel);
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Enter sql to query or 'exit' to quit: ");
 
-            while (true) {
-                System.out.print("> ");
-                String input = scanner.nextLine().trim();
+            try (Terminal terminal = TerminalBuilder.builder().build()) {
+                LineReader lineReader = LineReaderBuilder.builder()
+                        .terminal(terminal)
+                        .build();
+                lineReader.variable(LineReader.HISTORY_FILE, "/tmp/history")
+                        .variable(LineReader.HISTORY_FILE_SIZE, 1_000);
 
-                if (input.isEmpty()) {
-                    continue;
-                }
+                String input = null;
+                System.out.println("Enter sql to query or 'exit' to quit: ");
+                while (true) {
+                    input = lineReader.readLine("> ");
 
-                if (Contants.EXIT.equalsIgnoreCase(input)) {
-                    System.out.println("Exiting...");
-                    break;
-                } else {
-                    System.out.println("You entered: " + input);
-                    KdbSqlResponse kdbSqlResponse = client.sendSql(input);
-                    printResponse(kdbSqlResponse);
+                    if (input.isEmpty()) {
+                        continue;
+                    }
+
+                    if (Contants.EXIT.equalsIgnoreCase(input)) {
+                        System.out.println("Exiting...");
+                        break;
+                    } else {
+                        System.out.println("You entered: " + input);
+                        KdbSqlResponse kdbSqlResponse = client.sendSql(input);
+                        printResponse(kdbSqlResponse);
+                    }
                 }
             }
 
-            scanner.close();
+
+
+//            Scanner scanner = new Scanner(System.in);
+//            System.out.println("Enter sql to query or 'exit' to quit: ");
+//
+//            while (true) {
+//                System.out.print("> ");
+//                String input = scanner.nextLine().trim();
+//
+//                if (input.isEmpty()) {
+//                    continue;
+//                }
+//
+//                if (Contants.EXIT.equalsIgnoreCase(input)) {
+//                    System.out.println("Exiting...");
+//                    break;
+//                } else {
+//                    System.out.println("You entered: " + input);
+//                    KdbSqlResponse kdbSqlResponse = client.sendSql(input);
+//                    printResponse(kdbSqlResponse);
+//                }
+//            }
+
+//            scanner.close();
         } finally {
             // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
             // resources the channel should be shut down when it will no longer be used. If it may be used
