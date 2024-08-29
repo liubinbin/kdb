@@ -26,7 +26,7 @@ public class LimitExePlan extends AbstrExePlan {
 
     @Override
     public boolean hasMore() {
-        return currentCount <= limit && next.hasMore();
+        return currentCount < limit && next.hasMore();
     }
 
     @Override

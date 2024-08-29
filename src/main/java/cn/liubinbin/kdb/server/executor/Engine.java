@@ -50,11 +50,11 @@ public class Engine {
         }
 
         // limit
-//        LimitExePlan limitExePlan = null;
-//        if (plan.getLimit() != null && plan.getLimit() > 0) {
-//            limitExePlan = new LimitExePlan(curFirstNode, plan.getLimit());
-//            curFirstNode = limitExePlan;
-//        }
+        LimitExePlan limitExePlan = null;
+        if (plan.getLimit() != null && plan.getLimit() > 0) {
+            limitExePlan = new LimitExePlan(curFirstNode, plan.getLimit());
+            curFirstNode = limitExePlan;
+        }
 
         System.out.println("generatePhysicalPlan FirstNode: " + curFirstNode);
         return curFirstNode;
