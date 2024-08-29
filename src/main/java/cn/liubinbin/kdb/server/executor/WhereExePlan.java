@@ -19,6 +19,10 @@ public class WhereExePlan extends AbstrExePlan {
     private List<BoolExpression> boolExpressions;
     private boolean isWhereAnd;
 
+    public WhereExePlan(AbstrExePlan nextPlan, AbstTable table, List<BoolExpression> boolExpressions, boolean isWhereAnd) {
+        this(ExePlanKind.WhereFilter, nextPlan, table, boolExpressions, isWhereAnd);
+    }
+    
     public WhereExePlan(ExePlanKind kind, AbstrExePlan nextPlan, AbstTable table, List<BoolExpression> boolExpressions, boolean isWhereAnd) {
         super(kind, nextPlan);
         this.table = table;

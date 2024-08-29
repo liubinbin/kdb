@@ -4,6 +4,7 @@ import cn.liubinbin.kdb.server.entity.KdbRowValue;
 import cn.liubinbin.kdb.server.parser.ParserUtils;
 import cn.liubinbin.kdb.server.table.Column;
 import cn.liubinbin.kdb.server.table.ColumnType;
+import cn.liubinbin.kdb.utils.Contants;
 import org.apache.calcite.sql.*;
 import org.apache.calcite.sql.ddl.SqlColumnDeclaration;
 import org.apache.calcite.sql.ddl.SqlCreateTable;
@@ -157,7 +158,12 @@ public class Planer {
                         }
                     }
                     String columnOrderBy = orderBy.orderList.get(0).toString();
-                    Integer limit = orderBy.fetch.toString().isEmpty() ? null : Integer.parseInt(orderBy.fetch.toString());
+                    Integer limit = null;
+                    if (orderBy.fetch != null) {
+                        limit = orderBy.fetch.toString().isEmpty() ? null : Integer.parseInt(orderBy.fetch.toString());
+                    } else {
+                        limit = Contants.DEFAULT_LIMIT;
+                    }
 
                     plan = new SelectTablePlan(tableName, columnList, isWhereAnd, whereBoolExpreList, columnOrderBy, limit);
                 } else {

@@ -69,4 +69,6 @@ public class Contants {
 
     public static int NULL_NEXT_NODE_ID = -1;
 
+    public static int DEFAULT_LIMIT = 10;
+
 }

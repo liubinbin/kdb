@@ -15,6 +15,10 @@ public class ScanExePlan extends AbstrExePlan {
     AbstTable table;
     Cursor cursor;
 
+    public ScanExePlan(AbstrExePlan next, AbstTable table) {
+        this(ExePlanKind.ScanTable, next, table);
+    }
+
     public ScanExePlan(ExePlanKind kind, AbstrExePlan next, AbstTable table) {
         super(kind, next);
         this.table = table;

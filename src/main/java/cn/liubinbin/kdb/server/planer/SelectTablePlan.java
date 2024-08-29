@@ -57,6 +57,14 @@ public class SelectTablePlan extends Plan {
         return isStar;
     }
 
+    public boolean isOrderBy() {
+        return isOrderBy;
+    }
+
+    public String getColumnOrderBy() {
+        return columnOrderBy;
+    }
+
     @Override
     public String toString() {
         return "SelectTablePlan{" +

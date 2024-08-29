@@ -2,6 +2,7 @@ package cn.liubinbin.kdb.server.executor;
 
 import cn.liubinbin.kdb.server.planer.SelectTablePlan;
 import cn.liubinbin.kdb.server.table.AbstTable;
+import com.sun.org.apache.xpath.internal.operations.Or;
 
 /**
  * @author liubinbin
@@ -25,19 +26,28 @@ public class Engine {
     public AbstrExePlan generatePhysicalPlan(SelectTablePlan plan, AbstTable table) {
         AbstrExePlan curFirstNode = null;
         // scan
-        curFirstNode = new ScanExePlan(ExePlanKind.ScanTable, null, table);
+        curFirstNode = new ScanExePlan(null, table);
 
         // whereFilter
-        AbstrExePlan whereFilter = new WhereExePlan(ExePlanKind.WhereFilter, curFirstNode, table, plan.getWhereBoolExpreList(),
-                plan.isWhereAnd());
-        curFirstNode = whereFilter;
+        AbstrExePlan whereFilter = null;
+        if (plan.getWhereBoolExpreList() != null && !plan.getWhereBoolExpreList().isEmpty()) {
+            whereFilter = new WhereExePlan(curFirstNode, table, plan.getWhereBoolExpreList(),
+                    plan.isWhereAnd());
+            curFirstNode = whereFilter;
+        }
 
         // order by
+        OrderByExePlan orderByExePlan = null;
+        if (plan.isOrderBy()) {
+            orderByExePlan = new OrderByExePlan(curFirstNode, table, plan.getColumnOrderBy());
+            curFirstNode = orderByExePlan;
+        }
 
         // column filter
 
         // limit
 
+        System.out.println("generatePhysicalPlan FirstNode: " + curFirstNode);
         return curFirstNode;
     }
 }

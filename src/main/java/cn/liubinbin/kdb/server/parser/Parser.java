@@ -88,7 +88,7 @@ public class Parser {
 //                            break;
 //                    }
 //                }
-//                System.out.println("lbb whereBoolExpreList " + whereBoolExpreList);
+//                System.out.println("whereBoolExpreList " + whereBoolExpreList);
 //            } else {
 //                String columnName = curCondition.getOperandList().get(0).toString();
 //                List<BoolExpression> whereBoolExpreList = new ArrayList<>();
@@ -104,7 +104,7 @@ public class Parser {
 //                        whereBoolExpreList.add(new BoolExpression(columnName, OperatorKind.LESS_THAN, curKdbRowValue));
 //                        break;
 //                }
-//                System.out.println("lbb whereBoolExpreList " + whereBoolExpreList);
+//                System.out.println("whereBoolExpreList " + whereBoolExpreList);
 //            }
 //            System.out.println("4: " + select.getOrderList());
 //            System.out.println("5: " + select.getGroup());
