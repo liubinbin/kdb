@@ -84,11 +84,11 @@ public class BPlusTree extends Engine {
     }
 
     public KdbRow[] mergeKdbRowAndSort(KdbRow[] left, KdbRow right) {
-        KdbRow[] result = new KdbRow[left.length + 1];
-        System.arraycopy(left, 0, result, 0, left.length);
-        result[left.length] = right;
-        Arrays.sort(result);
-        return result;
+        KdbRow[] mergedArray = new KdbRow[left.length + 1];
+        System.arraycopy(left, 0, mergedArray, 0, left.length);
+        mergedArray[left.length] = right;
+        Arrays.sort(mergedArray);
+        return mergedArray;
     }
 
     public void delete(KdbRow rowToDelete) {

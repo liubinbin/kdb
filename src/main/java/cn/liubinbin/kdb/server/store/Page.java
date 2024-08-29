@@ -140,7 +140,7 @@ public class Page {
         }
         // row data
         offset = Contants.META_SHIFT;
-        KdbRow[] kdbRows = new KdbRow[5];
+        KdbRow[] kdbRows = new KdbRow[order - 1];
         for (int i = 0; i < rowCount; i++) {
             KdbRow temp = new KdbRow();
             for (Column column: tableColumnList) {
