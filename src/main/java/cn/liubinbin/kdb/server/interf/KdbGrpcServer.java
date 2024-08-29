@@ -45,12 +45,10 @@ public class KdbGrpcServer {
 
     private Server server;
     private final TableManage tableManage;
-//    private final StoreManage storeManage;
     private final int kdbServerPort;
 
     public KdbGrpcServer(KdbConfig kdbConfig, TableManage tableManage) {
         this.tableManage = tableManage;
-//        this.storeManage = storeManage;
         this.kdbServerPort = kdbConfig.getKdbServerPort();
     }
 
@@ -69,7 +67,6 @@ public class KdbGrpcServer {
                 try {
                     KdbGrpcServer.this.stop();
                     tableManage.close();
-//                    storeManage.close();
                 } catch (InterruptedException e) {
                     e.printStackTrace(System.err);
                 }

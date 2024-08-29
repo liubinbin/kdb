@@ -104,12 +104,12 @@ public class TableStore {
         return pageMap.get(pageId);
     }
 
-    public void addNode(Node node) {
+    public void registerNode(Node node) {
         Page page = new Page(node, columns);
         putPage(node.getNodeId(), page);
     }
 
-    public void deleteNode(Node node) {
+    public void deregisterNode(Node node) {
         pageMap.remove(node.getNodeId());
     }
 

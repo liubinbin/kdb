@@ -12,6 +12,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 /**
  * @author liubinbin
+ * @info BPlusTree implement
  */
 public class BPlusTree extends Engine {
 
@@ -31,7 +32,7 @@ public class BPlusTree extends Engine {
         if (initBtree) {
             this.root = new Node(true, true, Contants.ROOT_NODE_ID, order);
             this.maxNodeId = Contants.ROOT_NODE_ID;
-            addNode(this.root);
+            registerNode(this.root);
         }
     }
 
@@ -53,25 +54,30 @@ public class BPlusTree extends Engine {
                 }
             }
         }
+        if (root == null) {
+            System.out.println("initBtreeFromNodeMap error root is null");
+        }
         System.out.println("root.id: " + root.getNodeId() + " maxNodeId: " + maxNodeId );
         this.initBtree(root, maxNodeId);
+        // TODO update child Content
+        print();
     }
 
     public void initBtree(Node root, Integer maxNodeId) {
         this.root = root;
         this.maxNodeId = maxNodeId;
-        addNode(root);
+        registerNode(root);
     }
 
-    public void addNode(Node node) {
+    public void registerNode(Node node) {
         if (this.tableStore != null) {
-            this.tableStore.addNode(node);
+            this.tableStore.registerNode(node);
         }
     }
 
-    public void deleteNode(Node node) {
+    public void deregisterNode(Node node) {
         if (this.tableStore != null) {
-            this.tableStore.deleteNode(node);
+            this.tableStore.deregisterNode(node);
         }
     }
 
@@ -153,6 +159,7 @@ public class BPlusTree extends Engine {
         }
         newNode.setParent(parent);
         newNode.setNext(rightNode.getNext());
+        registerNode(newNode);
 
         // 移动 childrenSep 和 child
         parent.getChildren()[childIdxInParent] = newNode;
@@ -208,6 +215,8 @@ public class BPlusTree extends Engine {
                 rightNode.add(curNodeData[i]);
             }
         }
+        registerNode(leftNode);
+        registerNode(rightNode);
 
         // 修改 split
         if (curNode.isRoot()) {
@@ -268,6 +277,8 @@ public class BPlusTree extends Engine {
         Node leftChildInLeftChild = leftChildren.getChildren()[leftChildren.getChildrenCount() - 1];
         Node rightChildInRightChild = rightChildren.getChildren()[0];
         leftChildInLeftChild.setNext(rightChildInRightChild);
+        registerNode(leftChildren);
+        registerNode(rightChildren);
 
 //        System.out.println("print two child start");
 //        leftChildren.printChildren();
@@ -277,6 +288,8 @@ public class BPlusTree extends Engine {
         // 更新父节点
         if (curNode.isRoot()) {
             Node newRoot = new Node(true, false, getAndAddNodeId(), order);
+            registerNode(newRoot);
+
             updateChild(newRoot, curNodeChildSep, leftChildren, rightChildren);
             this.root = newRoot;
         } else {

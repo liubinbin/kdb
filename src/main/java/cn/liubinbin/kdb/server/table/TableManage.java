@@ -47,7 +47,7 @@ public class TableManage {
 
     public void init() {
         // read meta data
-        readFrom();
+        readMetaFile();
 
         for (AbstTable table : tableMap.values()) {
             table.init();
@@ -108,7 +108,10 @@ public class TableManage {
     }
 
 
-    public void readFrom() {
+    /**
+     * @info 从文件获取表结构
+     */
+    public void readMetaFile() {
         if (!new File(tableMetaFullPath).exists()) {
             return;
         }
@@ -170,6 +173,6 @@ public class TableManage {
 
         tableManage.init();
         tableManage.writeTableMetaTo();
-        tableManage.readFrom();
+        tableManage.readMetaFile();
     }
 }

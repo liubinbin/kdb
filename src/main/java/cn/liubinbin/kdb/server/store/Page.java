@@ -129,13 +129,11 @@ public class Page {
         Integer childrenCount = ByteArrayUtils.toInt(data, Contants.CHILDREN_COUNT_SHIFT);
         offset = Contants.CHILDREN_COUNT_SHIFT;
         for (int i = 0; i < childrenCount; i++){
-            System.out.println("NodeId " + ByteArrayUtils.toInt(data, offset));
             offset += Contants.INTEGER_SHIFT;
         }
         // meta.children.sep
         Integer childrenSepCount = ByteArrayUtils.toInt(data, offset);
         for (int i = 0; i < childrenSepCount; i++){
-            System.out.println("childrenSep " + ByteArrayUtils.toInt(data, offset));
             offset += Contants.INTEGER_SHIFT;
         }
         // row data
