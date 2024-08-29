@@ -1,5 +1,7 @@
 package cn.liubinbin.kdb.server.entity;
 
+import cn.liubinbin.kdb.server.table.ColumnType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +20,11 @@ public class KdbRow implements Comparable<KdbRow>{
 
     public KdbRow(List<KdbRowValue> values) {
         this.values = values;
-        this.rowKey = values.get(0).getIntValue();
+        if (values.get(0).getColumnType() == ColumnType.INTEGER) {
+            this.rowKey = values.get(0).getIntValue();
+        } else {
+            this.rowKey = values.get(0).getStringValue().hashCode();
+        }
     }
 
     public void appendRowValue(KdbRowValue temp) {

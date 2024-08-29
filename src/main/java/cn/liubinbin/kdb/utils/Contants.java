@@ -73,4 +73,6 @@ public class Contants {
 
     public static String COUNT_START = "COUNT(*)";
 
+    public static int DEFAULT_COUNT_STAR = -1;
+
 }
