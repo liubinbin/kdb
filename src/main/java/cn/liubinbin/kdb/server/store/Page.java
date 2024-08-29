@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,14 +28,14 @@ public class Page {
     public static final int PAGE_SIZE = 16 * 1024; // 16KB
     private byte[] data;
     private Node node;
-    private int curOffset;
+    private int curPageOffset;
     private String tableName;
     private List<Column> tableColumnList;
 
     public Page(Node node, List<Column> tableColumnList) {
         this.node = node;
         this.tableColumnList = tableColumnList;
-        this.curOffset = 0;
+        this.curPageOffset = 0;
         this.data = new byte[PAGE_SIZE];
     }
 
@@ -66,7 +67,7 @@ public class Page {
     }
 
     public void compressNodeToBytes(Node node) {
-        int offset = 0;
+        int curOffset = 0;
         int overviewStatus = node.getStatus();
         // meta data
         // meta.nodeId
@@ -75,24 +76,30 @@ public class Page {
         ByteArrayUtils.putInt(data, Contants.STATUS_SHIFT, overviewStatus);
         // meta.rowCount
         ByteArrayUtils.putInt(data, Contants.ROW_COUNT, node.getCurrentRowCount());
+        // meta.next
+        if (node.getNext() != null) {
+            ByteArrayUtils.putInt(data, Contants.NEXT_NODE_ID_SHIFT, node.getNext().getNodeId());
+        } else {
+            ByteArrayUtils.putInt(data, Contants.NEXT_NODE_ID_SHIFT, Contants.NULL_NEXT_NODE_ID);
+        }
         // meta.childrenCount
         ByteArrayUtils.putInt(data, Contants.CHILDREN_COUNT_SHIFT, node.getChildrenCount());
-        offset = Contants.CHILDREN_COUNT_SHIFT;
+        curOffset = Contants.CHILDREN_COUNT_SHIFT + Contants.INTEGER_SHIFT;
         // meta.children.nodeId
         for (int i = 0; i < node.getChildrenCount(); i++) {
-            ByteArrayUtils.putInt(data, offset, node.getChildren()[i].getNodeId());
-            offset += Contants.INTEGER_SHIFT;
+            ByteArrayUtils.putInt(data, curOffset, node.getChildren()[i].getNodeId());
+            curOffset += Contants.INTEGER_SHIFT;
         }
         // meta.children.sep
-        ByteArrayUtils.putInt(data, offset, node.getChildrenCount() - 1);
-        offset += Contants.INTEGER_SHIFT;
+        ByteArrayUtils.putInt(data, curOffset, node.getChildrenSepCount());
+        curOffset += Contants.INTEGER_SHIFT;
         Integer[] childrenSep = node.getChildrenSep();
-        for (int i = 0; i < node.getChildrenCount() - 1; i++) {
-            ByteArrayUtils.putInt(data, offset, childrenSep[i]);
-            offset += Contants.INTEGER_SHIFT;
+        for (int i = 0; i < node.getChildrenSepCount(); i++) {
+            ByteArrayUtils.putInt(data, curOffset, childrenSep[i]);
+            curOffset += Contants.INTEGER_SHIFT;
         }
         // row data
-        offset = Contants.META_SHIFT;
+        curOffset = Contants.META_SHIFT;
         KdbRow[] kdbRows = node.getData();
         for (int i = 0; i < node.getCurrentRowCount(); i++) {
             KdbRow kdbRow = kdbRows[i];
@@ -101,20 +108,20 @@ public class Page {
             for (int j = 0; j < values.size(); j++) {
                 KdbRowValue value = values.get(j);
                 if (value.getColumnType() == ColumnType.INTEGER) {
-                    ByteArrayUtils.putInt(data, offset, value.getIntValue());
-                    offset += Contants.INTEGER_SHIFT;
+                    ByteArrayUtils.putInt(data, curOffset, value.getIntValue());
+                    curOffset += Contants.INTEGER_SHIFT;
                 } else if (value.getColumnType() == ColumnType.VARCHAR) {
-                    ByteArrayUtils.putInt(data, offset, value.getStringValue().getBytes().length);
-                    offset += Contants.INTEGER_SHIFT;
-                    ByteArrayUtils.putBytes(data, offset, value.getStringValue().getBytes());
-                    offset += tableColumnList.get(j).getColumnParameter();
+                    ByteArrayUtils.putInt(data, curOffset, value.getStringValue().getBytes().length);
+                    curOffset += Contants.INTEGER_SHIFT;
+                    ByteArrayUtils.putBytes(data, curOffset, value.getStringValue().getBytes());
+                    curOffset += tableColumnList.get(j).getColumnParameter();
                 }
             }
         }
     }
 
     public Node exactFromBytes(Integer order) {
-        int offset = 0;
+        int curOffset = 0;
         // meta data
         // meta.nodeId
         Integer nodeId = ByteArrayUtils.toInt(data, Contants.NODE_ID_SHIFT);
@@ -125,37 +132,50 @@ public class Page {
         Node node = new Node(isRoot, isLeaf, nodeId, order);
         // meta.rowCount
         Integer rowCount = ByteArrayUtils.toInt(data, Contants.ROW_COUNT);
+        Integer nextNodeId = ByteArrayUtils.toInt(data, Contants.NEXT_NODE_ID_SHIFT);
+        node.setNextNodeId(nextNodeId);
         // meta.children
+        Integer[] childrenId = new Integer[order];
+
         Integer childrenCount = ByteArrayUtils.toInt(data, Contants.CHILDREN_COUNT_SHIFT);
-        offset = Contants.CHILDREN_COUNT_SHIFT;
+        curOffset = Contants.CHILDREN_COUNT_SHIFT + Contants.INTEGER_SHIFT;
+        // meta.child.nodeId
         for (int i = 0; i < childrenCount; i++){
-            offset += Contants.INTEGER_SHIFT;
+            childrenId[i] = ByteArrayUtils.toInt(data, curOffset);
+            curOffset += Contants.INTEGER_SHIFT;
         }
         // meta.children.sep
-        Integer childrenSepCount = ByteArrayUtils.toInt(data, offset);
+        Integer[] childrenSep = new Integer[order + 1];
+        Integer childrenSepCount = ByteArrayUtils.toInt(data, curOffset);
+        curOffset += Contants.INTEGER_SHIFT;
         for (int i = 0; i < childrenSepCount; i++){
-            offset += Contants.INTEGER_SHIFT;
+            childrenSep[i] = ByteArrayUtils.toInt(data, curOffset);
+            curOffset += Contants.INTEGER_SHIFT;
         }
         // row data
-        offset = Contants.META_SHIFT;
+        curOffset = Contants.META_SHIFT;
         KdbRow[] kdbRows = new KdbRow[order - 1];
         for (int i = 0; i < rowCount; i++) {
             KdbRow temp = new KdbRow();
             for (Column column: tableColumnList) {
                 if (column.getColumnType() == ColumnType.INTEGER) {
-                    temp.appendRowValue(new KdbRowValue(column.getColumnType(), ByteArrayUtils.toInt(data, offset)));
-                    offset += Contants.INTEGER_SHIFT;
+                    temp.appendRowValue(new KdbRowValue(column.getColumnType(), ByteArrayUtils.toInt(data, curOffset)));
+                    curOffset += Contants.INTEGER_SHIFT;
                 } else if (column.getColumnType() == ColumnType.VARCHAR) {
-                    int length = ByteArrayUtils.toInt(data, offset);
-                    offset += Contants.INTEGER_SHIFT;
-                    byte[] bytes = ByteArrayUtils.getBytes(data, offset, length);
+                    int length = ByteArrayUtils.toInt(data, curOffset);
+                    curOffset += Contants.INTEGER_SHIFT;
+                    byte[] bytes = ByteArrayUtils.getBytes(data, curOffset, length);
                     temp.appendRowValue(new KdbRowValue(column.getColumnType(), new String(bytes)));
-                    offset += column.getColumnParameter();
+                    curOffset += column.getColumnParameter();
                 }
             }
             kdbRows[i] = temp;
         }
-        node.updateData(kdbRows, rowCount);
+        if (node.isLeaf()) {
+            node.updateData(kdbRows, rowCount);
+        } else {
+            node.setChildAndSepId(childrenId, childrenSep, childrenSepCount);
+        }
         setNode(node);
         return node;
     }

@@ -43,6 +43,7 @@ public class BPlusTree extends Engine {
         Node root = null;
         Integer maxNodeId = Integer.MIN_VALUE;
         for (Node node : nodeMap.values()) {
+            // 遍历获取数据
             if (node.getNodeId() > maxNodeId) {
                 maxNodeId = node.getNodeId();
             }
@@ -53,13 +54,27 @@ public class BPlusTree extends Engine {
                     root = node;
                 }
             }
+            // 更新 child 的 node 引用
+            if (!node.isLeaf()) {
+                for (int i = 0; i < node.getChildrenCount(); i++) {
+                    node.getChildren()[i] = nodeMap.get(node.getChildrenId()[i]);
+                }
+            }
+            // 更新最大值、最小值
+            if (node.isLeaf()) {
+                node.updateMinAndMax();
+            }
+            // 更新 next
+            if (node.getNextNodeId() != null && node.getNextNodeId() != Contants.NULL_NEXT_NODE_ID) {
+                node.setNext(nodeMap.get(node.getNextNodeId()));
+            }
         }
         if (root == null) {
             System.out.println("initBtreeFromNodeMap error root is null");
         }
         System.out.println("root.id: " + root.getNodeId() + " maxNodeId: " + maxNodeId );
         this.initBtree(root, maxNodeId);
-        // TODO update child Content
+        System.out.println();
         print();
     }
 

@@ -77,6 +77,7 @@ public class TableStore {
     public void close() throws IOException {
         int offset = 0;
         try (RandomAccessFile raf = new RandomAccessFile(new File(tableDataBackupFilePath), "rw")) {
+            System.out.println("TableStore " + tableName + " close pageSize: " + pageMap.size());
             for (Page page : pageMap.values()) {
                 if (page.getNode().isRoot() && page.getNode().isLeaf() && page.getNode().getCurRowCount() < 1) {
                     continue;

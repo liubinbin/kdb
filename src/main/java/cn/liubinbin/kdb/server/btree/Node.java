@@ -6,6 +6,7 @@ import cn.liubinbin.kdb.server.table.ColumnType;
 import cn.liubinbin.kdb.utils.ByteUtils;
 import cn.liubinbin.kdb.utils.Contants;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -27,9 +28,10 @@ public class Node {
     private Integer curRowCount;
     // 子节点
     private Node[] children;
+    // 用于文件存取
+    private Integer[] childrenId;
     // 字节点个数
     private int childrenSepCount;
-
     // 字节点分割
     private Integer[] childrenSep;
     // key 的最大值
@@ -42,6 +44,8 @@ public class Node {
     private Integer order;
     // 下面一个
     private Node next;
+    // 用于文件存取
+    private Integer nextNodeId;
 
     public Node(boolean isRoot, boolean isLeaf, Integer nodeId, Integer order) {
         this.order = order;
@@ -61,6 +65,7 @@ public class Node {
         // childrenSep 实际长度只能为的 order -1，children 实际长度只能为 order。
         this.childrenSep = new Integer[order];
         this.children = new Node[order + 1];
+        this.childrenId = new Integer[order + 1];
         this.childrenSepCount = 0;
         this.next = null;
     }
@@ -241,6 +246,10 @@ public class Node {
         this.children = children;
     }
 
+    public Integer[] getChildrenId() {
+        return childrenId;
+    }
+
     public void printChildren() {
         for (int i = 0; i < childrenSepCount; i++) {
             System.out.print("childrenSep data[" + i + "]:" + childrenSep[i] + "; ");
@@ -327,6 +336,12 @@ public class Node {
         updateMinAndMax();
     }
 
+    public void setChildAndSepId(Integer[] childrenId, Integer[] childrenSep, Integer childrenSepCount) {
+        this.childrenId = childrenId;
+        this.childrenSep = childrenSep;
+        this.childrenSepCount = childrenSepCount;
+    }
+
     public int getChildrenSepCount() {
         return childrenSepCount;
     }
@@ -345,6 +360,14 @@ public class Node {
 
     public void setNext(Node next) {
         this.next = next;
+    }
+
+    public void setNextNodeId(Integer nextNodeId) {
+        this.nextNodeId = nextNodeId;
+    }
+
+    public Integer getNextNodeId() {
+        return nextNodeId;
     }
 
     public Node getNext() {

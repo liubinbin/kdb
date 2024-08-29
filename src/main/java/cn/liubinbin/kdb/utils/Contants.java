@@ -62,9 +62,11 @@ public class Contants {
     public static int NODE_ID_SHIFT = 0;
     public static int STATUS_SHIFT = 4;
     public static int ROW_COUNT = 8;
-    public static int CHILDREN_COUNT_SHIFT = 12;
+    public static int NEXT_NODE_ID_SHIFT = 12;
+    public static int CHILDREN_COUNT_SHIFT = 16;
     // 1024
     public static int META_SHIFT = 1024;
 
+    public static int NULL_NEXT_NODE_ID = -1;
 
 }
