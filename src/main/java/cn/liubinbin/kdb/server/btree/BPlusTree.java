@@ -141,6 +141,11 @@ public class BPlusTree extends Engine {
         mergeLeafChildren(curNode, parent);
     }
 
+    /**
+     * 合并叶子节点
+     * @param curNode
+     * @param parent
+     */
     private void mergeLeafChildren(Node curNode, Node parent) {
         if (parent.isRoot() && parent.getChildrenCount() <= 1) {
             parent.setLeaf(true);
@@ -176,6 +181,8 @@ public class BPlusTree extends Engine {
         newNode.setParent(parent);
         newNode.setNext(rightNode.getNext());
         registerNode(newNode);
+        deregisterNode(rightNode);
+        deregisterNode(leftNode);
 
         // 移动 childrenSep 和 child
         parent.getChildren()[childIdxInParent] = newNode;
@@ -195,6 +202,10 @@ public class BPlusTree extends Engine {
         }
     }
 
+    /**
+     * 入口 insert 函数
+     * @param rowToInsert
+     */
     public void insert(KdbRow rowToInsert) {
         // find Node2Insert
         Node curNode = root;
@@ -241,10 +252,14 @@ public class BPlusTree extends Engine {
         } else {
             Node parent = curNode.getParent();
             splitLeafChildren(parent, leftNode, rightNode, splitRowKey);
+            deregisterNode(curNode);
         }
     }
 
-    //
+    /**
+     * 分裂非叶子节点
+     * @param curNode
+     */
     public void splitInternalChildren(Node curNode){
         if (curNode.getChildrenSepCount() <= order - 1) {
             return;
@@ -306,16 +321,25 @@ public class BPlusTree extends Engine {
             Node newRoot = new Node(true, false, getAndAddNodeId(), order);
             registerNode(newRoot);
 
-            updateChild(newRoot, curNodeChildSep, leftChildren, rightChildren);
+            updateChildAfterSplit(newRoot, curNodeChildSep, leftChildren, rightChildren);
             this.root = newRoot;
+            deregisterNode(curNode);
         } else {
             Node parent = curNode.getParent();
-            updateChild(parent, curNodeChildSep, leftChildren, rightChildren);
+            updateChildAfterSplit(parent, curNodeChildSep, leftChildren, rightChildren);
             splitInternalChildren(parent);
+            deregisterNode(curNode);
         }
     }
 
-    public void updateChild(Node curNode, Integer newChildrenSep, Node leftChildren, Node rightChildren) {
+    /**
+     * 将 curNode 的 children 分成两个部分后，此函数用于更新 parent 的 children 列表
+     * @param curNode
+     * @param newChildrenSep
+     * @param leftChildren
+     * @param rightChildren
+     */
+    public void updateChildAfterSplit(Node curNode, Integer newChildrenSep, Node leftChildren, Node rightChildren) {
         Integer oriChildSep = leftChildren.getMinKey();
         int idxToInsert = 0;
         if (curNode.getChildrenSepCount() != 0) {
@@ -343,6 +367,13 @@ public class BPlusTree extends Engine {
         }
     }
 
+    /**
+     * 在 curNode 的孩子列表将原有的一个node分裂为两个node
+     * @param curNode
+     * @param leftChildren
+     * @param rightChildren
+     * @param childrenSepKey
+     */
     public void splitLeafChildren(Node curNode, Node leftChildren, Node rightChildren, Integer childrenSepKey) {
         if (!rightChildren.getMinKey().equals(childrenSepKey)) {
             throw new RuntimeException("childrenSepKey is equal to minKey");

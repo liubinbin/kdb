@@ -31,4 +31,8 @@ public abstract class AbstrExePlan implements BaseExePlan {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "This is a " + kind.toString() + " plan";
+    }
 }
