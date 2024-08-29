@@ -6,7 +6,6 @@ import cn.liubinbin.kdb.server.table.ColumnType;
 import cn.liubinbin.kdb.utils.ByteUtils;
 import cn.liubinbin.kdb.utils.Contants;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 /**

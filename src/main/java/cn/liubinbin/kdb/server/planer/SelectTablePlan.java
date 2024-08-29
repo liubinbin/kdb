@@ -53,6 +53,10 @@ public class SelectTablePlan extends Plan {
         return isWhereAnd;
     }
 
+    public boolean isStar() {
+        return isStar;
+    }
+
     @Override
     public String toString() {
         return "SelectTablePlan{" +

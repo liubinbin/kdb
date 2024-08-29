@@ -103,6 +103,9 @@ public class Executor {
 
                 // 先生成物理计划
                 AbstTable table = tableManage.getTable(selectTablePlan.getTableName());
+                if (selectTablePlan.isStar()) {
+                    table.getColumns().forEach(column -> selectTablePlan.getColumnList().add(column.getColumnName()));
+                }
                 AbstrExePlan selectPhysicalPlan = Engine.getInstance().generatePhysicalPlan(selectTablePlan, table);
 
                 // 获取数据
