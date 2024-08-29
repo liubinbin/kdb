@@ -2,7 +2,6 @@ package cn.liubinbin.kdb.server.executor;
 
 import cn.liubinbin.kdb.server.planer.SelectTablePlan;
 import cn.liubinbin.kdb.server.table.AbstTable;
-import com.sun.org.apache.xpath.internal.operations.Or;
 
 /**
  * @author liubinbin
@@ -44,8 +43,18 @@ public class Engine {
         }
 
         // column filter
+        ColumnFilterExePlan columnFilterExePlan = null;
+        if (plan.getColumnList() != null && !plan.getColumnList().isEmpty()) {
+            columnFilterExePlan = new ColumnFilterExePlan(curFirstNode, table);
+            curFirstNode = columnFilterExePlan;
+        }
 
         // limit
+        LimitExePlan limitExePlan = null;
+        if (plan.getLimit() != null && plan.getLimit() > 0) {
+            limitExePlan = new LimitExePlan(curFirstNode, plan.getLimit());
+            curFirstNode = limitExePlan;
+        }
 
         System.out.println("generatePhysicalPlan FirstNode: " + curFirstNode);
         return curFirstNode;

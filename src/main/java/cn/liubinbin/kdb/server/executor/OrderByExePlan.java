@@ -5,7 +5,6 @@ import cn.liubinbin.kdb.server.entity.KdbRowValue;
 import cn.liubinbin.kdb.server.table.AbstTable;
 import cn.liubinbin.kdb.server.table.Column;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 

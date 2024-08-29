@@ -65,6 +65,10 @@ public class SelectTablePlan extends Plan {
         return columnOrderBy;
     }
 
+    public Integer getLimit() {
+        return limit;
+    }
+
     @Override
     public String toString() {
         return "SelectTablePlan{" +

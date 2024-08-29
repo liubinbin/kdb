@@ -71,4 +71,6 @@ public class Contants {
 
     public static int DEFAULT_LIMIT = 10;
 
+    public static String COUNT_START = "COUNT(*)";
+
 }

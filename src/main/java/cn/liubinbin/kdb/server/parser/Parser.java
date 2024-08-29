@@ -2,7 +2,7 @@ package cn.liubinbin.kdb.server.parser;
 
 import org.apache.calcite.config.Lex;
 import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.sql.SqlOrderBy;
+import org.apache.calcite.sql.SqlSelect;
 import org.apache.calcite.sql.parser.SqlParseException;
 import org.apache.calcite.sql.parser.SqlParser;
 import org.apache.calcite.sql.parser.ddl.SqlDdlParserImpl;
@@ -43,8 +43,10 @@ public class Parser {
 
 //        sqls.add("select age, count(*) from stu group by age"); // 不支持
 
-        sqls.add("select * from stu where id = 1 order by b limit 10");
-        sqls.add("select id,name from stu where id = 1 order by b limit 10");
+//        sqls.add("select * from stu where id = 1 order by b limit 10");
+//        sqls.add("select id,name from stu where id = 1 order by b limit 10");
+
+        sqls.add("select count(*) from stu where id = 1");
 
 //        sqls.add("delete from a where id = 3 and name = 'haha'");
 
@@ -54,10 +56,17 @@ public class Parser {
             SqlNode sqlNode = parse(sql);
             System.out.println(sqlNode.getKind());
 
-            SqlOrderBy orderby = (SqlOrderBy) sqlNode;
-            System.out.println(orderby.orderList);
-            System.out.println(orderby.fetch);
-            System.out.println(orderby.query.getClass());
+
+            SqlSelect select = (SqlSelect) sqlNode;
+            System.out.println("sqlNode select " + select);
+            System.out.println("1: " + select.getSelectList().get(0));
+            List<String> columnList = ParserUtils.getColumnList(select.getSelectList());
+            System.out.println(columnList);
+
+//            SqlOrderBy orderby = (SqlOrderBy) sqlNode;
+//            System.out.println(orderby.orderList);
+//            System.out.println(orderby.fetch);
+//            System.out.println(orderby.query.getClass());
 
 
 //            SqlSelect select = (SqlSelect) sqlNode;

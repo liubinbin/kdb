@@ -157,7 +157,10 @@ public class Planer {
                             whereBoolExpreList.add(ParserUtils.getWhereBoolExpreList(curCondition));
                         }
                     }
-                    String columnOrderBy = orderBy.orderList.get(0).toString();
+                    String columnOrderBy = null;
+                    if (orderBy.orderList != null && orderBy.orderList.size() == 1) {
+                        columnOrderBy = orderBy.orderList.get(0).toString();
+                    }
                     Integer limit = null;
                     if (orderBy.fetch != null) {
                         limit = orderBy.fetch.toString().isEmpty() ? null : Integer.parseInt(orderBy.fetch.toString());

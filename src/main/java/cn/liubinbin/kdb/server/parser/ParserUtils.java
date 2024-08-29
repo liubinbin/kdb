@@ -5,6 +5,7 @@ import cn.liubinbin.kdb.server.entity.KdbRowValue;
 import cn.liubinbin.kdb.server.planer.BoolExpression;
 import cn.liubinbin.kdb.server.planer.OperatorKind;
 import cn.liubinbin.kdb.server.table.ColumnType;
+import cn.liubinbin.kdb.utils.Contants;
 import org.apache.calcite.sql.*;
 
 import java.util.ArrayList;
@@ -40,6 +41,11 @@ public class ParserUtils {
             for (SqlNode sqlNode : sqlNodeList) {
                 if (sqlNode instanceof SqlIdentifier) {
                     columnNames.add(getString(sqlNode));
+                } else if (sqlNode instanceof SqlBasicCall){
+                    SqlBasicCall sqlBasicCall = (SqlBasicCall) sqlNode;
+                    if (sqlBasicCall.toString().equals(Contants.COUNT_START)) {
+                        columnNames.add(Contants.COUNT_START);
+                    }
                 }
             }
         }

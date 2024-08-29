@@ -1,9 +1,7 @@
 package cn.liubinbin.kdb.server.executor;
 
-import cn.liubinbin.kdb.server.btree.Cursor;
 import cn.liubinbin.kdb.server.entity.KdbRow;
 import cn.liubinbin.kdb.server.table.AbstTable;
-import cn.liubinbin.kdb.server.table.BtreeTable;
 
 
 /**
@@ -13,23 +11,23 @@ import cn.liubinbin.kdb.server.table.BtreeTable;
 public class ColumnFilterExePlan extends AbstrExePlan {
 
     AbstTable table;
-    Cursor cursor;
+
+    public ColumnFilterExePlan(AbstrExePlan next, AbstTable table) {
+        this(ExePlanKind.ColumnFilter, next, table);
+    }
 
     public ColumnFilterExePlan(ExePlanKind kind, AbstrExePlan next, AbstTable table) {
         super(kind, next);
         this.table = table;
-        if (table instanceof BtreeTable) {
-            cursor = ((BtreeTable) table).getCursor();
-        }
     }
 
     @Override
     public boolean hasMore() {
-        return cursor.hasMore();
+        return next.hasMore();
     }
 
     @Override
     public KdbRow onNext() {
-        return cursor.next();
+        return next.onNext();
     }
 }

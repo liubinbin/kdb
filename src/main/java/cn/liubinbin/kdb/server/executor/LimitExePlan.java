@@ -14,6 +14,10 @@ public class LimitExePlan extends AbstrExePlan {
     Integer limit;
     Integer currentCount;
 
+    public LimitExePlan(AbstrExePlan next, Integer limit) {
+        this(ExePlanKind.Limit, next, limit);
+    }
+
     public LimitExePlan(ExePlanKind kind, AbstrExePlan next, Integer limit) {
         super(kind, next);
         this.limit = limit;
