@@ -55,7 +55,7 @@ public class KdbGrpcClient {
      * Say hello to server.
      */
     public KdbSqlResponse sendSql(String sql) {
-        logger.info("Will try to send sql " + sql + " ...");
+//        logger.info("Will try to send sql " + sql + " ...");
         KdbSqlRequest request = KdbSqlRequest.newBuilder().setSql(sql).build();
         KdbSqlResponse response;
         try {

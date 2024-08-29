@@ -1,5 +1,6 @@
 package cn.liubinbin.kdb.server.planer;
 
+import cn.liubinbin.kdb.server.entity.KdbRow;
 import cn.liubinbin.kdb.server.entity.KdbRowValue;
 import cn.liubinbin.kdb.server.parser.ParserUtils;
 import cn.liubinbin.kdb.server.table.Column;
@@ -57,9 +58,15 @@ public class Planer {
                     String tableName = ParserUtils.getString(insert.getTargetTable());
                     List<String> columnList = ParserUtils.getColumnList(insert.getTargetColumnList());
                     SqlBasicCall c = (SqlBasicCall) insert.getSource();
-                    SqlBasicCall d = (SqlBasicCall) c.getOperandList().get(0);
-                    List<KdbRowValue> rowValueList = ParserUtils.getRowValueList(d);
-                    plan = new InsertTablePlan(tableName, columnList, rowValueList);
+                    List<KdbRow> rowListToInsert = new ArrayList<>();
+                    for (SqlNode node : c.getOperandList()) {
+                        if (node instanceof SqlBasicCall) {
+                            SqlBasicCall curNode = (SqlBasicCall) node;
+                            List<KdbRowValue> rowValueList = ParserUtils.getRowValueList(curNode);
+                            rowListToInsert.add(new KdbRow(rowValueList));
+                        }
+                    }
+                    plan = new InsertTablePlan(tableName, columnList, rowListToInsert);
                 } else {
                     throw new RuntimeException("Expected an INSERT_TABLE statement but got: " + sqlNode.getKind());
                 }

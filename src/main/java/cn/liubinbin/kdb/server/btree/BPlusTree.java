@@ -58,6 +58,7 @@ public class BPlusTree extends Engine {
             if (!node.isLeaf()) {
                 for (int i = 0; i < node.getChildrenCount(); i++) {
                     node.getChildren()[i] = nodeMap.get(node.getChildrenId()[i]);
+                    node.getChildren()[i].setParent(node);
                 }
             }
             // 更新最大值、最小值

@@ -1,6 +1,6 @@
 package cn.liubinbin.kdb.server.planer;
 
-import cn.liubinbin.kdb.server.entity.KdbRowValue;
+import cn.liubinbin.kdb.server.entity.KdbRow;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class InsertTablePlan extends Plan {
 
     private final String tableName;
     private List<String> columnList;
-    private List<KdbRowValue> rowValueList;
+    private List<KdbRow> rowList;
 
     public InsertTablePlan(String tableName) {
         super(PlanKind.INSERT_TABLE);
@@ -25,11 +25,11 @@ public class InsertTablePlan extends Plan {
         this.columnList = columnList;
     }
 
-    public InsertTablePlan(String tableName, List<String> columnList, List<KdbRowValue> rowValueList) {
+    public InsertTablePlan(String tableName, List<String> columnList, List<KdbRow> rowList) {
         super(PlanKind.INSERT_TABLE);
         this.tableName = tableName;
         this.columnList = columnList;
-        this.rowValueList = rowValueList;
+        this.rowList = rowList;
     }
 
     public String getTableName() {
@@ -40,16 +40,17 @@ public class InsertTablePlan extends Plan {
         return columnList;
     }
 
-    public List<KdbRowValue> getRowValueList() {
-        return rowValueList;
+    public List<KdbRow> getRowList() {
+        return rowList;
     }
+
 
     @Override
     public String toString() {
         return "InsertTablePlan{" +
                 "tableName='" + tableName + '\'' +
-                ", columnList=" + columnList +
-                ", rowValueList=" + rowValueList +
+                ", columnList=" + columnList + '\'' +
+                ", rowList=" + rowList + '\'' +
                 '}';
     }
 }
