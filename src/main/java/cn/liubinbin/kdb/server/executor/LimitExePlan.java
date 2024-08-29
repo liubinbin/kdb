@@ -31,11 +31,16 @@ public class LimitExePlan extends AbstrExePlan {
 
     @Override
     public KdbRow onNext() {
-        if (currentCount < limit) {
-            currentCount++;
-            return next.onNext();
-        } else {
+        if (currentCount > limit) {
             return null;
         }
+        while(next.hasMore()) {
+            KdbRow tempRow = next.onNext();
+            if (tempRow != null) {
+                currentCount++;
+                return tempRow;
+            }
+        }
+        return null;
     }
 }

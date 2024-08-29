@@ -34,6 +34,10 @@ public class KdbRow implements Comparable<KdbRow>{
         return rowKey;
     }
 
+    public void setValues(List<KdbRowValue> values) {
+        this.values = values;
+    }
+
     @Override
     public int compareTo(KdbRow o) {
         return this.rowKey.compareTo(o.getRowKey());

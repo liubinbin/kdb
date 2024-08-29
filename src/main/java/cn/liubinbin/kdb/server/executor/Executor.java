@@ -106,12 +106,12 @@ public class Executor {
                 if (selectTablePlan.isStar()) {
                     table.getColumns().forEach(column -> selectTablePlan.getColumnList().add(column.getColumnName()));
                 }
-                AbstrExePlan selectPhysicalPlan = Engine.getInstance().generatePhysicalPlan(selectTablePlan, table);
+                AbstrExePlan getResultExePlan = Engine.getInstance().generatePhysicalPlan(selectTablePlan, table);
 
                 // 获取数据
                 List<KdbRow> kdbRows = new ArrayList<>();
-                while (selectPhysicalPlan.hasMore()) {
-                    KdbRow tempRow = selectPhysicalPlan.onNext();
+                while (getResultExePlan.hasMore()) {
+                    KdbRow tempRow = getResultExePlan.onNext();
                     if (tempRow != null) {
                         kdbRows.add(tempRow);
                     }

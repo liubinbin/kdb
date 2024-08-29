@@ -45,16 +45,16 @@ public class Engine {
         // column filter
         ColumnFilterExePlan columnFilterExePlan = null;
         if (plan.getColumnList() != null && !plan.getColumnList().isEmpty()) {
-            columnFilterExePlan = new ColumnFilterExePlan(curFirstNode, table);
+            columnFilterExePlan = new ColumnFilterExePlan(curFirstNode, table, plan.getColumnList());
             curFirstNode = columnFilterExePlan;
         }
 
         // limit
-        LimitExePlan limitExePlan = null;
-        if (plan.getLimit() != null && plan.getLimit() > 0) {
-            limitExePlan = new LimitExePlan(curFirstNode, plan.getLimit());
-            curFirstNode = limitExePlan;
-        }
+//        LimitExePlan limitExePlan = null;
+//        if (plan.getLimit() != null && plan.getLimit() > 0) {
+//            limitExePlan = new LimitExePlan(curFirstNode, plan.getLimit());
+//            curFirstNode = limitExePlan;
+//        }
 
         System.out.println("generatePhysicalPlan FirstNode: " + curFirstNode);
         return curFirstNode;
