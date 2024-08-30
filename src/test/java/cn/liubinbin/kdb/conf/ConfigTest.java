@@ -7,6 +7,11 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
+
+/**
+ * @author liubinbin
+ * @date 2024/08/30
+ */
 public class ConfigTest {
 
     @Test
