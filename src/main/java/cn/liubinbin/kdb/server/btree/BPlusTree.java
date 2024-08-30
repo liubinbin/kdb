@@ -137,8 +137,10 @@ public class BPlusTree extends Engine {
         }
 
         System.out.println("should merge");
-        Node parent = curNode.getParent();
-        mergeLeafChildren(curNode, parent);
+        if (!curNode.isRoot()) {
+            Node parent = curNode.getParent();
+            mergeLeafChildren(curNode, parent);
+        }
     }
 
     /**
