@@ -5,9 +5,10 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Unit test for simple App.
+ * @author liubinbin
+ * @date 2024/08/30
  */
-public class AppTest {
+public class ClientTest {
     /**
      * Rigorous Test :-)
      */

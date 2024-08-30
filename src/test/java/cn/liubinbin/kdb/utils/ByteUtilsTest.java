@@ -1,10 +1,14 @@
-package cn.liubinbin.kdb.sever.utils;
+package cn.liubinbin.kdb.utils;
 
-import cn.liubinbin.kdb.utils.ByteUtils;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+
+/**
+ * @author liubinbin
+ * @date 2024/08/30
+ */
 public class ByteUtilsTest {
 
     @Test

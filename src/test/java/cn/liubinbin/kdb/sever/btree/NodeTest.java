@@ -11,6 +11,11 @@ import java.util.Collections;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+
+/**
+ * @author liubinbin
+ * @date 2024/08/30
+ */
 public class NodeTest {
 
     @Test
