@@ -18,7 +18,7 @@ public class StringUtils {
         return builder.toString();
     }
 
-    public static String leftPadding(String original, int length){
+    public static String rightPaddingToFixLen(String original, int length){
         return String.format("%-" + length + "s", original);
     }
 

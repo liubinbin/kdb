@@ -75,7 +75,7 @@ public class KdbGrpcClient {
         StringBuilder rowStr = new StringBuilder();
         rowStr.append(Contants.ROW_PRINT_SEPARATOR);
         for (String s : row) {
-            rowStr.append(StringUtils.leftPadding(s, 10)).append(Contants.ROW_PRINT_SEPARATOR);
+            rowStr.append(StringUtils.rightPaddingToFixLen(s, 10)).append(Contants.ROW_PRINT_SEPARATOR);
         }
         System.out.println(rowStr);
     }
