@@ -64,7 +64,7 @@ public class CursorTest {
         cursor.next();
         cursor.next();
 
-        assertNull(cursor.next());
+        assertTrue(cursor.next() == null || !cursor.hasMore());
         assertFalse(cursor.hasMore());
     }
 

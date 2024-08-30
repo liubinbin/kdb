@@ -22,6 +22,10 @@ public class Cursor {
         this.dataIdx = 0;
     }
 
+    /**
+     * 若返回 false，则没有数据了。
+     * @return
+     */
     public boolean hasMore() {
         if (curNode == null) {
             return false;
@@ -30,6 +34,10 @@ public class Cursor {
         }
     }
 
+    /**
+     * 返回的数据可能是 null，在上层需要处理
+     * @return
+     */
     public KdbRow next() {
         if (curNode != null) {
             if (dataIdx < curNode.getCurrentRowCount()) {
