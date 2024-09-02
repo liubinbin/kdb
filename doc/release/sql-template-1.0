@@ -1,0 +1,31 @@
+describe database kdb
+
+describe table stu
+
+create table stu(id int, age int, name varchar(256))
+
+insert into stu(id, age, name) VALUES (1, 29, 'Alice')
+
+insert into stu (id, age, name) VALUES (1, 29, 'Alice'),(2, 32, 'Bin')
+
+select count(*) from stu
+
+select id,age,name from stu
+
+select id,age from stu
+
+select id from stu
+
+select * from stu where id = 1
+
+select * from stu where id = 1 and name = 'Alice'
+
+select id,name from stu
+
+select * from stu order by age limit 10
+
+delete from stu where id = 1 and name = 'Alice'
+
+select * from stu where id = 1 order by b limit 10
+
+select id,name from stu where id = 1 order by b limit 10

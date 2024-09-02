@@ -10,3 +10,5 @@ Third, kdb is one of my favorite football players, kevin de bruyne, he is a grea
 design: doc/design.md in https://github.com/liubinbin/kdb
 
 usage: doc/usage.md in https://github.com/liubinbin/kdb
+
+release: doc/version1.0.md in https://github.com/liubinbin/kdb
