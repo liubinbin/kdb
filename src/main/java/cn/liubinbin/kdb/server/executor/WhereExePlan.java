@@ -45,7 +45,7 @@ public class WhereExePlan extends AbstrExePlan {
 
     @Override
     public boolean hasMore() {
-        return next.hasMore();
+        return nextPlan.hasMore();
     }
 
     public boolean isPass(KdbRow row) {
@@ -72,8 +72,8 @@ public class WhereExePlan extends AbstrExePlan {
 
     @Override
     public KdbRow onNext() {
-        while(next.hasMore()) {
-            KdbRow tempRow = next.onNext();
+        while(nextPlan.hasMore()) {
+            KdbRow tempRow = nextPlan.onNext();
             if (tempRow == null) {
                 continue;
             } else {

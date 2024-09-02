@@ -27,7 +27,7 @@ public class FakeScanExePlanTest {
     public void hasNextShouldRight() {
         List<KdbRow> kdbRows = new ArrayList<>();
         FakeScanExePlan fakeScanExePlan = new FakeScanExePlan(null, kdbRows);
-        assertFalse(fakeScanExePlan.hasNext());
+        assertFalse(fakeScanExePlan.hasNextPlan());
     }
 
     @Test

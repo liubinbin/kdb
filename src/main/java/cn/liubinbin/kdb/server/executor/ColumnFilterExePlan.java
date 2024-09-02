@@ -52,7 +52,7 @@ public class ColumnFilterExePlan extends AbstrExePlan {
         if (isCountStar) {
             return count == Contants.DEFAULT_COUNT_STAR;
         }
-        return next.hasMore();
+        return nextPlan.hasMore();
     }
 
     public KdbRow filterRow(KdbRow row) {
@@ -71,8 +71,8 @@ public class ColumnFilterExePlan extends AbstrExePlan {
     public KdbRow onNext() {
         if (isCountStar) {
             int tempCount = 0;
-            while(next.hasMore()) {
-                KdbRow tempRow = next.onNext();
+            while(nextPlan.hasMore()) {
+                KdbRow tempRow = nextPlan.onNext();
                 if (tempRow != null) {
                     tempCount++;
                 }
@@ -80,8 +80,8 @@ public class ColumnFilterExePlan extends AbstrExePlan {
             this.count = tempCount;
             return getNumberKdbRow(tempCount);
         }
-        while(next.hasMore()) {
-            KdbRow tempRow = next.onNext();
+        while(nextPlan.hasMore()) {
+            KdbRow tempRow = nextPlan.onNext();
             if (tempRow != null) {
                 return filterRow(tempRow);
             }

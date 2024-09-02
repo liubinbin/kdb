@@ -1,13 +1,13 @@
 package cn.liubinbin.kdb.sever.executor;
 
+
 import cn.liubinbin.kdb.server.entity.KdbRow;
 import cn.liubinbin.kdb.server.entity.KdbRowValue;
-import cn.liubinbin.kdb.server.executor.ColumnFilterExePlan;
 import cn.liubinbin.kdb.server.executor.FakeScanExePlan;
+import cn.liubinbin.kdb.server.executor.OrderByExePlan;
 import cn.liubinbin.kdb.server.table.BtreeTable;
 import cn.liubinbin.kdb.server.table.Column;
 import cn.liubinbin.kdb.server.table.ColumnType;
-import cn.liubinbin.kdb.utils.Contants;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -15,12 +15,11 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-
 /**
  * @author liubinbin
- * @date 2024/09/01
+ * @date 2024/09/02
  */
-public class ColumnFilterExePlanTest {
+public class OrderByExePlanTest {
 
     private List<KdbRow> getIdKdbRowList(int count){
         List<KdbRow> data = new ArrayList<>();
@@ -46,6 +45,20 @@ public class ColumnFilterExePlanTest {
         return data;
     }
 
+    private List<KdbRow> getIdNameKdbRowListForOrderBy(int count){
+        List<KdbRow> data = new ArrayList<>();
+        for (int i = count; i > 0; i--) {
+            KdbRow row = new KdbRow();
+            KdbRowValue id = new KdbRowValue(ColumnType.INTEGER, i);
+            KdbRowValue name = new KdbRowValue(ColumnType.INTEGER, "bin" + i);
+            row.appendRowValue(id);
+            row.appendRowValue(name);
+            data.add(row);
+        }
+        return data;
+    }
+
+
     private BtreeTable getFakeTable(){
         List<Column> tableColumn = new ArrayList<>();
         tableColumn.add(new Column(0, "id", ColumnType.INTEGER, 0));
@@ -61,11 +74,8 @@ public class ColumnFilterExePlanTest {
 
         BtreeTable btreeTable = getFakeTable();
 
-        List<String> columnNameList = new ArrayList<>();
-        columnNameList.add("id");
-        columnNameList.add("name");
-        ColumnFilterExePlan columnFilterExePlan = new ColumnFilterExePlan(fakeScanExePlan, btreeTable, columnNameList);
-        assertFalse(columnFilterExePlan.hasMore());
+        OrderByExePlan orderByExePlan = new OrderByExePlan(fakeScanExePlan, btreeTable, "id");
+        assertTrue(orderByExePlan.hasMore());
     }
 
     @Test
@@ -75,28 +85,23 @@ public class ColumnFilterExePlanTest {
 
         BtreeTable btreeTable = getFakeTable();
 
-        List<String> columnNameList = new ArrayList<>();
-        columnNameList.add("id");
-        columnNameList.add("name");
-        ColumnFilterExePlan columnFilterExePlan = new ColumnFilterExePlan(fakeScanExePlan, btreeTable, columnNameList);
+        OrderByExePlan orderByExePlan = new OrderByExePlan(fakeScanExePlan, btreeTable, "id");
 
-        assertTrue(columnFilterExePlan.hasNextPlan());
+        assertTrue(orderByExePlan.hasNextPlan());
     }
 
     @Test
     public void onNextShouldRight() {
-        List<KdbRow> kdbRows = getIdNameKdbRowList(3);
+        List<KdbRow> kdbRows = getIdNameKdbRowListForOrderBy(3);
+        System.out.println(kdbRows);
         FakeScanExePlan fakeScanExePlan = new FakeScanExePlan(null, kdbRows);
 
         BtreeTable btreeTable = getFakeTable();
 
-        List<String> columnNameList = new ArrayList<>();
-        columnNameList.add("id");
-        columnNameList.add("name");
-        ColumnFilterExePlan columnFilterExePlan = new ColumnFilterExePlan(fakeScanExePlan, btreeTable, columnNameList);
+        OrderByExePlan orderByExePlan = new OrderByExePlan(fakeScanExePlan, btreeTable, "id");
 
-        KdbRow row = columnFilterExePlan.onNext();
-        assertEquals(0, row.getRowKey().longValue());
+        KdbRow row = orderByExePlan.onNext();
+        assertEquals(1, row.getRowKey().longValue());
     }
 
     @Test
@@ -106,54 +111,43 @@ public class ColumnFilterExePlanTest {
 
         BtreeTable btreeTable = getFakeTable();
 
-        List<String> columnNameList = new ArrayList<>();
-        columnNameList.add("id");
-        columnNameList.add("name");
-        ColumnFilterExePlan columnFilterExePlan = new ColumnFilterExePlan(fakeScanExePlan, btreeTable, columnNameList);
-        assertTrue(columnFilterExePlan.hasMore());
+        OrderByExePlan orderByExePlan = new OrderByExePlan(fakeScanExePlan, btreeTable, "id");
+        assertTrue(orderByExePlan.hasMore());
     }
 
     @Test
     public void hasNextShouldRight2() {
-        List<KdbRow> kdbRows = getIdNameKdbRowList(3);
+        List<KdbRow> kdbRows = getIdNameKdbRowListForOrderBy(3);
         FakeScanExePlan fakeScanExePlan = new FakeScanExePlan(null, kdbRows);
 
         BtreeTable btreeTable = getFakeTable();
 
-        List<String> columnNameList = new ArrayList<>();
-        columnNameList.add("id");
-        columnNameList.add("name");
-        ColumnFilterExePlan columnFilterExePlan = new ColumnFilterExePlan(fakeScanExePlan, btreeTable, columnNameList);
-        assertNotNull(columnFilterExePlan.onNext());
+        OrderByExePlan orderByExePlan = new OrderByExePlan(fakeScanExePlan, btreeTable, "id");
+        assertNotNull(orderByExePlan.onNext());
     }
 
     @Test
-    public void filterShouldRight() {
-        List<KdbRow> kdbRows = getIdNameKdbRowList(3);
+    public void orderByShouldRight() {
+        List<KdbRow> kdbRows = getIdNameKdbRowListForOrderBy(3);
         FakeScanExePlan fakeScanExePlan = new FakeScanExePlan(null, kdbRows);
 
         BtreeTable btreeTable = getFakeTable();
 
-        List<String> columnNameList = new ArrayList<>();
-        columnNameList.add("id");
-        ColumnFilterExePlan columnFilterExePlan = new ColumnFilterExePlan(fakeScanExePlan, btreeTable, columnNameList);
-        KdbRow kdbRow = columnFilterExePlan.onNext();
-        assertEquals(1, kdbRow.getValues().size());
-        assertEquals(0, kdbRow.getValues().get(0).getIntValue().longValue());
-    }
+        OrderByExePlan orderByExePlan = new OrderByExePlan(fakeScanExePlan, btreeTable, "id");
 
-    @Test
-    public void countStartShouldRight() {
-        List<KdbRow> kdbRows = getIdNameKdbRowList(3);
-        FakeScanExePlan fakeScanExePlan = new FakeScanExePlan(null, kdbRows);
+        KdbRow kdbRow = orderByExePlan.onNext();
+        assertEquals(2, kdbRow.getValues().size());
+        assertEquals(1, kdbRow.getValues().get(0).getIntValue().longValue());
 
-        BtreeTable btreeTable = getFakeTable();
+        kdbRow = orderByExePlan.onNext();
+        assertEquals(2, kdbRow.getValues().get(0).getIntValue().longValue());
 
-        List<String> columnNameList = new ArrayList<>();
-        columnNameList.add(Contants.COUNT_START);
-        ColumnFilterExePlan columnFilterExePlan = new ColumnFilterExePlan(fakeScanExePlan, btreeTable, columnNameList);
-        KdbRow kdbRow = columnFilterExePlan.onNext();
-        assertEquals(1, kdbRow.getValues().size());
+        kdbRow = orderByExePlan.onNext();
         assertEquals(3, kdbRow.getValues().get(0).getIntValue().longValue());
+
+        kdbRow = orderByExePlan.onNext();
+        assertNull(kdbRow);
+
     }
+
 }

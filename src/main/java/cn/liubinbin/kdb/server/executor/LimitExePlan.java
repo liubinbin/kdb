@@ -26,7 +26,7 @@ public class LimitExePlan extends AbstrExePlan {
 
     @Override
     public boolean hasMore() {
-        return currentCount < limit && next.hasMore();
+        return currentCount < limit && nextPlan.hasMore();
     }
 
     @Override
@@ -34,8 +34,8 @@ public class LimitExePlan extends AbstrExePlan {
         if (currentCount > limit) {
             return null;
         }
-        while(next.hasMore()) {
-            KdbRow tempRow = next.onNext();
+        while(nextPlan.hasMore()) {
+            KdbRow tempRow = nextPlan.onNext();
             if (tempRow != null) {
                 currentCount++;
                 return tempRow;

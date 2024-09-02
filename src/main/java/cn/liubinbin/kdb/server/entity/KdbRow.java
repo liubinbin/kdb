@@ -48,4 +48,12 @@ public class KdbRow implements Comparable<KdbRow>{
     public int compareTo(KdbRow o) {
         return this.rowKey.compareTo(o.getRowKey());
     }
+
+    @Override
+    public String toString() {
+        return "KdbRow{" +
+                "rowKey=" + rowKey +
+                ", values=" + values +
+                '}';
+    }
 }

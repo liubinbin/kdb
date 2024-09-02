@@ -51,12 +51,11 @@ public class OrderByExePlan extends AbstrExePlan {
         if (tempSortedData == null){
             tempSortedData = new ArrayList<>();
             ArrayList<KdbRow> tempUnsortData = new ArrayList<>();
-            while (next.hasMore()) {
-                KdbRow tempRow = next.onNext();
+            while (nextPlan.hasMore()) {
+                KdbRow tempRow = nextPlan.onNext();
                 if (tempRow != null) {
                     tempUnsortData.add(tempRow);
                 }
-
             }
             tempUnsortData.sort((o1, o2) -> {
                     KdbRowValue o1Value = o1.getValues().get(sortColumnIdx);
@@ -64,6 +63,9 @@ public class OrderByExePlan extends AbstrExePlan {
                     return o1Value.compareTo(o2Value);
                 });
                 tempSortedData.addAll(tempUnsortData);
+        }
+        if (dataNextIdx >= tempSortedData.size()){
+            return null;
         }
         return tempSortedData.get(dataNextIdx++);
     }

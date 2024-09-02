@@ -5,20 +5,20 @@ import cn.liubinbin.kdb.server.entity.KdbRow;
 public abstract class AbstrExePlan implements BaseExePlan {
 
     public ExePlanKind kind;
-    public AbstrExePlan next;
+    public AbstrExePlan nextPlan;
 
     public AbstrExePlan(ExePlanKind kind) {
         this.kind = kind;
-        this.next = null;
+        this.nextPlan = null;
     }
 
-    public AbstrExePlan(ExePlanKind kind, AbstrExePlan next) {
+    public AbstrExePlan(ExePlanKind kind, AbstrExePlan nextPlan) {
         this.kind = kind;
-        this.next = next;
+        this.nextPlan = nextPlan;
     }
 
-    public boolean hasNext() {
-        return next != null;
+    public boolean hasNextPlan() {
+        return nextPlan != null;
     }
 
     @Override
