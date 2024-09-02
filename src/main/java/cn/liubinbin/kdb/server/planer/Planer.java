@@ -13,6 +13,11 @@ import org.apache.calcite.sql.ddl.SqlCreateTable;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * @author liubinbin
+ * @date 2024/09/02
+ */
 public class Planer {
 
     public static Plan plan(SqlNode sqlNode) {
