@@ -2,6 +2,7 @@ package cn.liubinbin.kdb.server.executor;
 
 import cn.liubinbin.kdb.server.entity.KdbRow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -20,7 +21,11 @@ public class FakeScanExePlan extends AbstrExePlan {
 
     public FakeScanExePlan(ExePlanKind kind, AbstrExePlan nextPlan, List<KdbRow> data) {
         super(kind, nextPlan);
-        this.data = data;
+        if (data == null) {
+            this.data = new ArrayList<>();
+        } else {
+            this.data = data;
+        }
         this.curIdx = 0;
     }
 
