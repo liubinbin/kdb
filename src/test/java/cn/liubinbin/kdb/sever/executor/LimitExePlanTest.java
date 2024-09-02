@@ -58,7 +58,6 @@ public class LimitExePlanTest {
 
         LimitExePlan limitExePlan = new LimitExePlan(fakeScanExePlan, 1);
 
-        limitExePlan.onNext();
         assertTrue(limitExePlan.hasNextPlan());
     }
 
