@@ -114,7 +114,7 @@ public class TableStore {
         pageMap.remove(node.getNodeId());
     }
 
-    public void putPage(Integer pageId, Page page) {
+    private void putPage(Integer pageId, Page page) {
         pageMap.put(pageId, page);
     }
 
