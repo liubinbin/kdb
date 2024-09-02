@@ -35,6 +35,16 @@ public class TableManage {
     private Integer btreeOrder;
     private KdbConfig kdbConfig;
 
+    public TableManage(KdbConfig kdbConfig, String tableMetaFullPath, String tableMetaFullBackupPath) {
+        this.tableMap = new ConcurrentHashMap<String, AbstTable>(16);
+        this.tableType = kdbConfig.getTableType();
+        this.tableMetaFullPath = tableMetaFullPath;
+        this.tableMetaFullBackupPath = tableMetaFullBackupPath;
+        this.btreeOrder = kdbConfig.getBtreeOrder();
+        this.kdbConfig = kdbConfig;
+        System.out.println("kdbConfig tableMetaFullPath " + tableMetaFullPath + ", tableMetaFullBackupPath "  + tableMetaFullBackupPath);
+    }
+
     public TableManage(KdbConfig kdbConfig) {
         this.tableMap = new ConcurrentHashMap<String, AbstTable>(16);
         this.tableType = kdbConfig.getTableType();
